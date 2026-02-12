@@ -7,34 +7,52 @@
 }
 
 @theme inline {
-  --font-display: "Plus Jakarta Sans", sans-serif;
-  --color-primary: #2b8cee;
-  --color-background-light: #f6f7f8;
-  --color-background-dark: #101922;
-  --color-accent-yellow: #facc15;
+  --font-sans: "Noto Sans KR", -apple-system, sans-serif;
+  --font-serif: "Gowun Batang", serif;
+
+  --color-cream: #FBF7F0;
+  --color-beige: #F3EDE3;
+  --color-beige-dark: #E8DFD1;
+  --color-brown-light: #C4A882;
+  --color-brown: #8B6F4E;
+  --color-brown-dark: #5C4A33;
+  --color-brown-text: #3D2E1F;
+  --color-terracotta: #C4603A;
+  --color-terracotta-hover: #A8502F;
+  --color-terracotta-light: #F0D5CB;
+  --color-accent-green: #4A8C5C;
+  --color-accent-green-light: #E8F3EB;
+  --color-accent-green-dark: #357A47;
+  --color-green-badge: #D4EDDA;
+  --color-gold: #F0A500;
+
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-fade-in-up: fadeInUp 0.6s ease both;
 }
 
-:root {
-  --radius: 0.5rem;
-  --background: #f6f7f8;
-  --foreground: #0d141b;
-  --primary: #2b8cee;
-  --primary-foreground: #ffffff;
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
-.dark {
-  --background: #101922;
-  --foreground: #f1f5f9;
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  font-family: "Plus Jakarta Sans", sans-serif;
-  background-color: var(--background);
-  color: var(--foreground);
+  font-family: "Noto Sans KR", -apple-system, sans-serif;
+  background-color: var(--color-cream);
+  color: var(--color-brown-text);
   margin: 0;
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 .hide-scrollbar::-webkit-scrollbar {

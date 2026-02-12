@@ -1,204 +1,174 @@
 import { Link } from "react-router-dom";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const academies = [
   {
     id: "smeag",
-    name: "SMEAG Global Education",
-    location: "Talavera, Cebu City",
-    rating: 4.9,
-    reviews: 128,
-    price: 780,
-    tags: ["ESL", "IELTS", "Business"],
-    badge: "Top Rated",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBuCv7i6GaoPo9FidyyWtAfpiaHFoIb_VXlQIGJKb2aDBkrB-t8DfAHVozF11opSkEZchV4aEV4134KDF6jMc6eRgcwEAo2ARH6v8vbp4I_TVHBgwZWZA3KvEijBa0KV-keRp3gglb4cNx8lVXEr-BckWPrbhAZOiVegfBjBDv-0y2535u63O5uC-ksIJR_WGQSHBtmzD-7IUBZp400bwoON_p4JxoTSKX5_DVMxCEqkXbyCeW76ZqmDylJ3NOJTW_ZlXyf_p4f5LQk",
-    logo: "https://lh3.googleusercontent.com/aida-public/AB6AXuAcBp3a7zJG0-p9xNKtRggUuqdMjwbgSe50U1JUN6Btba9qu7hhwQJ6V8kKn5sDmH0224nj_p6HGaJEhXy9CuDCCo1eg-SlHcwoVpvZl60ZbAabReC-qbk1jnf_sJ966OwqtMbkU8eiNaLWFk5fMqweVrORdXBUSjA33zNQV7GDWd2yX6yQKCGuV-CwqX0UsbhYxAngo2a1_fe9VZSzVcAP4k851WzDxrYtvrzeXR18THUbwLIEVoe_NpUI1YmXDfteCE3l008KofuO",
+    name: "SMEAG Capital",
+    region: "세부",
+    style: "스파르타",
+    desc: "세부 최대 규모 어학원. IELTS, TOEIC 공인시험 센터를 보유하고 있어 시험 준비에 최적화된 환경.",
+    price: "$1,350",
+    rating: "4.5",
+    tags: ["ESL", "IELTS", "TOEIC"],
+  },
+  {
+    id: "cpi",
+    name: "CPI (Cebu Pelis Institute)",
+    region: "세부",
+    style: "세미스파르타",
+    desc: "리조트형 캠퍼스로 수영장, 헬스장 등 시설이 뛰어남. ESL 과정이 강하며 쾌적한 학습 환경 제공.",
+    price: "$1,480",
+    rating: "4.7",
+    tags: ["ESL", "스피킹"],
+  },
+  {
+    id: "pines",
+    name: "PINES Main",
+    region: "바기오",
+    style: "스파르타",
+    desc: "바기오의 명문 스파르타 어학원. 시원한 기후와 집중적인 커리큘럼으로 단기간 실력 향상에 최적.",
+    price: "$1,200",
+    rating: "4.4",
+    tags: ["ESL", "IELTS"],
+  },
+  {
+    id: "ev",
+    name: "EV Academy",
+    region: "세부",
+    style: "세미스파르타",
+    desc: "세부 시내 위치. 깔끔한 신축 캠퍼스와 체계적인 커리큘럼으로 인기가 많은 어학원.",
+    price: "$1,400",
+    rating: "4.6",
+    tags: ["ESL", "IELTS", "비즈니스"],
   },
   {
     id: "cia",
-    name: "CIA Academy Mactan",
-    location: "Lapu-Lapu, Cebu",
-    rating: 4.7,
-    reviews: 95,
-    price: 850,
-    tags: ["TOEFL", "Premium Dorm"],
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDP1U4Wswy9nvr8B5dZT9GkP3eh3uj9jw_8RKFs6O-7bpyvpliepDDy_-TXq81r6HvyRZB8uvpcj7Epm3a9xxKKcUsIGJJmlg5miPGaLOqom7hFWBjg978oujI0QtnywqJ43DoSuKt-0lh0MKciRETsGWI5WmkmGDd_d1_gaHTVARndgzwAyw4PBOPyDgrXK4eVM-_kK6HgqANooiFpgAYmSRLgz81ZqOhL5AUTDdXqf1aSCNJ3xpeg132Agn_y7Wjl5FGhjwClfDha",
-    logo: "https://lh3.googleusercontent.com/aida-public/AB6AXuB-sldGjRTAFVfs89XKa4ULAHH6UNhRoTueeWksTRUlueWSWtV_sxfJGBE0OfXCc4eTtOYZhiN7ZnecG8quzbqXv24CTJ_MP0Ck4mC6OH2MuJSn2eSsN3LwxTWSKGOka1t1u-n4jfN14HY112D1OYFvLsCkUBYkJko6uD_6UFyq9qVQCypJ5V8EdXsnZtMQVzlUNyUqlmEeXfl3ddEE73B3cFhFIk3sgwWgJ3cAQscly2M30NYS_yWTWq8WqWLgIb1y_NI1OfkZSlWy",
+    name: "CIA Academy",
+    region: "세부",
+    style: "세미스파르타",
+    desc: "막탄 신캠퍼스로 이전. 바다 근처 리조트 캠퍼스에서 학습과 여가를 동시에 즐길 수 있음.",
+    price: "$1,420",
+    rating: "4.5",
+    tags: ["ESL", "TOEFL", "TOEIC"],
   },
   {
-    id: "help",
-    name: "HELP Academy Baguio",
-    location: "Baguio City, Philippines",
-    rating: 4.8,
-    reviews: 112,
-    price: 650,
-    tags: ["Spartan", "TOEIC"],
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBkNSseCgMEXIKVLodfLIboFB7bPbxSAD83CSMrz99K_R-w3j2TO2mCji-4cKwEqu_wF7yJbN60zMSe-9QI_CRCq8cCnHilrAFya7lAqdMEaet1GSB2glY5EpA09OgxOC1UGdw_6rANwTbGXkTz_8VeZJcKUw9-BMhwxKOxCnnfPsbv-cOMQ2Yjb4eux19ZcmwefoRPTjFQooZT7IqBSJv-2q4WpWZI76IH71CeS6e6udEA76Ve4gW_cQBTVPYoisfJfvho06AO02Od",
-    logo: "https://lh3.googleusercontent.com/aida-public/AB6AXuBWxEDzncSyN4Abn_-2aWz94iTg2PXoWQI0F3MUpC1xxssixycRbqGBj3lVz1FVaxLfdcnvAalCTixR8OnpweC3Dn59Cig8mYhH-kN4Y0SO0BPuwOuKdtQqxClUYQ3RdpYyedcRL0m6uZuoAy3Ppx5vVcFkj0k-M3nmlIW5j0mBaRISFsXMYfpodNhdtw25P9fop-CRyoX-_lmAjsO2y7XC-fDEoKrvDIQuWluZ2DHFllr63nVu498XysrQXn1WX7FiyZ2bXS1BeTG_",
+    id: "beci",
+    name: "BECI Main",
+    region: "바기오",
+    style: "세미스파르타",
+    desc: "바기오의 대표 세미스파르타. SP트레이너 프로그램으로 발음 교정에 강점. 쾌적한 학습 환경.",
+    price: "$1,150",
+    rating: "4.3",
+    tags: ["ESL", "스피킹"],
   },
 ];
 
 export default function AcademySearchPage() {
   return (
-    <div className="min-h-screen bg-[#f6f7f8]">
-      {/* Top Navigation Bar */}
-      <div className="sticky top-0 z-50 bg-[#f6f7f8]/80 backdrop-blur-md border-b border-slate-200">
-        <div className="flex items-center p-4 justify-between">
-          <Link to="/" className="text-slate-900 flex size-10 shrink-0 items-center justify-center">
-            <span className="material-symbols-outlined">arrow_back_ios</span>
-          </Link>
-          <h2 className="text-slate-900 text-lg font-bold leading-tight tracking-tight flex-1 text-center">
-            Find your Academy
-          </h2>
-          <div className="flex w-10 items-center justify-end">
-            <span className="material-symbols-outlined text-[#2b8cee]">tune</span>
+    <div className="bg-cream min-h-screen">
+      <Navbar />
+
+      {/* Page Header */}
+      <div className="bg-white border-b border-beige-dark pt-20">
+        <div className="max-w-[1200px] mx-auto px-6 py-8">
+          <h1 className="text-[1.8rem] md:text-[2.2rem] font-extrabold text-brown-dark tracking-tight mb-2">어학원 비교</h1>
+          <p className="text-brown text-base">가격, 시설, 수업 스타일까지 한눈에 비교하세요.</p>
+        </div>
+      </div>
+
+      {/* Search & Filters */}
+      <div className="border-b border-beige-dark bg-white sticky top-16 z-40">
+        <div className="max-w-[1200px] mx-auto px-6 py-4">
+          <div className="flex items-stretch rounded-xl h-12 border border-beige-dark bg-cream overflow-hidden">
+            <div className="flex items-center justify-center pl-4 text-brown">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+            </div>
+            <input
+              className="flex-1 bg-transparent px-3 text-sm focus:outline-none placeholder:text-brown-light border-none"
+              placeholder="어학원 이름 또는 지역으로 검색..."
+            />
+          </div>
+          <div className="flex gap-2 mt-3 overflow-x-auto hide-scrollbar pb-1">
+            {["전체", "📍 세부", "📍 바기오", "📍 클락", "스파르타", "세미스파르타", "ESL", "IELTS", "TOEIC"].map(
+              (filter, i) => (
+                <button
+                  key={filter}
+                  className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    i === 0
+                      ? "bg-terracotta text-white font-semibold"
+                      : "bg-white border border-beige-dark text-brown hover:border-brown-light"
+                  }`}
+                >
+                  {filter}
+                </button>
+              ),
+            )}
           </div>
         </div>
-
-        {/* Search Field */}
-        <div className="px-4 pb-3">
-          <label className="flex flex-col min-w-40 h-11 w-full">
-            <div className="flex w-full flex-1 items-stretch rounded-xl h-full bg-white shadow-sm border border-slate-200">
-              <div className="text-slate-400 flex items-center justify-center pl-4">
-                <span className="material-symbols-outlined text-xl">search</span>
-              </div>
-              <input
-                className="flex w-full min-w-0 flex-1 border-none bg-transparent focus:outline-none focus:ring-0 h-full placeholder:text-slate-400 px-3 text-sm font-normal"
-                placeholder="Search school name or city..."
-              />
-            </div>
-          </label>
-        </div>
-
-        {/* Horizontal Filter Chips */}
-        <div className="flex gap-2 px-4 pb-4 overflow-x-auto hide-scrollbar">
-          <button className="flex h-9 shrink-0 items-center justify-center gap-x-1 rounded-full bg-[#2b8cee] text-white px-4 text-sm font-semibold">
-            <span>All Locations</span>
-          </button>
-          <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white border border-slate-200 px-4 text-sm font-medium">
-            <span>Cebu</span>
-            <span className="material-symbols-outlined text-sm">expand_more</span>
-          </button>
-          <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white border border-slate-200 px-4 text-sm font-medium">
-            <span>Course</span>
-            <span className="material-symbols-outlined text-sm">expand_more</span>
-          </button>
-          <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white border border-slate-200 px-4 text-sm font-medium">
-            <span>Dorm</span>
-            <span className="material-symbols-outlined text-sm">expand_more</span>
-          </button>
-        </div>
       </div>
 
-      {/* Main Content */}
-      <main className="p-4 space-y-6 pb-24">
-        <div className="flex items-center justify-between">
-          <h3 className="text-slate-900 text-lg font-bold">42 Schools found</h3>
-          <span className="text-[#2b8cee] text-sm font-semibold">Map View</span>
+      {/* Results */}
+      <div className="max-w-[1200px] mx-auto px-6 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-bold text-brown-dark">{academies.length}개 어학원</h2>
+          <select className="bg-white border border-beige-dark rounded-lg px-3 py-2 text-sm text-brown focus:outline-none cursor-pointer">
+            <option>추천순</option>
+            <option>가격 낮은순</option>
+            <option>가격 높은순</option>
+            <option>평점순</option>
+          </select>
         </div>
 
-        {/* Academy Cards */}
-        {academies.map((academy) => (
-          <div
-            key={academy.id}
-            className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100"
-          >
-            <div className="relative w-full aspect-[16/9] bg-slate-200 overflow-hidden">
-              <img
-                alt={academy.name}
-                className="w-full h-full object-cover"
-                src={academy.image}
-              />
-              {academy.badge && (
-                <div className="absolute top-3 left-3 flex gap-2">
-                  <span className="bg-white/90 backdrop-blur-sm text-slate-900 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
-                    {academy.badge}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {academies.map((academy) => (
+            <Link
+              to={`/academy/${academy.id}`}
+              key={academy.id}
+              className="bg-white rounded-[20px] overflow-hidden border border-beige-dark hover:-translate-y-1 hover:shadow-lg transition-all no-underline text-brown-text"
+            >
+              <div className="h-[180px] bg-gradient-to-br from-beige to-beige-dark relative flex items-center justify-center">
+                <span className="text-[2.5rem] opacity-40">🏫</span>
+                <div className="absolute top-3 left-3 flex gap-1.5">
+                  <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-white/90 text-brown-dark">
+                    📍 {academy.region}
+                  </span>
+                  <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-accent-green text-white">
+                    {academy.style}
                   </span>
                 </div>
-              )}
-              <div className="absolute top-3 right-3 bg-white p-1 rounded-lg shadow-md">
-                <img alt="School Logo" className="w-8 h-8 rounded" src={academy.logo} />
               </div>
-            </div>
-            <div className="p-4">
-              <div className="flex justify-between items-start mb-1">
-                <div className="flex items-center gap-1 text-[#2b8cee]">
-                  <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>
-                    star
-                  </span>
-                  <span className="text-sm font-bold">{academy.rating}</span>
-                  <span className="text-slate-400 text-xs font-normal">({academy.reviews} reviews)</span>
+              <div className="p-5">
+                <div className="text-[1.1rem] font-bold text-brown-dark">{academy.name}</div>
+                <p className="mt-1.5 text-[0.82rem] text-brown leading-[1.5] line-clamp-2">{academy.desc}</p>
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  {academy.tags.map((tag) => (
+                    <span key={tag} className="px-2 py-0.5 bg-beige text-brown text-[0.72rem] rounded font-medium">
+                      {tag}
+                    </span>
+                  ))}
                 </div>
-                <span className="text-[#2b8cee] font-bold text-sm">Starting ${academy.price}</span>
+                <div className="mt-4 flex justify-between items-center pt-4 border-t border-beige">
+                  <div>
+                    <div className="text-[0.72rem] text-brown">4주 1인실 기준</div>
+                    <span className="text-[1.15rem] font-extrabold text-terracotta">{academy.price}</span>
+                    <span className="text-[0.75rem] text-brown font-medium">/4주</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-[0.85rem] font-semibold text-brown-dark">
+                    <span className="text-gold">★</span> {academy.rating}
+                  </div>
+                </div>
               </div>
-              <h4 className="text-slate-900 text-lg font-bold leading-tight mb-1">{academy.name}</h4>
-              <div className="flex items-center gap-1 text-slate-500 text-sm mb-3">
-                <span className="material-symbols-outlined text-base">location_on</span>
-                <span>{academy.location}</span>
-              </div>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {academy.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <Link
-                to={`/academy/${academy.id}`}
-                className="block w-full bg-[#2b8cee] text-white font-bold py-2.5 rounded-lg hover:bg-[#2b8cee]/90 transition-colors text-center"
-              >
-                View Academy Details
-              </Link>
-            </div>
-          </div>
-        ))}
-      </main>
-
-      {/* Floating Action Button: Consultancy */}
-      <div className="fixed bottom-24 right-4 z-40">
-        <button className="flex items-center gap-2 bg-[#2b8cee] text-white px-5 py-3 rounded-full shadow-lg border-2 border-white animate-bounce">
-          <span className="material-symbols-outlined">support_agent</span>
-          <span className="font-bold text-sm">Talk to Expert</span>
-        </button>
-      </div>
-
-      {/* Bottom Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-lg border-t border-slate-200">
-        <div className="flex justify-around items-center h-16">
-          <Link to="/" className="flex flex-col items-center justify-center text-slate-400">
-            <span className="material-symbols-outlined">home</span>
-            <span className="text-[10px] mt-0.5">Home</span>
-          </Link>
-          <Link to="/search" className="flex flex-col items-center justify-center text-[#2b8cee]">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
-              search
-            </span>
-            <span className="text-[10px] mt-0.5 font-semibold">Search</span>
-          </Link>
-          <a href="#" className="flex flex-col items-center justify-center text-slate-400">
-            <span className="material-symbols-outlined">forum</span>
-            <span className="text-[10px] mt-0.5">Consult</span>
-          </a>
-          <a href="#" className="flex flex-col items-center justify-center text-slate-400">
-            <span className="material-symbols-outlined">favorite</span>
-            <span className="text-[10px] mt-0.5">Saved</span>
-          </a>
-          <a href="#" className="flex flex-col items-center justify-center text-slate-400">
-            <span className="material-symbols-outlined">person</span>
-            <span className="text-[10px] mt-0.5">Profile</span>
-          </a>
+            </Link>
+          ))}
         </div>
-      </nav>
-
-      {/* Map Trigger (Floating) */}
-      <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-40">
-        <button className="bg-slate-900 text-white px-4 py-2 rounded-full shadow-xl flex items-center gap-2 text-xs font-bold">
-          <span className="material-symbols-outlined text-sm">map</span>
-          Map View
-        </button>
       </div>
+
+      <Footer />
     </div>
   );
 }

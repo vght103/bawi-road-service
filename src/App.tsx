@@ -7,8 +7,10 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/search" element={<AcademySearchPage />} />
+      <Route path="/academies" element={<AcademySearchPage />} />
       <Route path="/academy/:id" element={<AcademyDetailPage />} />
+      {/* backward compat */}
+      <Route path="/search" element={<AcademySearchPage />} />
     </Routes>
   );
 }
