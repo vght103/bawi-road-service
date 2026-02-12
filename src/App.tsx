@@ -2,6 +2,10 @@ import { Routes, Route } from "react-router-dom";
 import HomePage from "@/pages/HomePage";
 import AcademySearchPage from "@/pages/AcademySearchPage";
 import AcademyDetailPage from "@/pages/AcademyDetailPage";
+import WhyPhilippinesPage from "@/pages/WhyPhilippinesPage";
+import ProcessPage from "@/pages/ProcessPage";
+import VisaInfoPage from "@/pages/VisaInfoPage";
+import QuotePage from "@/pages/QuotePage";
 
 function App() {
   return (
@@ -9,6 +13,10 @@ function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/academies" element={<AcademySearchPage />} />
       <Route path="/academy/:id" element={<AcademyDetailPage />} />
+      <Route path="/why-philippines" element={<WhyPhilippinesPage />} />
+      <Route path="/process" element={<ProcessPage />} />
+      <Route path="/visa-info" element={<VisaInfoPage />} />
+      <Route path="/quote" element={<QuotePage />} />
       {/* backward compat */}
       <Route path="/search" element={<AcademySearchPage />} />
     </Routes>

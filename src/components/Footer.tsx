@@ -1,13 +1,11 @@
 import { Link } from "react-router-dom";
-import BawiLogo from "./BawiLogo";
 
 export default function Footer() {
   return (
     <footer className="bg-brown-dark text-brown-light pt-[60px] pb-10 px-6">
       <div className="max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10">
         <div className="col-span-2 md:col-span-1">
-          <div className="font-extrabold text-[1.2rem] text-cream mb-3 flex items-center gap-2">
-            <BawiLogo size={22} />
+          <div className="font-extrabold text-[1.2rem] text-cream mb-3">
             바위로드
           </div>
           <p className="text-[0.82rem] leading-[1.7]">
@@ -24,9 +22,9 @@ export default function Footer() {
           <a href="/#cost" className="block text-brown-light no-underline text-[0.85rem] mb-2.5 hover:text-cream transition-colors">
             비용 가이드
           </a>
-          <a href="#" className="block text-brown-light no-underline text-[0.85rem] mb-2.5 hover:text-cream transition-colors">
+          <Link to="/quote" className="block text-brown-light no-underline text-[0.85rem] mb-2.5 hover:text-cream transition-colors">
             무료 견적
-          </a>
+          </Link>
           <a href="#" className="block text-brown-light no-underline text-[0.85rem] mb-2.5 hover:text-cream transition-colors">
             수속 신청
           </a>

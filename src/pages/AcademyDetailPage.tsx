@@ -103,7 +103,7 @@ export default function AcademyDetailPage() {
             {/* Image Gallery Placeholder */}
             <div className="rounded-[20px] overflow-hidden border border-beige-dark">
               <div className="h-[300px] md:h-[400px] bg-gradient-to-br from-beige to-beige-dark relative flex items-center justify-center">
-                <span className="text-6xl opacity-30">🏫</span>
+                <span className="text-[0.85rem] font-semibold text-brown-light">사진 준비중</span>
                 <div className="absolute bottom-4 right-4 bg-brown-dark/60 text-white text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm">
                   1 / 12
                 </div>
@@ -114,7 +114,7 @@ export default function AcademyDetailPage() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <span className="px-2.5 py-1 rounded-md text-[0.75rem] font-semibold bg-white text-brown-dark border border-beige-dark">
-                  📍 {academy.region}
+                  {academy.region}
                 </span>
                 <span className="px-2.5 py-1 rounded-md text-[0.75rem] font-semibold bg-accent-green text-white">
                   {academy.style}
@@ -354,12 +354,12 @@ export default function AcademyDetailPage() {
                 </div>
 
                 {/* CTA Buttons */}
-                <button className="w-full py-3.5 bg-terracotta text-white rounded-[10px] font-bold hover:bg-terracotta-hover transition-colors mb-2">
-                  📧 견적서 이메일로 받기
-                </button>
-                <button className="w-full py-3.5 bg-brown-dark text-white rounded-[10px] font-bold hover:bg-brown-text transition-colors mb-3">
+                <Link to="/quote" className="block w-full py-3.5 bg-terracotta text-white rounded-[10px] font-bold hover:bg-terracotta-hover transition-colors mb-2 text-center no-underline">
+                  견적서 이메일로 받기
+                </Link>
+                <Link to="/quote" className="block w-full py-3.5 bg-brown-dark text-white rounded-[10px] font-bold hover:bg-brown-text transition-colors mb-3 text-center no-underline">
                   이 조건으로 수속 신청
-                </button>
+                </Link>
                 <a
                   href="#"
                   className="block text-center text-sm text-brown hover:text-brown-dark no-underline font-medium"

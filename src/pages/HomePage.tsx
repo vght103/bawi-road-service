@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import BawiLogo from "@/components/BawiLogo";
+
 
 export default function HomePage() {
   useEffect(() => {
@@ -82,14 +82,17 @@ export default function HomePage() {
         >
           {/* Floating badge top-left */}
           <div className="absolute -top-5 -left-[30px] bg-white rounded-xl px-4 py-2.5 shadow-md text-[0.8rem] font-semibold items-center gap-2 border border-beige-dark animate-float hidden md:flex z-10">
-            <span className="text-[1.1rem]">🎓</span> 1:1 수업 하루 4시간
+            1:1 수업 하루 4시간
           </div>
 
           <div className="bg-white rounded-[20px] p-6 md:p-8 shadow-lg w-full max-w-[440px] border border-beige-dark relative overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-terracotta to-accent-green" />
             <div className="flex items-center gap-3 mb-5">
-              <div className="w-12 h-12 rounded-full bg-beige flex items-center justify-center shrink-0">
-                <BawiLogo size={40} />
+              <div className="w-12 h-12 rounded-full bg-terracotta/10 flex items-center justify-center shrink-0">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-terracotta">
+                  <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+                  <rect x="9" y="3" width="6" height="4" rx="1" />
+                </svg>
               </div>
               <div>
                 <div className="font-bold text-[0.95rem]">나의 견적서</div>
@@ -113,9 +116,9 @@ export default function HomePage() {
                 <span className="font-semibold text-terracotta text-[0.95rem]">최종 금액</span>
                 <span className="font-black text-terracotta text-[1.3rem]">$2,052</span>
               </div>
-              <button className="mt-2 w-full py-3.5 bg-terracotta text-white rounded-[10px] text-[0.95rem] font-bold hover:bg-terracotta-hover transition-colors cursor-pointer border-none">
-                📧 견적서 이메일로 받기
-              </button>
+              <Link to="/quote" className="mt-2 w-full py-3.5 bg-terracotta text-white rounded-[10px] text-[0.95rem] font-bold hover:bg-terracotta-hover transition-colors cursor-pointer border-none block text-center no-underline">
+                견적서 이메일로 받기
+              </Link>
             </div>
           </div>
 
@@ -124,7 +127,7 @@ export default function HomePage() {
             className="absolute -bottom-4 -right-[25px] bg-white rounded-xl px-4 py-2.5 shadow-md text-[0.8rem] font-semibold items-center gap-2 border border-beige-dark animate-float hidden md:flex z-10"
             style={{ animationDelay: "1.5s" }}
           >
-            <span className="text-[1.1rem]">✈️</span> 세부 직항 4시간
+            세부 직항 4시간
           </div>
         </div>
       </section>
@@ -132,17 +135,10 @@ export default function HomePage() {
       {/* TRUST BAR */}
       <div className="bg-beige py-10 px-6 border-y border-beige-dark">
         <div className="max-w-[1200px] mx-auto flex justify-center gap-6 md:gap-12 flex-wrap">
-          {[
-            { icon: "💰", text: "학생 수수료 0원" },
-            { icon: "📊", text: "가격 100% 공개" },
-            { icon: "🏫", text: "검증된 어학원만" },
-            { icon: "📝", text: "솔직한 장단점 비교" },
-          ].map((item) => (
-            <div key={item.text} className="flex items-center gap-3 text-[0.95rem] font-semibold text-brown">
-              <div className="w-10 h-10 bg-white rounded-[10px] flex items-center justify-center text-[1.2rem] shadow-sm">
-                {item.icon}
-              </div>
-              {item.text}
+          {["학생 수수료 0원", "가격 100% 공개", "검증된 어학원만", "솔직한 장단점 비교"].map((text) => (
+            <div key={text} className="flex items-center gap-2.5 text-[0.95rem] font-semibold text-brown">
+              <div className="w-1.5 h-1.5 rounded-full bg-terracotta shrink-0" />
+              {text}
             </div>
           ))}
         </div>
@@ -158,7 +154,7 @@ export default function HomePage() {
             왜 바위로드와 함께해야 할까요?
           </h2>
           <p className="mt-3 text-base leading-[1.7] text-brown max-w-[600px]">
-            대형 유학원은 가격을 숨기고 상담으로 유도합니다. 바위로드는 다릅니다.
+            어학원 선택부터 출국까지, 필요한 정보를 한곳에 모았습니다.
           </p>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
@@ -200,7 +196,7 @@ export default function HomePage() {
       <section className="py-20 px-6 bg-cream">
         <div className="max-w-[1200px] mx-auto">
           <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
-            🏫 인기 어학원
+            인기 어학원
           </div>
           <h2 className="text-[1.6rem] md:text-[2.2rem] font-extrabold tracking-tight text-brown-dark leading-[1.3]">
             학생들이 많이 찾는 어학원
@@ -218,6 +214,7 @@ export default function HomePage() {
                 desc: "세부 최대 규모 어학원. IELTS, TOEIC 공인시험 센터를 보유하고 있어 시험 준비에 최적화된 환경.",
                 price: "$1,350",
                 rating: "4.5",
+                image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80",
               },
               {
                 id: "cpi",
@@ -227,6 +224,7 @@ export default function HomePage() {
                 desc: "리조트형 캠퍼스로 수영장, 헬스장 등 시설이 뛰어남. ESL 과정이 강하며 쾌적한 학습 환경 제공.",
                 price: "$1,480",
                 rating: "4.7",
+                image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80",
               },
               {
                 id: "pines",
@@ -236,6 +234,7 @@ export default function HomePage() {
                 desc: "바기오의 명문 스파르타 어학원. 시원한 기후와 집중적인 커리큘럼으로 단기간 실력 향상에 최적.",
                 price: "$1,200",
                 rating: "4.4",
+                image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80",
               },
             ].map((academy) => (
               <Link
@@ -243,11 +242,11 @@ export default function HomePage() {
                 key={academy.id}
                 className="reveal bg-white rounded-[20px] overflow-hidden border border-beige-dark hover:-translate-y-1 hover:shadow-lg transition-all no-underline text-brown-text"
               >
-                <div className="h-[180px] bg-gradient-to-br from-beige to-beige-dark relative flex items-center justify-center">
-                  <span className="text-[2.5rem] opacity-40">🏫</span>
+                <div className="h-[180px] relative overflow-hidden">
+                  <img src={academy.image} alt={academy.name} className="w-full h-full object-cover" loading="lazy" />
                   <div className="absolute top-3 left-3 flex gap-1.5">
                     <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-white/90 text-brown-dark">
-                      📍 {academy.region}
+                      {academy.region}
                     </span>
                     <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-accent-green text-white">
                       {academy.style}
@@ -290,7 +289,7 @@ export default function HomePage() {
         <div className="absolute -top-1/2 -right-[20%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(196,96,58,0.15)_0%,transparent_70%)] rounded-full" />
         <div className="max-w-[1200px] mx-auto relative">
           <div className="inline-flex items-center gap-1.5 bg-[rgba(74,140,92,0.2)] text-[#8FD4A0] px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
-            💰 비용 한눈에
+            비용 한눈에
           </div>
           <h2 className="text-[1.6rem] md:text-[2.2rem] font-extrabold tracking-tight text-cream leading-[1.3]">기간별 예상 비용</h2>
           <p className="mt-3 text-base leading-[1.7] text-brown-light max-w-[600px]">
@@ -324,6 +323,17 @@ export default function HomePage() {
                 </div>
               </div>
             ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link
+              to="/visa-info"
+              className="inline-flex items-center gap-2 text-[0.9rem] text-brown-light hover:text-cream font-medium no-underline transition-colors"
+            >
+              현지에서 발생하는 부대비용 알아보기
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>
@@ -386,18 +396,13 @@ export default function HomePage() {
       <section className="py-20 px-6 bg-beige text-center relative overflow-hidden">
         <div className="absolute bottom-[-100px] left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[radial-gradient(ellipse,rgba(196,96,58,0.08)_0%,transparent_70%)]" />
         <div className="max-w-[1200px] mx-auto relative">
-          <div className="w-[120px] h-[120px] mx-auto mb-6">
-            <BawiLogo size={120} />
-          </div>
           <h2 className="text-[2rem] font-extrabold tracking-tight text-brown-dark leading-[1.3]">어학연수, 어렵지 않아요</h2>
           <p className="mt-3 text-base leading-[1.7] text-brown max-w-[500px] mx-auto">
-            바위로드가 처음부터 끝까지 함께합니다.
-            <br />
-            견적부터 출국까지, 투명하게.
+            어학원 비교, 견적, 수속까지 한번에 해결하세요.
           </p>
           <div className="mt-8 flex gap-3.5 justify-center flex-wrap">
             <Link
-              to="/academies"
+              to="/quote"
               className="bg-terracotta text-white px-8 py-3.5 rounded-[10px] text-base font-bold no-underline inline-flex items-center gap-2 shadow-[0_4px_14px_rgba(196,96,58,0.3)] hover:bg-terracotta-hover hover:-translate-y-0.5 transition-all"
             >
               무료 견적 받기

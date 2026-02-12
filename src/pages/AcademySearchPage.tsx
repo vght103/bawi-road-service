@@ -12,6 +12,7 @@ const academies = [
     price: "$1,350",
     rating: "4.5",
     tags: ["ESL", "IELTS", "TOEIC"],
+    image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80",
   },
   {
     id: "cpi",
@@ -22,6 +23,7 @@ const academies = [
     price: "$1,480",
     rating: "4.7",
     tags: ["ESL", "스피킹"],
+    image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80",
   },
   {
     id: "pines",
@@ -32,6 +34,7 @@ const academies = [
     price: "$1,200",
     rating: "4.4",
     tags: ["ESL", "IELTS"],
+    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80",
   },
   {
     id: "ev",
@@ -42,6 +45,7 @@ const academies = [
     price: "$1,400",
     rating: "4.6",
     tags: ["ESL", "IELTS", "비즈니스"],
+    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=600&q=80",
   },
   {
     id: "cia",
@@ -52,6 +56,7 @@ const academies = [
     price: "$1,420",
     rating: "4.5",
     tags: ["ESL", "TOEFL", "TOEIC"],
+    image: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=600&q=80",
   },
   {
     id: "beci",
@@ -62,6 +67,7 @@ const academies = [
     price: "$1,150",
     rating: "4.3",
     tags: ["ESL", "스피킹"],
+    image: "https://images.unsplash.com/photo-1531545514256-b1400bc00f31?auto=format&fit=crop&w=600&q=80",
   },
 ];
 
@@ -94,7 +100,7 @@ export default function AcademySearchPage() {
             />
           </div>
           <div className="flex gap-2 mt-3 overflow-x-auto hide-scrollbar pb-1">
-            {["전체", "📍 세부", "📍 바기오", "📍 클락", "스파르타", "세미스파르타", "ESL", "IELTS", "TOEIC"].map(
+            {["전체", "세부", "바기오", "클락", "스파르타", "세미스파르타", "ESL", "IELTS", "TOEIC"].map(
               (filter, i) => (
                 <button
                   key={filter}
@@ -131,11 +137,11 @@ export default function AcademySearchPage() {
               key={academy.id}
               className="bg-white rounded-[20px] overflow-hidden border border-beige-dark hover:-translate-y-1 hover:shadow-lg transition-all no-underline text-brown-text"
             >
-              <div className="h-[180px] bg-gradient-to-br from-beige to-beige-dark relative flex items-center justify-center">
-                <span className="text-[2.5rem] opacity-40">🏫</span>
+              <div className="h-[180px] relative overflow-hidden">
+                <img src={academy.image} alt={academy.name} className="w-full h-full object-cover" loading="lazy" />
                 <div className="absolute top-3 left-3 flex gap-1.5">
                   <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-white/90 text-brown-dark">
-                    📍 {academy.region}
+                    {academy.region}
                   </span>
                   <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-accent-green text-white">
                     {academy.style}
