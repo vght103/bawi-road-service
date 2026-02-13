@@ -1,5 +1,13 @@
-# 필리핀 어학연수 1인 유학원 플랫폼 PRD (v3)
+# 필리핀 어학연수 1인 유학원 플랫폼 PRD (v4)
 
+> **v4 업데이트 요약**
+>
+> - 실제 구현 결과 반영, 기술 스택 업데이트, 견적 시스템 변경, 디자인 톤 변경
+> - 기술 스택: React 19 + Vite 7, React Router v7, Tailwind CSS v4, pnpm
+> - 견적 시스템: 어학원 상세 내 시뮬레이터 → **독립 견적 요청 페이지 (`/quote`)** (가격 미노출, 이메일 견적서 발송)
+> - 디자인 톤: 블루/그린 바다 느낌 → **cream/brown/terracotta 따뜻한 자연 톤**
+> - 신규 페이지: 왜 필리핀 (`/why-philippines`), 수속 절차 (`/process`), 비자 정보 (`/visa-info`)
+>
 > **v3 업데이트 요약**
 >
 > - Framework 변경: Next.js → **React + Vite** (SPA, Cloudflare Pages 배포 간편화)
@@ -39,10 +47,11 @@
 
 | 역할             | 서비스                            | 비고                                        |
 | ---------------- | --------------------------------- | ------------------------------------------- |
-| Framework        | **React 18 + Vite**               | TypeScript, SPA                             |
-| Routing          | **React Router v6**               | 클라이언트 사이드 라우팅                    |
-| Styling          | Tailwind CSS                      |                                             |
-| UI 컴포넌트      | shadcn/ui                         |                                             |
+| Framework        | **React 19 + Vite 7**             | TypeScript 5.9, SPA                         |
+| Routing          | **React Router v7**               | 클라이언트 사이드 라우팅                    |
+| 패키지 매니저    | **pnpm**                          | npm 대비 디스크 효율, strict 의존성 관리    |
+| Styling          | **Tailwind CSS v4**               |                                             |
+| UI 컴포넌트      | shadcn/ui                         | (Button, Input, Label, Calendar, Popover, Command, Dialog 설치됨) |
 | 배포             | **Cloudflare Pages**              | 정적 파일 호스팅, 상업용 무료               |
 | 인증             | **Supabase Auth**                 | 카카오/Google 소셜 로그인, RLS 연동         |
 | DB               | **Supabase (PostgreSQL)**         | 클라이언트에서 직접 호출, 500MB 무료        |
@@ -119,12 +128,18 @@
 
 ### 개요
 
-1인 부업으로 시간 최소화가 핵심이므로, AI 비서가 문의 응답·견적 생성을 자동 처리하고, 알림 시스템이 관리자와 학생에게 적시에 정보를 전달한다.
+1인 부업으로 시간 최소화가 핵심이므로, AI 비서가 문의 응답·챗봇 상담을 처리하고, 견적서는 Workers에서 자동 계산·발송하며, 알림 시스템이 관리자와 학생에게 적시에 정보를 전달한다.
+
+**AI vs Workers 역할 분리:**
+
+- **견적서 발송**: AI 불필요 → Workers에서 DB 조회 + 계산식 적용으로 자동 처리
+- **문의 분류/응답**: AI 필요 → 자연어 이해가 필요한 영역
+- **홈페이지 챗봇**: AI 필요 → 대화형 상담, 어학원 추천, 비용 안내 등
 
 **역할 분담:**
 
-- **AI가 하는 일**: 문의 분류, 자동 응답, 견적서 생성·발송
-- **시스템이 하는 일**: 관리자 이메일 알림, 학생 SMS 리마인드, 백오피스 알림 배지
+- **AI가 하는 일**: 문의 분류, 자동 응답, 홈페이지 챗봇 상담
+- **시스템이 하는 일**: 견적서 자동 생성·발송 (Workers), 관리자 이메일 알림, 학생 SMS 리마인드, 백오피스 알림 배지
 - **내가 하는 일**: 이메일 알림 확인 → Admin 페이지에서 처리 (어학원 확인 후 결과 입력)
 
 ### 알림 채널 정리
@@ -133,7 +148,6 @@
 | ------------------ | -------------- | -------- | --------------------------- |
 | 새 문의/수속 신청  | 관리자         | 이메일   | 단방향 알림, 구현 간편      |
 | 복잡 문의 접수     | 관리자         | 이메일   | 내용 요약 포함              |
-| 견적 3회 소진      | 관리자         | 이메일   | 상담 전환 대기 알림         |
 | 견적서 전달        | 학생 (수속 전) | 이메일   | 금액 궁금하니까 바로 확인함 |
 | 서류 제출 리마인드 | 학생 (수속 후) | SMS 문자 | 이메일 안 봄, 문자는 확인함 |
 | 상태 변경 안내     | 학생 (수속 후) | SMS 문자 | 즉시 확인 필요              |
@@ -156,20 +170,19 @@
 - 특수 상황 (비자 문제, 미성년자, 환불, 맞춤 스케줄 등)
 - 관리자 이메일로 내용 요약 + "답변하기" 링크 (Admin 페이지 직접 이동)
 
-#### 2. 견적서 이메일 발송
+#### 2. 견적서 이메일 발송 (Workers 자동 처리)
 
-견적 시뮬레이터에서 조건 선택 후, 견적서를 이메일로 받을 수 있다.
+견적 요청 페이지(`/quote`)에서 조건 선택 후, 견적서를 이메일로 받을 수 있다.
+**AI 불필요** — DB 조회 + 미리 정해둔 계산식으로 Workers에서 자동 생성·발송.
 
-**학생 입력 정보:**
+**입력 정보:** (견적 요청 폼에서 수집)
 
-- 이름 (필수)
-- 이메일 (필수)
-- 희망 출발 시기 (선택)
+- 이메일, 이름, 어학원, 코스, 시작일, 주수, 기숙사 타입
 
 **발송되는 견적서 내용:**
 
 - 선택한 어학원, 코스, 기숙사, 기간
-- 비용 상세 (학비, 기숙사비, 소계, 할인, 최종금액)
+- 비용 상세 (학비, 기숙사비, 등록금, SSP, 비자연장비, 교재비, 할인, 최종금액)
 - USD + 원화 환산 참고 금액
 - "수속 신청하기" CTA 링크
 - 유학원 연락처 (카카오톡)
@@ -178,7 +191,8 @@
 
 - 이메일 입력 = 잠재고객 리드
 - `QuoteLog` 테이블에 이메일 + 견적 내용 저장
-- 이메일 기준으로 견적 횟수 추적 (최대 3회)
+- **횟수 제한 없음** — 견적 발송 비용이 0원(Resend 무료)이므로 제한 불필요
+- 이메일별 요청 이력 추적 → 관리자가 다회 조회자에게 직접 상담 연락 판단
 - 관리자에게 이메일 알림: "새 견적 요청 — 김OO / SMEAG / ESL 8주"
 
 #### 3. 관리자 이메일 알림
@@ -192,7 +206,6 @@ Cloudflare Workers + Resend로 관리자에게 이메일 알림을 보낸다.
 | 새 문의        | `[새 문의] 김OO — 세부 / ESL 8주 / 2인실` |
 | 복잡 문의      | `[상담 필요] 비자 연장 관련 — 이OO`       |
 | 새 견적 요청   | `[견적] 박OO — SMEAG Capital / ESL 12주`  |
-| 견적 3회 소진  | `[상담 전환] 박OO 견적 3회 완료`          |
 | 새 수속 신청   | `[수속 신청] 최OO — CPI / IELTS 8주`      |
 | 서류 제출 완료 | `[서류 확인] 김OO 출국 서류 등록 완료`    |
 
@@ -513,22 +526,19 @@ id              UUID        PK
 user_id         UUID        FK → User (nullable, 비로그인 시 null)
 name            VARCHAR     이름
 email           VARCHAR     이메일 (견적서 수신 + 잠재고객 식별)
-preferred_date  VARCHAR     희망 출발 시기 (선택)
 academy_id      UUID        FK → Academy
-course_id       UUID        FK → Course
-dormitory_id    UUID        FK → Dormitory
-duration_weeks  INT         조회한 기간
-total_fee       DECIMAL     조회한 견적 금액
-quote_count     INT         해당 이메일의 누적 견적 횟수
+course_name     VARCHAR     선택한 코스명
+dormitory_type  VARCHAR     선택한 기숙사 타입
+duration_weeks  INT         연수 기간 (주)
+start_date      DATE        수업 시작 희망일
 email_sent      BOOLEAN     견적서 이메일 발송 여부
 created_at      TIMESTAMP
 ```
 
-**견적 횟수 제한 로직:**
+**잠재고객 추적:**
 
-- `email` 기준으로 `quote_count` 추적
-- 3회 초과 시 견적 생성 차단 → 상담 전환 유도 UI 표시
-- 관리자에게 이메일 알림: `"[상담 전환] 박OO 견적 3회 완료"`
+- `email` 기준으로 요청 이력 추적 (횟수 제한 없음)
+- 다회 조회자는 관심도 높은 잠재고객 → 관리자가 직접 상담 연락 판단
 
 #### `Inquiry` (문의)
 
@@ -584,8 +594,9 @@ created_at      TIMESTAMP
 - "다 보여주는 유학원" 차별점 강조 (가격 공개, 솔직 비교)
 - 인기 어학원 미리보기 (3~4개 카드)
 - 간단 비용 시뮬레이터 (기간/지역 선택 → 예상 비용 범위)
+- **AI 챗봇**: 대화형 상담 UI (어학원 추천, 비용 문의, 수속 절차 안내 등)
 - 학생 후기 캐러셀
-- CTA: 어학원 비교하기 / 카카오톡 상담
+- CTA: 어학원 비교하기 / 무료 견적 받기 / 카카오톡 상담
 
 #### 1-2. 어학원 리스트 페이지 (`/academies`)
 
@@ -599,7 +610,7 @@ created_at      TIMESTAMP
 - **정렬**: 추천순 / 가격 낮은순 / 가격 높은순 / 평점순
 - **비교 기능**: 최대 3개 어학원 체크 → 비교 페이지로 이동
 
-#### 1-3. 어학원 상세 페이지 (`/academies/:id`)
+#### 1-3. 어학원 상세 페이지 (`/academy/:id`)
 
 - 이미지 갤러리 (시설, 교실, 기숙사, 식당, 주변환경)
 - 기본 정보 (지역, 스타일, 시설, 주소, 지도)
@@ -607,15 +618,10 @@ created_at      TIMESTAMP
 - 추천 대상 (어떤 사람에게 맞는지)
 - **코스 목록**: 코스별 수업 구성, 주당 가격
 - **기숙사 목록**: 방 타입별 가격, 시설 설명
-- **견적 시뮬레이터** (이 어학원 기준):
-  - 코스 선택
-  - 기숙사 선택
-  - 기간 선택 (주 단위 슬라이더 또는 드롭다운)
-  - → 실시간 총 비용 계산 (학비 + 기숙사 + 할인 적용)
-  - → **"견적서 이메일로 받기" 버튼** → 이름/이메일/희망시기 입력 모달
-  - → 견적 횟수 표시 ("견적 조회 2/3회 사용")
-  - → 3회 초과 시 "맞춤 상담 필요" 안내 + 카카오톡 연결
-  - → "이 조건으로 수속 신청" 버튼 (로그인 필요)
+- **견적 요청 연결**:
+  - "견적서 이메일로 받기" 버튼 → `/quote` 페이지로 이동
+  - "이 조건으로 수속 신청" 버튼 → `/quote` 페이지로 이동
+  - 어학원 상세에서는 코스/기숙사 목록만 표시 (가격 포함)
 - 후기 섹션
 - CTA: 수속 신청 / 카카오톡 상담
 
@@ -647,6 +653,57 @@ created_at      TIMESTAMP
 - 이름, 이메일, 연락처, 문의 내용 입력
 - 제출 시 → `Inquiry` 테이블 저장 → AI 분류 → 자동 응답 또는 관리자 이메일 알림
 - "문의가 접수되었습니다. 빠르게 답변드릴게요!" 확인 메시지
+
+#### 1-9. 견적 요청 페이지 (`/quote`)
+
+독립적인 견적 요청 폼. 사이트 전체의 "무료 견적받기" CTA가 이 페이지로 연결된다.
+
+**입력 필드:**
+
+- 이메일 (필수, 유효성 검사)
+- 이름 (필수)
+- 관심 어학원 (필수, 검색 가능한 Combobox — shadcn Command + Popover)
+- 코스 (필수, 어학원 선택 시 해당 어학원 코스만 노출)
+- 수업 시작 희망일 (필수, Calendar 날짜 선택 — 최소 1주 후부터 선택 가능)
+- 연수 기간 (필수, 숫자만 입력, 주 단위)
+- 기숙사 타입 (필수, 어학원 선택 시 해당 어학원 기숙사만 노출)
+
+**가격 미노출 정책:**
+
+- 폼에서는 가격을 일체 표시하지 않음
+- 실제 견적서에 등록금, 학비, 기숙사비, SSP, 비자연장비, 할인율 등을 종합 적용
+- 견적서는 이메일로 발송 (Workers + Resend, 추후 구현)
+
+**레이아웃:**
+
+- 좌측: 폼 영역 (모바일에서는 전체 너비)
+- 우측: 요청 요약 사이드바 (선택한 어학원, 코스, 기숙사, 일정 표시)
+- 제출 후 성공 화면 표시
+
+**데이터 흐름:**
+
+- 제출 시 → QuoteLog 테이블 저장 (추후 Supabase 연동)
+- 관리자에게 이메일 알림 (추후 Workers 연동)
+- 견적서 이메일 발송 (추후 Workers + Resend 연동)
+
+#### 1-10. 왜 필리핀 어학연수 페이지 (`/why-philippines`)
+
+- 필리핀 어학연수의 장점 소개 (1:1 수업, 가성비, 접근성 등)
+- 다른 국가 대비 비교 (비용, 수업 시간 등)
+- CTA: 어학원 둘러보기, 무료 견적 받기
+
+#### 1-11. 수속 절차 안내 페이지 (`/process`)
+
+- 어학연수 수속 절차 단계별 안내
+- 타임라인 형태로 각 단계 설명
+- CTA: 무료 견적 받기
+
+#### 1-12. 비자 정보 페이지 (`/visa-info`)
+
+- 필리핀 비자 종류 및 연장 절차
+- SSP(특별학업허가증), ACR I-Card 등 현지 발급 서류 안내
+- 기간별 예상 비용 안내
+- CTA: 무료 견적 받기
 
 ---
 
@@ -852,7 +909,7 @@ status가 PAYMENT_COMPLETED 또는 DOCUMENTS_PENDING일 때 접근 가능.
 #### 3-8. 잠재고객 관리 (`/admin/leads`)
 
 - QuoteLog 기반 잠재고객 리스트
-- 이름, 이메일, 견적 내용, 견적 횟수, 희망 출발 시기
+- 이름, 이메일, 견적 내용, 요청 횟수, 희망 시작일
 - 수속 전환 여부 표시
 
 ---
@@ -871,14 +928,21 @@ status가 PAYMENT_COMPLETED 또는 DOCUMENTS_PENDING일 때 접근 가능.
 
 참고: 가격은 USD 기준으로 저장하고, 프론트에서 원화 환산 표시도 제공 (환율은 고정값 또는 외부 API).
 
-### 견적 횟수 제한 로직
+**참고: 견적 요청 폼에서는 가격을 노출하지 않음**
+
+- 프론트엔드 폼에서는 어학원, 코스, 기숙사, 기간만 선택
+- 실제 견적 금액은 백엔드(Workers)에서 계산하여 이메일로 발송
+- 견적에 포함되는 항목: 학비, 기숙사비, 등록금, SSP, 비자연장비, 교재비, 할인
+- 이를 통해 정확한 최종 금액만 고객에게 전달
+
+### 견적 발송 로직
 
 ```
-1. "견적서 이메일로 받기" 클릭 시 이름/이메일/희망시기 입력
-2. email 기준으로 QuoteLog count 조회
-3. count < 3 → 견적서 이메일 발송 + QuoteLog 저장
-4. count >= 3 → 견적 차단 + "맞춤 상담 필요" UI 표시
-5. 관리자에게 이메일 알림 발송
+1. 견적 요청 폼(/quote) 제출
+2. QuoteLog 테이블에 저장
+3. Workers에서 DB 조회 → 계산식 적용 → 견적서 이메일 발송 (횟수 제한 없음)
+4. 관리자에게 이메일 알림 발송
+5. 다회 조회자는 Admin 잠재고객 관리에서 확인 → 직접 상담 연락 판단
 ```
 
 ### 할인 정책
@@ -919,8 +983,11 @@ status가 PAYMENT_COMPLETED 또는 DOCUMENTS_PENDING일 때 접근 가능.
 ### 디자인 톤
 
 - 깔끔하고 신뢰감 있는 디자인
-- 과하지 않은 컬러 사용 (메인 컬러 1개 + 서브 컬러 1개)
-- 필리핀 느낌의 밝고 따뜻한 컬러 톤 (예: 블루/그린 계열 바다 느낌)
+- 따뜻하고 자연스러운 톤: cream(#FBF7F0), brown(#8B6F4E), terracotta(#C4603A)
+- 메인 컬러: terracotta(#C4603A) — CTA, 강조, 링크
+- 보조 컬러: accent-green(#4A8C5C) — 긍정적 상태, 배지
+- 배경: cream(#FBF7F0), 카드: white, 보더: beige-dark(#E8DFD1)
+- 폰트: Noto Sans KR (본문) + Gowun Batang (세리프, 강조)
 - 정보 밀도가 높으므로 여백과 타이포그래피로 가독성 확보
 
 ### 반응형
@@ -935,7 +1002,7 @@ status가 PAYMENT_COMPLETED 또는 DOCUMENTS_PENDING일 때 접근 가능.
 - 견적 시뮬레이터는 인터랙티브하게 (슬라이더/드롭다운 변경 즉시 반영)
 - 수속 진행 상태가 명확하게 보여야 함 (불안감 해소)
 - CTA는 항상 "카카오톡 상담" + "온라인 수속 신청" 두 경로 제공
-- 견적 횟수 잔여 표시로 긴장감 유도
+- 견적 요청이 간편해야 리드 확보율이 높아짐 (횟수 제한 없음)
 - **"견적서 이메일로 받기"가 자연스러운 리드 수집 수단**
 
 ---
@@ -944,114 +1011,88 @@ status가 PAYMENT_COMPLETED 또는 DOCUMENTS_PENDING일 때 접근 가능.
 
 ```
 project-root/
-├── web/                       # React SPA (Cloudflare Pages 배포)
-│   ├── src/
-│   │   ├── pages/             # 페이지 컴포넌트
-│   │   │   ├── public/        # Public Pages
-│   │   │   │   ├── Home.tsx           # 랜딩 페이지
-│   │   │   │   ├── AcademyList.tsx    # 어학원 리스트
-│   │   │   │   ├── AcademyDetail.tsx  # 어학원 상세
-│   │   │   │   ├── Compare.tsx        # 어학원 비교
-│   │   │   │   ├── CostGuide.tsx      # 비용 가이드
-│   │   │   │   ├── Contact.tsx        # 문의 폼
-│   │   │   │   ├── FAQ.tsx            # FAQ
-│   │   │   │   └── Blog.tsx           # 블로그
-│   │   │   ├── student/       # Student Portal
-│   │   │   │   ├── Dashboard.tsx      # 마이페이지
-│   │   │   │   ├── Enroll.tsx         # 수속 신청 (스텝 폼)
-│   │   │   │   ├── EnrollmentDetail.tsx  # 수속 현황
-│   │   │   │   └── TravelDocs.tsx     # 출국 준비 정보 등록
-│   │   │   └── admin/         # Admin Backoffice
-│   │   │       ├── AdminDashboard.tsx
-│   │   │       ├── Enrollments.tsx
-│   │   │       ├── EnrollmentDetail.tsx
-│   │   │       ├── Academies.tsx
-│   │   │       ├── AcademyEdit.tsx
-│   │   │       ├── Inquiries.tsx
-│   │   │       ├── Leads.tsx          # 잠재고객 (QuoteLog)
-│   │   │       └── Commissions.tsx
-│   │   │
-│   │   ├── components/
-│   │   │   ├── ui/                    # shadcn/ui 기반
-│   │   │   ├── academy/
-│   │   │   │   ├── AcademyCard.tsx
-│   │   │   │   ├── AcademyFilter.tsx
-│   │   │   │   ├── AcademyGallery.tsx
-│   │   │   │   ├── CourseList.tsx
-│   │   │   │   ├── DormitoryList.tsx
-│   │   │   │   └── QuoteSimulator.tsx # 견적 시뮬레이터 (이메일 발송 포함)
-│   │   │   ├── enrollment/
-│   │   │   │   ├── EnrollmentStepper.tsx
-│   │   │   │   ├── StatusProgress.tsx
-│   │   │   │   └── TravelDocForm.tsx
-│   │   │   ├── inquiry/
-│   │   │   │   └── InquiryForm.tsx
-│   │   │   └── layout/
-│   │   │       ├── Header.tsx
-│   │   │       ├── Footer.tsx
-│   │   │       ├── AdminSidebar.tsx
-│   │   │       ├── ProtectedRoute.tsx  # 인증 + role 체크
-│   │   │       └── NotificationBadge.tsx  # 알림 배지
-│   │   │
-│   │   ├── lib/
-│   │   │   ├── supabase.ts            # Supabase 클라이언트 (Auth + DB)
-│   │   │   ├── workers-api.ts         # Cloudflare Workers API 호출
-│   │   │   ├── utils.ts
-│   │   │   └── constants.ts
-│   │   │
-│   │   ├── hooks/
-│   │   │   ├── useAuth.ts             # Supabase Auth 훅
-│   │   │   ├── useAcademies.ts
-│   │   │   └── useEnrollments.ts
-│   │   │
-│   │   ├── types/
-│   │   │   └── index.ts
-│   │   │
-│   │   ├── router.tsx                 # React Router 설정
-│   │   ├── App.tsx
-│   │   └── main.tsx
+├── public/                       # 정적 파일
+├── src/
+│   ├── components/
+│   │   ├── ui/                   # shadcn/ui 컴포넌트
+│   │   │   ├── button.tsx
+│   │   │   ├── input.tsx
+│   │   │   ├── label.tsx
+│   │   │   ├── popover.tsx
+│   │   │   ├── dialog.tsx
+│   │   │   ├── calendar.tsx
+│   │   │   └── command.tsx
+│   │   ├── Navbar.tsx            # 네비게이션 헤더
+│   │   └── Footer.tsx            # 푸터
 │   │
-│   ├── public/
-│   ├── index.html
-│   ├── vite.config.ts
-│   ├── tailwind.config.ts
-│   └── package.json
+│   ├── data/
+│   │   └── academies.ts          # 어학원 정적 데이터 (추후 Supabase 전환)
+│   │
+│   ├── lib/
+│   │   └── utils.ts              # 유틸리티 (cn 헬퍼 등)
+│   │
+│   ├── pages/
+│   │   ├── HomePage.tsx           # 랜딩 페이지 (/)
+│   │   ├── AcademySearchPage.tsx  # 어학원 검색 (/academies)
+│   │   ├── AcademyDetailPage.tsx  # 어학원 상세 (/academy/:id)
+│   │   ├── QuotePage.tsx          # 견적 요청 (/quote)
+│   │   ├── WhyPhilippinesPage.tsx # 왜 필리핀 (/why-philippines)
+│   │   ├── ProcessPage.tsx        # 수속 절차 (/process)
+│   │   └── VisaInfoPage.tsx       # 비자 정보 (/visa-info)
+│   │
+│   ├── App.tsx                    # 라우팅 + 레이아웃
+│   ├── main.tsx                   # 엔트리포인트
+│   └── index.css                  # 글로벌 스타일 + CSS 변수
 │
-└── workers/                   # Cloudflare Workers (별도 배포)
-    ├── src/
-    │   ├── index.ts           # 라우터 (Hono 또는 itty-router)
-    │   ├── routes/
-    │   │   ├── notify.ts      # 관리자 이메일 알림 발송
-    │   │   ├── quote-email.ts # 견적서 이메일 발송
-    │   │   ├── sms.ts         # SMS 문자 발송
-    │   │   ├── ai-classify.ts # AI 문의 분류 + 자동 응답
-    │   │   └── r2-upload.ts   # R2 Presigned URL 발급
-    │   ├── lib/
-    │   │   ├── resend.ts      # Resend 이메일 클라이언트
-    │   │   ├── sms-client.ts  # 알리고/NHN Cloud SMS 클라이언트
-    │   │   └── ai.ts          # AI API 호출
-    │   └── cron/
-    │       └── document-remind.ts  # 매일 서류 리마인드 체크
-    │
-    ├── wrangler.toml          # Workers 설정 (크론 트리거 포함)
-    └── package.json
+├── components.json               # shadcn/ui 설정
+├── index.html
+├── vite.config.ts
+├── tsconfig.json
+├── tsconfig.app.json
+├── tsconfig.node.json
+├── package.json
+├── pnpm-lock.yaml
+└── tailwind.config.ts            # (Tailwind v4는 CSS 기반 설정 사용)
+
+# 추후 추가 예정
+├── workers/                      # Cloudflare Workers (이메일, SMS, AI)
+└── src/
+    ├── hooks/                    # 커스텀 훅 (useAuth, useAcademies 등)
+    ├── types/                    # TypeScript 타입 정의
+    ├── components/academy/       # 어학원 관련 컴포넌트
+    ├── components/enrollment/    # 수속 관련 컴포넌트
+    ├── pages/student/            # 학생 포털 페이지
+    └── pages/admin/              # 관리자 페이지
 ```
 
 ---
 
 ## 🚀 개발 우선순위
 
-### Phase 1: MVP 핵심 (2~3주)
+### Phase 1: MVP 핵심 ✅ (완료)
 
-1. Vite + React + Tailwind + React Router 프로젝트 설정
-2. Supabase DB 스키마 설정
-3. 어학원 상세 페이지 + 견적 시뮬레이터
-4. 어학원 리스트 페이지 (필터/정렬)
-5. Admin: 어학원/코스/기숙사 CRUD
-6. 랜딩 페이지
+1. ✅ Vite + React 19 + Tailwind CSS v4 + React Router 7 프로젝트 설정
+2. ✅ shadcn/ui 컴포넌트 라이브러리 도입
+3. ✅ 랜딩 페이지 (HomePage)
+4. ✅ 어학원 리스트/검색 페이지 (AcademySearchPage)
+5. ✅ 어학원 상세 페이지 (AcademyDetailPage)
+6. ✅ 견적 요청 페이지 (QuotePage) — shadcn/ui 기반 폼
+7. ✅ 정보 페이지: 왜 필리핀, 수속 절차, 비자 정보
+8. ✅ 어학원 정적 데이터 (6개 어학원, 코스, 기숙사)
+9. ⬜ Supabase DB 스키마 설정 (→ Phase 2로 이동)
+10. ⬜ Cloudflare Pages 배포
+
+### Phase 2: 데이터베이스 + 견적 이메일 (다음)
+
+1. Supabase DB 스키마 설정 + 어학원 데이터 마이그레이션
+2. 정적 데이터 → Supabase 실시간 조회 전환
+3. Cloudflare Workers + Resend 연동
+4. 견적서 이메일 발송 기능
+5. QuoteLog 테이블 (잠재고객 추적)
+6. Admin: 어학원/코스/기숙사 CRUD
 7. Cloudflare Pages 배포
 
-### Phase 2: 수속 시스템 (2~3주)
+### Phase 3: 수속 시스템 (2~3주)
 
 1. Supabase Auth 인증 연동 (카카오 소셜 로그인)
 2. 회원가입/로그인 + ProtectedRoute
@@ -1059,14 +1100,6 @@ project-root/
 4. 수속 현황 페이지
 5. Admin: 수속 관리 + 상태 변경
 6. 출국 준비 정보 등록 폼 (파일 업로드 → R2)
-
-### Phase 3: 알림 + 견적 이메일 (1~2주)
-
-1. Cloudflare Workers 설정 + Resend 연동
-2. 관리자 이메일 알림 (새 문의, 수속 신청, 서류 제출)
-3. 견적서 이메일 발송 기능 (이름/이메일 입력 → 견적서 발송)
-4. QuoteLog 테이블 + 견적 횟수 제한 (3회)
-5. Admin 알림 배지
 
 ### Phase 4: AI 자동화 + SMS (2주)
 

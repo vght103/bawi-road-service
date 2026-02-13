@@ -1,12 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navbar() {
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
   const [mobileGuideOpen, setMobileGuideOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const userMenuRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -110,6 +115,59 @@ export default function Navbar() {
           >
             무료 견적 받기
           </Link>
+
+          {/* Auth */}
+          {user ? (
+            <div
+              className="relative"
+              onMouseEnter={() => {
+                clearTimeout(userMenuRef.current);
+                setUserMenuOpen(true);
+              }}
+              onMouseLeave={() => {
+                userMenuRef.current = setTimeout(() => setUserMenuOpen(false), 150);
+              }}
+            >
+              <button className="flex items-center gap-2 text-brown text-[0.85rem] font-medium hover:text-brown-dark transition-colors bg-transparent border-none cursor-pointer p-0">
+                <div className="w-8 h-8 rounded-full bg-beige-dark flex items-center justify-center text-brown-dark text-sm font-bold">
+                  {(profile?.name ?? user.email)?.[0]?.toUpperCase()}
+                </div>
+              </button>
+              {userMenuOpen && (
+                <div className="absolute top-full right-0 pt-3">
+                  <div className="bg-white rounded-xl shadow-lg border border-beige-dark py-2 min-w-[160px]">
+                    <div className="px-4 py-2 border-b border-beige text-xs text-brown">
+                      {profile?.name ?? user.email}
+                    </div>
+                    <Link
+                      to="/my"
+                      className="block px-4 py-2.5 text-[0.85rem] text-brown hover:bg-beige hover:text-brown-dark transition-colors no-underline"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      마이페이지
+                    </Link>
+                    <button
+                      onClick={async () => {
+                        await signOut();
+                        setUserMenuOpen(false);
+                        navigate("/");
+                      }}
+                      className="w-full text-left px-4 py-2.5 text-[0.85rem] text-brown hover:bg-beige hover:text-brown-dark transition-colors bg-transparent border-none cursor-pointer"
+                    >
+                      로그아웃
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="text-brown text-[0.85rem] font-medium hover:text-brown-dark transition-colors no-underline"
+            >
+              로그인
+            </Link>
+          )}
         </div>
 
         {/* Mobile Toggle */}
@@ -215,6 +273,49 @@ export default function Navbar() {
           >
             무료 견적 받기
           </Link>
+
+          {/* Mobile Auth */}
+          {user ? (
+            <div className="border-t border-beige-dark mt-3 pt-3 space-y-1">
+              <div className="text-xs text-brown px-1 pb-1">
+                {profile?.name ?? user.email}
+              </div>
+              <Link
+                to="/my"
+                className="block text-brown-dark font-medium py-2 no-underline"
+                onClick={() => setMobileOpen(false)}
+              >
+                마이페이지
+              </Link>
+              <button
+                onClick={async () => {
+                  await signOut();
+                  setMobileOpen(false);
+                  navigate("/");
+                }}
+                className="w-full text-left text-brown font-medium py-2 bg-transparent border-none cursor-pointer text-base"
+              >
+                로그아웃
+              </button>
+            </div>
+          ) : (
+            <div className="border-t border-beige-dark mt-3 pt-3 flex gap-3">
+              <Link
+                to="/login"
+                className="flex-1 text-center text-brown-dark font-medium py-2.5 rounded-lg border border-beige-dark no-underline"
+                onClick={() => setMobileOpen(false)}
+              >
+                로그인
+              </Link>
+              <Link
+                to="/signup"
+                className="flex-1 text-center text-brown-dark font-medium py-2.5 rounded-lg bg-beige no-underline"
+                onClick={() => setMobileOpen(false)}
+              >
+                회원가입
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </nav>
