@@ -85,7 +85,6 @@ export default function SignupPage() {
     setSuccess(true);
   }
 
-  const pwErrors = password ? validatePassword(password) : [];
   const pwChecks = [
     { label: "8자 이상", pass: password.length >= 8 },
     { label: "숫자 포함", pass: /\d/.test(password) },
