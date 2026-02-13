@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,10 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { signIn } = useAuth();
+
+  const from = (location.state as { from?: string })?.from || "/";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,7 +43,7 @@ export default function LoginPage() {
       return;
     }
 
-    navigate("/my");
+    navigate(from, { replace: true });
   }
 
   return (

@@ -33,6 +33,8 @@ interface AuthContextType {
     password: string
   ) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
+  changePassword: (newPassword: string) => Promise<{ error: string | null }>;
+  deleteAccount: () => Promise<{ error: string | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -90,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   ) {
     if (!supabaseConfigured)
       return {
-        error: "Supabase가 설정되지 않았습니다. .env 파일을 확인해주세요.",
+        error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
       };
     const { error } = await supabase.auth.signUp({
       email,
@@ -108,7 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function signIn(email: string, password: string) {
     if (!supabaseConfigured)
       return {
-        error: "Supabase가 설정되지 않았습니다. .env 파일을 확인해주세요.",
+        error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
       };
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -122,9 +124,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProfile(null);
   }
 
+  async function changePassword(newPassword: string) {
+    if (!supabaseConfigured)
+      return { error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+    return { error: error?.message ?? null };
+  }
+
+  async function deleteAccount() {
+    if (!supabaseConfigured)
+      return { error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
+    const { error } = await supabase.rpc("delete_own_account");
+    if (error) return { error: error.message };
+    await supabase.auth.signOut();
+    setProfile(null);
+    return { error: null };
+  }
+
   return (
     <AuthContext.Provider
-      value={{ user, profile, session, loading, signUp, signIn, signOut }}
+      value={{ user, profile, session, loading, signUp, signIn, signOut, changePassword, deleteAccount }}
     >
       {children}
     </AuthContext.Provider>

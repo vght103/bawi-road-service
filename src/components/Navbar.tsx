@@ -1,10 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navbar() {
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
@@ -163,6 +164,7 @@ export default function Navbar() {
           ) : (
             <Link
               to="/login"
+              state={{ from: location.pathname }}
               className="text-brown text-[0.85rem] font-medium hover:text-brown-dark transition-colors no-underline"
             >
               로그인
@@ -302,6 +304,7 @@ export default function Navbar() {
             <div className="border-t border-beige-dark mt-3 pt-3 flex gap-3">
               <Link
                 to="/login"
+                state={{ from: location.pathname }}
                 className="flex-1 text-center text-brown-dark font-medium py-2.5 rounded-lg border border-beige-dark no-underline"
                 onClick={() => setMobileOpen(false)}
               >

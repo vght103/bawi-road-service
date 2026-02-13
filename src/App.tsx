@@ -8,6 +8,8 @@ import VisaInfoPage from "@/pages/VisaInfoPage";
 import QuotePage from "@/pages/QuotePage";
 import SignupPage from "@/pages/SignupPage";
 import LoginPage from "@/pages/LoginPage";
+import MyPage from "@/pages/MyPage";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 function App() {
   return (
@@ -21,6 +23,7 @@ function App() {
       <Route path="/quote" element={<QuotePage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/my" element={<ProtectedRoute><MyPage /></ProtectedRoute>} />
       {/* backward compat */}
       <Route path="/search" element={<AcademySearchPage />} />
     </Routes>

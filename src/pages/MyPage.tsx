@@ -1,0 +1,222 @@
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/contexts/AuthContext";
+
+function validatePassword(pw: string) {
+  const errors: string[] = [];
+  if (pw.length < 8) errors.push("8자 이상");
+  if (!/\d/.test(pw)) errors.push("숫자 포함");
+  if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(pw)) errors.push("특수기호 포함");
+  return errors;
+}
+
+export default function MyPage() {
+  const navigate = useNavigate();
+  const { user, profile, signOut, changePassword, deleteAccount } = useAuth();
+
+  // 비밀번호 변경
+  const [newPassword, setNewPassword] = useState("");
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
+  const [pwError, setPwError] = useState("");
+  const [pwSuccess, setPwSuccess] = useState(false);
+  const [pwSubmitting, setPwSubmitting] = useState(false);
+
+  // 회원 탈퇴
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deleteError, setDeleteError] = useState("");
+  const [deleteSubmitting, setDeleteSubmitting] = useState(false);
+  const [showDeleteSection, setShowDeleteSection] = useState(false);
+
+  async function handleChangePassword(e: React.FormEvent) {
+    e.preventDefault();
+    setPwError("");
+    setPwSuccess(false);
+
+    const pwErrors = validatePassword(newPassword);
+    if (pwErrors.length > 0) {
+      setPwError(`비밀번호: ${pwErrors.join(", ")} 필요`);
+      return;
+    }
+    if (newPassword !== newPasswordConfirm) {
+      setPwError("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    setPwSubmitting(true);
+    const { error } = await changePassword(newPassword);
+    setPwSubmitting(false);
+
+    if (error) {
+      setPwError(error);
+      return;
+    }
+
+    setPwSuccess(true);
+    setNewPassword("");
+    setNewPasswordConfirm("");
+  }
+
+  async function handleDeleteAccount() {
+    if (deleteConfirm !== "회원탈퇴") {
+      setDeleteError('"회원탈퇴"를 정확히 입력해주세요.');
+      return;
+    }
+
+    setDeleteError("");
+    setDeleteSubmitting(true);
+    const { error } = await deleteAccount();
+    setDeleteSubmitting(false);
+
+    if (error) {
+      setDeleteError(error);
+      return;
+    }
+
+    navigate("/");
+  }
+
+  if (!user) {
+    return (
+      <div className="flex min-h-dvh items-center justify-center bg-cream px-4">
+        <div className="text-center">
+          <p className="mb-4 text-brown-text">로그인이 필요합니다.</p>
+          <Link to="/login">
+            <Button className="bg-terracotta hover:bg-terracotta-hover text-white">로그인</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-dvh bg-cream px-4 py-12">
+      <div className="mx-auto w-full max-w-lg">
+        <Link to="/" className="mb-6 inline-block text-sm text-brown hover:text-terracotta">
+          &larr; 홈으로
+        </Link>
+
+        <h1 className="mb-8 text-2xl font-bold text-brown-text">마이페이지</h1>
+
+        {/* 내 정보 */}
+        <section className="mb-8 rounded-2xl border border-beige-dark bg-white p-6">
+          <h2 className="mb-4 text-lg font-semibold text-brown-text">내 정보</h2>
+          <div className="space-y-2 text-sm text-brown">
+            <p>
+              <span className="font-medium text-brown-text">이름:</span> {profile?.name ?? "-"}
+            </p>
+            <p>
+              <span className="font-medium text-brown-text">이메일:</span> {user.email}
+            </p>
+            <p>
+              <span className="font-medium text-brown-text">연락처:</span> {profile?.phone ?? "-"}
+            </p>
+          </div>
+
+          <Button
+            onClick={async () => {
+              await signOut();
+              navigate("/");
+            }}
+            variant="outline"
+            className="w-full border-brown/30 text-brown hover:bg-beige mt-4"
+          >
+            로그아웃
+          </Button>
+        </section>
+
+        {/* 비밀번호 변경 */}
+        <section className="mb-8 rounded-2xl border border-beige-dark bg-white p-6">
+          <h2 className="mb-4 text-lg font-semibold text-brown-text">비밀번호 변경</h2>
+          <form onSubmit={handleChangePassword} className="space-y-4">
+            {pwError && <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{pwError}</div>}
+            {pwSuccess && (
+              <div className="rounded-lg bg-green-50 p-3 text-sm text-green-600">비밀번호가 변경되었습니다.</div>
+            )}
+            <div className="space-y-1.5">
+              <Label htmlFor="newPassword" className="text-brown-text font-medium">
+                새 비밀번호
+              </Label>
+              <Input
+                id="newPassword"
+                type="password"
+                placeholder="8자 이상, 숫자, 특수기호 포함"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="newPasswordConfirm" className="text-brown-text font-medium">
+                새 비밀번호 확인
+              </Label>
+              <Input
+                id="newPasswordConfirm"
+                type="password"
+                placeholder="비밀번호를 다시 입력해주세요"
+                value={newPasswordConfirm}
+                onChange={(e) => setNewPasswordConfirm(e.target.value)}
+              />
+            </div>
+            <Button
+              type="submit"
+              disabled={pwSubmitting}
+              className="bg-terracotta hover:bg-terracotta-hover text-white w-full"
+            >
+              {pwSubmitting ? "변경 중..." : "비밀번호 변경"}
+            </Button>
+          </form>
+        </section>
+
+        {/* 회원 탈퇴 */}
+        <section className="rounded-2xl border border-red-200 bg-white p-6">
+          <h2 className="mb-2 text-lg font-semibold text-red-600">회원 탈퇴</h2>
+          <p className="mb-4 text-sm text-brown">탈퇴 시 모든 개인정보가 즉시 삭제되며 복구할 수 없습니다.</p>
+
+          {!showDeleteSection ? (
+            <Button
+              onClick={() => setShowDeleteSection(true)}
+              variant="outline"
+              className="border-red-300 text-red-600 hover:bg-red-50 w-full"
+            >
+              회원 탈퇴하기
+            </Button>
+          ) : (
+            <div className="space-y-3">
+              {deleteError && <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{deleteError}</div>}
+              <p className="text-sm font-medium text-red-600">탈퇴를 확인하려면 아래에 "회원탈퇴"를 입력해주세요.</p>
+              <Input
+                type="text"
+                placeholder="회원탈퇴"
+                value={deleteConfirm}
+                onChange={(e) => setDeleteConfirm(e.target.value)}
+                className="border-red-300 focus-visible:ring-red-300"
+              />
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleDeleteAccount}
+                  disabled={deleteSubmitting}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                >
+                  {deleteSubmitting ? "처리 중..." : "탈퇴 확인"}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowDeleteSection(false);
+                    setDeleteConfirm("");
+                    setDeleteError("");
+                  }}
+                  variant="outline"
+                  className="border-brown/30 text-brown"
+                >
+                  취소
+                </Button>
+              </div>
+            </div>
+          )}
+        </section>
+      </div>
+    </div>
+  );
+}
