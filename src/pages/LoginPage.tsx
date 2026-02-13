@@ -47,7 +47,7 @@ export default function LoginPage() {
     <div className="flex min-h-dvh items-center justify-center bg-cream px-4 py-12">
       <div className="flex w-full max-w-[1000px] overflow-hidden rounded-2xl bg-white shadow-lg border border-beige-dark">
       {/* Left: Form */}
-      <div className="flex w-1/2 items-center justify-center px-10 py-12">
+      <div className="flex w-full lg:w-1/2 items-center justify-center px-6 sm:px-10 py-12">
         <div className="w-full max-w-sm">
           <div className="mb-8">
             <Link
