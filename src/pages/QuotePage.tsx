@@ -105,11 +105,6 @@ export default function QuotePage() {
         return;
       }
 
-      const totalFee =
-        selectedCourse && selectedDorm
-          ? (selectedCourse.pricePerWeek + selectedDorm.pricePerWeek) * weeksNum
-          : null;
-
       const payload: QuoteLogInsert = {
         user_id: user?.id ?? null,
         name,
@@ -120,7 +115,6 @@ export default function QuotePage() {
         dormitory_type: selectedDorm!.type,
         duration_weeks: weeksNum,
         start_date: startDate ? startDate.toISOString().split("T")[0] : null,
-        total_fee: totalFee,
         quote_count: currentCount + 1,
       };
 
