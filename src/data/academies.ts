@@ -1,32 +1,32 @@
 export interface Course {
-  name: string;
-  category: string;
-  manToMan: number;
-  group: number;
-  optional: number;
-  pricePerWeek: number;
-  desc: string;
+  name: string;         // 코스명
+  category: string;     // 카테고리 (ESL, IELTS, TOEIC 등)
+  manToMan: number;     // 1:1 수업 시간
+  group: number;        // 그룹 수업 시간
+  optional: number;     // 선택 수업 시간
+  pricePerWeek: number; // 주당 수업료 (USD)
+  desc: string;         // 코스 설명
 }
 
 export interface Dormitory {
-  type: string;
-  pricePerWeek: number;
-  meals: string;
-  desc: string;
+  type: string;         // 기숙사 타입 (1인실, 2인실 등)
+  pricePerWeek: number; // 주당 숙소비 (USD)
+  meals: string;        // 식사 포함 여부 (주 3식 등)
+  desc: string;         // 기숙사 설명
 }
 
 export interface Academy {
-  id: string;
-  name: string;
-  region: string;
-  style: string;
-  desc: string;
-  price: string;
-  rating: string;
-  tags: string[];
-  image: string;
-  courses: Course[];
-  dormitories: Dormitory[];
+  id: string;              // 어학원 고유 ID ("1", "2", ...)
+  name: string;            // 어학원명
+  region: string;          // 지역 (세부, 바기오 등)
+  style: string;           // 학습 스타일 (스파르타, 세미스파르타)
+  desc: string;            // 어학원 소개 설명
+  price: string;           // 대표 가격 표시용 ("$1,350")
+  rating: string;          // 평점 ("4.5")
+  tags: string[];          // 태그 목록 (ESL, IELTS 등)
+  image: string;           // 대표 이미지 URL
+  courses: Course[];       // 제공 코스 목록
+  dormitories: Dormitory[];// 기숙사 옵션 목록
 }
 
 export const academies: Academy[] = [
