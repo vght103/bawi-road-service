@@ -9,7 +9,7 @@ const academies = [
     region: "세부",
     style: "스파르타",
     desc: "세부 최대 규모 어학원. IELTS, TOEIC 공인시험 센터를 보유하고 있어 시험 준비에 최적화된 환경.",
-    price: "$1,350",
+    price: "2,000,000원",
     rating: "4.5",
     tags: ["ESL", "IELTS", "TOEIC"],
     image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80",
@@ -20,7 +20,7 @@ const academies = [
     region: "세부",
     style: "세미스파르타",
     desc: "리조트형 캠퍼스로 수영장, 헬스장 등 시설이 뛰어남. ESL 과정이 강하며 쾌적한 학습 환경 제공.",
-    price: "$1,480",
+    price: "2,000,000원",
     rating: "4.7",
     tags: ["ESL", "스피킹"],
     image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80",
@@ -31,7 +31,7 @@ const academies = [
     region: "바기오",
     style: "스파르타",
     desc: "바기오의 명문 스파르타 어학원. 시원한 기후와 집중적인 커리큘럼으로 단기간 실력 향상에 최적.",
-    price: "$1,200",
+    price: "1,600,000원",
     rating: "4.4",
     tags: ["ESL", "IELTS"],
     image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80",
@@ -42,7 +42,7 @@ const academies = [
     region: "세부",
     style: "세미스파르타",
     desc: "세부 시내 위치. 깔끔한 신축 캠퍼스와 체계적인 커리큘럼으로 인기가 많은 어학원.",
-    price: "$1,400",
+    price: "2,000,000원",
     rating: "4.6",
     tags: ["ESL", "IELTS", "비즈니스"],
     image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=600&q=80",
@@ -53,7 +53,7 @@ const academies = [
     region: "세부",
     style: "세미스파르타",
     desc: "막탄 신캠퍼스로 이전. 바다 근처 리조트 캠퍼스에서 학습과 여가를 동시에 즐길 수 있음.",
-    price: "$1,420",
+    price: "2,000,000원",
     rating: "4.5",
     tags: ["ESL", "TOEFL", "TOEIC"],
     image: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=600&q=80",
@@ -64,7 +64,7 @@ const academies = [
     region: "바기오",
     style: "세미스파르타",
     desc: "바기오의 대표 세미스파르타. SP트레이너 프로그램으로 발음 교정에 강점. 쾌적한 학습 환경.",
-    price: "$1,150",
+    price: "1,600,000원",
     rating: "4.3",
     tags: ["ESL", "스피킹"],
     image: "https://images.unsplash.com/photo-1531545514256-b1400bc00f31?auto=format&fit=crop&w=600&q=80",
@@ -160,9 +160,8 @@ export default function AcademySearchPage() {
                 </div>
                 <div className="mt-4 flex justify-between items-center pt-4 border-t border-beige">
                   <div>
-                    <div className="text-[0.72rem] text-brown">4주 1인실 기준</div>
+                    <div className="text-[0.72rem] text-brown">4주 기준</div>
                     <span className="text-[1.15rem] font-extrabold text-terracotta">{academy.price}</span>
-                    <span className="text-[0.75rem] text-brown font-medium">/4주</span>
                   </div>
                   <div className="flex items-center gap-1 text-[0.85rem] font-semibold text-brown-dark">
                     <span className="text-gold">★</span> {academy.rating}

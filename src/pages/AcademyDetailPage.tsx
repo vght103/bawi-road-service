@@ -207,7 +207,7 @@ export default function AcademyDetailPage() {
                         <h4 className="font-bold text-brown-dark">{c.name}</h4>
                         <span className="text-[0.72rem] px-2 py-0.5 bg-beige text-brown rounded font-medium">{c.category}</span>
                       </div>
-                      <span className="text-terracotta font-bold">${c.pricePerWeek}/주</span>
+                      <span className="text-terracotta font-bold">{c.pricePerWeek.toLocaleString()}원/주</span>
                     </div>
                     <p className="text-sm text-brown mb-2">{c.desc}</p>
                     <div className="flex gap-2 text-[0.75rem]">
@@ -237,7 +237,7 @@ export default function AcademyDetailPage() {
                     onClick={() => setSelectedDorm(i)}
                   >
                     <div className="font-bold text-brown-dark mb-1">{d.type}</div>
-                    <div className="text-terracotta font-bold text-lg">${d.pricePerWeek}<span className="text-sm text-brown font-normal">/주</span></div>
+                    <div className="text-terracotta font-bold text-lg">{d.pricePerWeek.toLocaleString()}원<span className="text-sm text-brown font-normal">/주</span></div>
                     <div className="text-[0.75rem] text-brown mt-1">{d.meals}</div>
                     <div className="text-[0.72rem] text-brown-light mt-1">{d.desc}</div>
                   </div>
@@ -300,7 +300,7 @@ export default function AcademyDetailPage() {
                   <label className="text-sm font-semibold text-brown-dark mb-1.5 block">코스</label>
                   <div className="text-sm text-brown bg-beige rounded-[10px] px-4 py-3">
                     {course.name}
-                    <span className="text-terracotta font-bold ml-2">${course.pricePerWeek}/주</span>
+                    <span className="text-terracotta font-bold ml-2">{course.pricePerWeek.toLocaleString()}원/주</span>
                   </div>
                 </div>
 
@@ -309,7 +309,7 @@ export default function AcademyDetailPage() {
                   <label className="text-sm font-semibold text-brown-dark mb-1.5 block">기숙사</label>
                   <div className="text-sm text-brown bg-beige rounded-[10px] px-4 py-3">
                     {dorm.type}
-                    <span className="text-terracotta font-bold ml-2">${dorm.pricePerWeek}/주</span>
+                    <span className="text-terracotta font-bold ml-2">{dorm.pricePerWeek.toLocaleString()}원/주</span>
                   </div>
                 </div>
 
@@ -333,18 +333,15 @@ export default function AcademyDetailPage() {
                 <div className="space-y-3 mb-4">
                   <div className="flex justify-between text-sm">
                     <span className="text-brown">학비 ({weeks}주)</span>
-                    <span className="font-bold text-brown-dark">${tuition.toLocaleString()}</span>
+                    <span className="font-bold text-brown-dark">{tuition.toLocaleString()}원</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-brown">기숙사 ({weeks}주)</span>
-                    <span className="font-bold text-brown-dark">${dormFee.toLocaleString()}</span>
+                    <span className="font-bold text-brown-dark">{dormFee.toLocaleString()}원</span>
                   </div>
                   <div className="border-t border-beige-dark pt-3 flex justify-between">
                     <span className="font-semibold text-terracotta">최종 금액</span>
-                    <span className="font-black text-terracotta text-xl">${total.toLocaleString()}</span>
-                  </div>
-                  <div className="text-right text-[0.75rem] text-brown">
-                    약 {Math.round(total * 1350 / 10000)}만원 (환율 1,350원 기준)
+                    <span className="font-black text-terracotta text-xl">{total.toLocaleString()}원</span>
                   </div>
                 </div>
 

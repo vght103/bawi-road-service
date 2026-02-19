@@ -212,7 +212,7 @@ export default function HomePage() {
                 region: "세부",
                 style: "스파르타",
                 desc: "세부 최대 규모 어학원. IELTS, TOEIC 공인시험 센터를 보유하고 있어 시험 준비에 최적화된 환경.",
-                price: "$1,350",
+                price: "2,000,000원",
                 rating: "4.5",
                 image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80",
               },
@@ -222,7 +222,7 @@ export default function HomePage() {
                 region: "세부",
                 style: "세미스파르타",
                 desc: "리조트형 캠퍼스로 수영장, 헬스장 등 시설이 뛰어남. ESL 과정이 강하며 쾌적한 학습 환경 제공.",
-                price: "$1,480",
+                price: "2,000,000원",
                 rating: "4.7",
                 image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80",
               },
@@ -232,7 +232,7 @@ export default function HomePage() {
                 region: "바기오",
                 style: "스파르타",
                 desc: "바기오의 명문 스파르타 어학원. 시원한 기후와 집중적인 커리큘럼으로 단기간 실력 향상에 최적.",
-                price: "$1,200",
+                price: "1,600,000원",
                 rating: "4.4",
                 image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80",
               },
@@ -258,9 +258,8 @@ export default function HomePage() {
                   <p className="mt-1.5 text-[0.82rem] text-brown leading-[1.5] line-clamp-2">{academy.desc}</p>
                   <div className="mt-4 flex justify-between items-center pt-4 border-t border-beige">
                     <div>
-                      <div className="text-[0.72rem] text-brown">4주 1인실 기준</div>
+                      <div className="text-[0.72rem] text-brown">4주 기준</div>
                       <span className="text-[1.15rem] font-extrabold text-terracotta">{academy.price}</span>
-                      <span className="text-[0.75rem] text-brown font-medium">/4주</span>
                     </div>
                     <div className="flex items-center gap-1 text-[0.85rem] font-semibold text-brown-dark">
                       <span className="text-gold">★</span> {academy.rating}

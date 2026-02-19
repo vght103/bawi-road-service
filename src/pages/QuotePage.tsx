@@ -691,10 +691,10 @@ export default function QuotePage() {
                       <div className="pt-4 border-t border-beige-dark">
                         <div className="text-[0.75rem] text-muted-foreground mb-1">참고 견적가</div>
                         <div className="font-bold text-brown-dark text-lg">
-                          ${((selectedCourse.pricePerWeek + selectedDorm.pricePerWeek) * weeksNum).toLocaleString()}
+                          {((selectedCourse.pricePerWeek + selectedDorm.pricePerWeek) * weeksNum).toLocaleString()}원
                         </div>
                         <div className="text-[0.68rem] text-muted-foreground mt-1">
-                          USD 기준 · 참고가이며, 정확한 할인 금액은 상담 후 안내드립니다.
+                          참고가이며, 정확한 할인 금액은 상담 후 안내드립니다.
                         </div>
                       </div>
                     )}

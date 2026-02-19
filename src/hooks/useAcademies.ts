@@ -14,10 +14,7 @@ export function useAcademies() {
     }
 
     async function fetchAcademies() {
-      const { data, error } = await supabase
-        .from("academies")
-        .select("*")
-        .order("id");
+      const { data, error } = await supabase.from("academies").select("*").order("id");
 
       if (!error && data && data.length > 0) {
         const mapped: Academy[] = data.map((row: Record<string, unknown>) => ({
@@ -26,7 +23,6 @@ export function useAcademies() {
           region: row.region as string,
           style: row.style as string,
           desc: row.desc as string,
-          price: row.price as string,
           rating: row.rating as string,
           tags: row.tags as string[],
           image: row.image as string,
