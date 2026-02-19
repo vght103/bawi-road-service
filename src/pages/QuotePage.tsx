@@ -22,6 +22,9 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { supabase, supabaseConfigured } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthContext";
+import type { QuoteLogInsert } from "@/types/quote";
 
 export default function QuotePage() {
   const [email, setEmail] = useState("");
@@ -36,6 +39,12 @@ export default function QuotePage() {
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [quoteCount, setQuoteCount] = useState<number | null>(null);
+  const [quoteLimitReached, setQuoteLimitReached] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const { user } = useAuth();
 
   const selectedAcademy = academies.find((a) => a.id === academyId);
 
@@ -63,12 +72,72 @@ export default function QuotePage() {
     return e;
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleEmailBlur() {
+    if (!supabaseConfigured || !validateEmail(email)) return;
+    const { data, error } = await supabase.rpc("get_quote_count", { p_email: email });
+    if (!error && typeof data === "number") {
+      setQuoteCount(data);
+      setQuoteLimitReached(data >= 3);
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const v = validate();
     setErrors(v);
+    setSubmitError(null);
     if (Object.keys(v).length > 0) return;
-    setSubmitted(true);
+
+    if (!supabaseConfigured) {
+      setSubmitted(true);
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      // Re-check quote count
+      const { data: countData } = await supabase.rpc("get_quote_count", { p_email: email });
+      const currentCount = typeof countData === "number" ? countData : 0;
+      if (currentCount >= 3) {
+        setQuoteCount(currentCount);
+        setQuoteLimitReached(true);
+        setSubmitting(false);
+        return;
+      }
+
+      const totalFee =
+        selectedCourse && selectedDorm
+          ? (selectedCourse.pricePerWeek + selectedDorm.pricePerWeek) * weeksNum
+          : null;
+
+      const payload: QuoteLogInsert = {
+        user_id: user?.id ?? null,
+        name,
+        email,
+        academy_id: academyId,
+        academy_name: selectedAcademy!.name,
+        course_name: selectedCourse!.name,
+        dormitory_type: selectedDorm!.type,
+        duration_weeks: weeksNum,
+        start_date: startDate ? startDate.toISOString().split("T")[0] : null,
+        total_fee: totalFee,
+        quote_count: currentCount + 1,
+      };
+
+      const { error } = await supabase.from("quote_logs").insert(payload);
+      if (error) {
+        setSubmitError("견적 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        setSubmitting(false);
+        return;
+      }
+
+      setQuoteCount(currentCount + 1);
+      setSubmitted(true);
+    } catch {
+      setSubmitError("네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const weeksNum = Number(weeks) || 0;
@@ -93,6 +162,47 @@ export default function QuotePage() {
         )
       : null;
 
+  if (quoteLimitReached && !submitted) {
+    return (
+      <div className="bg-cream min-h-screen">
+        <Navbar />
+        <div className="pt-[140px] pb-20 px-6">
+          <div className="max-w-[520px] mx-auto text-center">
+            <div className="bg-white rounded-[20px] p-10 border border-beige-dark shadow-lg">
+              <div className="w-16 h-16 bg-terracotta/10 rounded-full flex items-center justify-center mx-auto mb-5">
+                <span className="text-2xl">&#128274;</span>
+              </div>
+              <h2 className="text-[1.5rem] font-extrabold text-brown-dark mb-3">
+                견적 조회 3/3회를 모두 사용하셨습니다
+              </h2>
+              <p className="text-brown text-[0.9rem] leading-relaxed mb-6">
+                더 자세한 맞춤 상담을 받아보세요.
+                <br />
+                카카오톡으로 1:1 상담을 진행해드립니다.
+              </p>
+              <div className="flex gap-3 justify-center">
+                <Button variant="secondary" asChild>
+                  <Link to="/" className="no-underline">홈으로</Link>
+                </Button>
+                <Button asChild>
+                  <a
+                    href="https://pf.kakao.com/_placeholder"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="no-underline"
+                  >
+                    카카오톡 상담하기
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   if (submitted) {
     return (
       <div className="bg-cream min-h-screen">
@@ -111,9 +221,23 @@ export default function QuotePage() {
                 <br />
                 견적서를 보내드리겠습니다.
               </p>
-              <p className="text-brown-light text-[0.82rem] mb-8">
+              <p className="text-brown-light text-[0.82rem] mb-4">
                 보통 1~2 영업일 이내에 회신드립니다.
               </p>
+              {quoteCount !== null && (
+                <div className="mb-6">
+                  <div className="inline-flex items-center gap-2 bg-cream border border-beige-dark rounded-full px-4 py-2 text-[0.82rem]">
+                    <span className="text-brown">견적 조회</span>
+                    <span className="font-bold text-brown-dark">{quoteCount}/3</span>
+                    <span className="text-brown">회 사용</span>
+                  </div>
+                  {quoteCount >= 3 && (
+                    <p className="text-terracotta text-[0.75rem] mt-2">
+                      다음부터는 카카오톡 상담을 이용해주세요.
+                    </p>
+                  )}
+                </div>
+              )}
               <div className="flex gap-3 justify-center">
                 <Button variant="secondary" asChild>
                   <Link to="/" className="no-underline">홈으로</Link>
@@ -199,12 +323,18 @@ export default function QuotePage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    onBlur={handleEmailBlur}
                     placeholder="example@email.com"
                     aria-invalid={!!errors.email}
                     className="h-11 rounded-[10px]"
                   />
                   {errors.email && (
                     <p className="text-terracotta text-[0.75rem]">{errors.email}</p>
+                  )}
+                  {quoteLimitReached && (
+                    <p className="text-terracotta text-[0.75rem]">
+                      무료 견적 조회 3회를 모두 사용하셨습니다. 카카오톡 상담을 이용해주세요.
+                    </p>
                   )}
                 </div>
 
@@ -472,9 +602,17 @@ export default function QuotePage() {
                 </div>
 
                 {/* Submit */}
-                <Button type="submit" size="lg" className="w-full h-12 text-base rounded-[10px]">
-                  견적서 요청하기
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full h-12 text-base rounded-[10px]"
+                  disabled={submitting || quoteLimitReached}
+                >
+                  {submitting ? "요청 중..." : quoteLimitReached ? "견적 조회 한도 초과" : "견적서 요청하기"}
                 </Button>
+                {submitError && (
+                  <p className="text-terracotta text-[0.8rem] text-center">{submitError}</p>
+                )}
               </form>
             </div>
           </div>
@@ -537,6 +675,18 @@ export default function QuotePage() {
                       <div>
                         <div className="text-[0.75rem] text-muted-foreground mb-1">기숙사</div>
                         <div className="font-bold text-brown-dark">{selectedDorm.type}</div>
+                      </div>
+                    )}
+
+                    {selectedCourse && selectedDorm && weeksNum > 0 && (
+                      <div className="pt-4 border-t border-beige-dark">
+                        <div className="text-[0.75rem] text-muted-foreground mb-1">참고 견적가</div>
+                        <div className="font-bold text-brown-dark text-lg">
+                          ${((selectedCourse.pricePerWeek + selectedDorm.pricePerWeek) * weeksNum).toLocaleString()}
+                        </div>
+                        <div className="text-[0.68rem] text-muted-foreground mt-1">
+                          USD 기준 · 참고가이며, 정확한 할인 금액은 상담 후 안내드립니다.
+                        </div>
                       </div>
                     )}
                   </div>
