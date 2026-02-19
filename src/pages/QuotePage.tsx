@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { CalendarIcon, CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { academies } from "@/data/academies";
+import { useAcademies } from "@/hooks/useAcademies";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,6 +45,7 @@ export default function QuotePage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const { user } = useAuth();
+  const { academies, loading: academiesLoading } = useAcademies();
 
   const selectedAcademy = academies.find((a) => a.id === academyId);
 
@@ -155,6 +156,20 @@ export default function QuotePage() {
           startDate.getDate() + weeksNum * 7,
         )
       : null;
+
+  if (academiesLoading) {
+    return (
+      <div className="bg-cream min-h-screen">
+        <Navbar />
+        <div className="pt-[140px] pb-20 px-6">
+          <div className="max-w-[520px] mx-auto text-center">
+            <p className="text-brown text-[0.9rem]">어학원 정보를 불러오는 중...</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (quoteLimitReached && !submitted) {
     return (
