@@ -80,11 +80,6 @@ export default function HomePage() {
           className="relative flex justify-center items-center animate-fade-in-up order-first md:order-last"
           style={{ animationDelay: "0.2s" }}
         >
-          {/* Floating badge top-left */}
-          <div className="absolute -top-5 -left-[30px] bg-white rounded-xl px-4 py-2.5 shadow-md text-[0.8rem] font-semibold items-center gap-2 border border-beige-dark animate-float hidden md:flex z-10">
-            1:1 수업 하루 4시간
-          </div>
-
           <div className="bg-white rounded-[20px] p-6 md:p-8 shadow-lg w-full max-w-[440px] border border-beige-dark relative overflow-hidden flex flex-col">
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-terracotta to-accent-green" />
             <div className="flex items-center gap-3 mb-5">
@@ -134,13 +129,6 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Floating badge bottom-right */}
-          <div
-            className="absolute -bottom-4 -right-[25px] bg-white rounded-xl px-4 py-2.5 shadow-md text-[0.8rem] font-semibold items-center gap-2 border border-beige-dark animate-float hidden md:flex z-10"
-            style={{ animationDelay: "1.5s" }}
-          >
-            세부 직항 4시간
-          </div>
         </div>
       </section>
 
