@@ -85,40 +85,52 @@ export default function HomePage() {
             1:1 수업 하루 4시간
           </div>
 
-          <div className="bg-white rounded-[20px] p-6 md:p-8 shadow-lg w-full max-w-[440px] border border-beige-dark relative overflow-hidden">
+          <div className="bg-white rounded-[20px] p-6 md:p-8 shadow-lg w-full max-w-[440px] border border-beige-dark relative overflow-hidden flex flex-col">
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-terracotta to-accent-green" />
             <div className="flex items-center gap-3 mb-5">
-              <div className="w-12 h-12 rounded-full bg-terracotta/10 flex items-center justify-center shrink-0">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-terracotta">
-                  <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                  <rect x="9" y="3" width="6" height="4" rx="1" />
+              <div className="w-12 h-12 rounded-full bg-accent-green-light flex items-center justify-center shrink-0">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent-green">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
               </div>
               <div>
-                <div className="font-bold text-[0.95rem]">나의 견적서</div>
-                <div className="text-[0.8rem] text-brown">SMEAG Capital &middot; ESL General</div>
+                <div className="font-bold text-[0.95rem]">AI 상담 어시스턴트</div>
+                <div className="text-[0.8rem] text-brown">어학연수 궁금한 점을 물어보세요</div>
               </div>
             </div>
-            <div className="flex flex-col gap-3.5">
-              <div className="flex justify-between items-center px-4 py-3 bg-beige rounded-[10px] text-[0.9rem]">
-                <span className="text-brown font-medium">코스 (8주)</span>
-                <span className="font-bold text-brown-dark">$1,200</span>
+
+            <div className="flex flex-col gap-3 flex-1 mb-4">
+              <div className="flex gap-2.5 items-end">
+                <div className="w-7 h-7 rounded-full bg-accent-green-light flex items-center justify-center shrink-0 text-[0.7rem] font-bold text-accent-green">AI</div>
+                <div className="bg-beige rounded-[14px] rounded-bl-[4px] px-4 py-3 text-[0.85rem] text-brown-dark leading-[1.6] max-w-[85%]">
+                  안녕하세요! 필리핀 어학연수에 대해 궁금한 점이 있으시면 편하게 물어보세요 😊
+                </div>
               </div>
-              <div className="flex justify-between items-center px-4 py-3 bg-beige rounded-[10px] text-[0.9rem]">
-                <span className="text-brown font-medium">기숙사 2인실 (8주)</span>
-                <span className="font-bold text-brown-dark">$960</span>
+              <div className="flex gap-2.5 items-end justify-end">
+                <div className="bg-terracotta text-white rounded-[14px] rounded-br-[4px] px-4 py-3 text-[0.85rem] leading-[1.6] max-w-[85%]">
+                  세부 어학원 추천해주세요!
+                </div>
               </div>
-              <div className="flex justify-between items-center px-4 py-3 bg-beige rounded-[10px] text-[0.9rem]">
-                <span className="text-brown font-medium">할인 (5%)</span>
-                <span className="font-bold text-accent-green">-$108</span>
+              <div className="flex gap-2.5 items-end">
+                <div className="w-7 h-7 rounded-full bg-accent-green-light flex items-center justify-center shrink-0 text-[0.7rem] font-bold text-accent-green">AI</div>
+                <div className="bg-beige rounded-[14px] rounded-bl-[4px] px-4 py-3 text-[0.85rem] text-brown-dark leading-[1.6] max-w-[85%]">
+                  세부 지역에서 인기 있는 어학원을 알려드릴게요! 스파르타 vs 세미스파르타 중 어떤 스타일을 선호하시나요?
+                </div>
               </div>
-              <div className="flex justify-between items-center px-4 py-4 bg-terracotta-light rounded-[10px] mt-1">
-                <span className="font-semibold text-terracotta text-[0.95rem]">최종 금액</span>
-                <span className="font-black text-terracotta text-[1.3rem]">$2,052</span>
-              </div>
-              <Link to="/quote" className="mt-2 w-full py-3.5 bg-terracotta text-white rounded-[10px] text-[0.95rem] font-bold hover:bg-terracotta-hover transition-colors cursor-pointer border-none block text-center no-underline">
-                견적서 이메일로 받기
-              </Link>
+            </div>
+
+            <div className="flex items-center gap-2 bg-beige rounded-[12px] px-4 py-3 border border-beige-dark">
+              <input
+                type="text"
+                placeholder="어학연수에 대해 물어보세요..."
+                className="flex-1 bg-transparent text-[0.85rem] focus:outline-none placeholder:text-brown-light border-none"
+                disabled
+              />
+              <button className="w-8 h-8 rounded-full bg-terracotta flex items-center justify-center shrink-0" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+                  <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                </svg>
+              </button>
             </div>
           </div>
 
@@ -212,8 +224,6 @@ export default function HomePage() {
                 region: "세부",
                 style: "스파르타",
                 desc: "세부 최대 규모 어학원. IELTS, TOEIC 공인시험 센터를 보유하고 있어 시험 준비에 최적화된 환경.",
-                price: "2,000,000원",
-                rating: "4.5",
                 image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80",
               },
               {
@@ -222,8 +232,6 @@ export default function HomePage() {
                 region: "세부",
                 style: "세미스파르타",
                 desc: "리조트형 캠퍼스로 수영장, 헬스장 등 시설이 뛰어남. ESL 과정이 강하며 쾌적한 학습 환경 제공.",
-                price: "2,000,000원",
-                rating: "4.7",
                 image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80",
               },
               {
@@ -232,8 +240,6 @@ export default function HomePage() {
                 region: "바기오",
                 style: "스파르타",
                 desc: "바기오의 명문 스파르타 어학원. 시원한 기후와 집중적인 커리큘럼으로 단기간 실력 향상에 최적.",
-                price: "1,600,000원",
-                rating: "4.4",
                 image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80",
               },
             ].map((academy) => (
@@ -256,15 +262,6 @@ export default function HomePage() {
                 <div className="p-5">
                   <div className="text-[1.1rem] font-bold text-brown-dark">{academy.name}</div>
                   <p className="mt-1.5 text-[0.82rem] text-brown leading-[1.5] line-clamp-2">{academy.desc}</p>
-                  <div className="mt-4 flex justify-between items-center pt-4 border-t border-beige">
-                    <div>
-                      <div className="text-[0.72rem] text-brown">4주 기준</div>
-                      <span className="text-[1.15rem] font-extrabold text-terracotta">{academy.price}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-[0.85rem] font-semibold text-brown-dark">
-                      <span className="text-gold">★</span> {academy.rating}
-                    </div>
-                  </div>
                 </div>
               </Link>
             ))}

@@ -17,6 +17,14 @@
 - Supabase 연동 타입/필드는 DB와 동일하게 **snake_case** 사용 (`academy_name`, `duration_weeks`)
 - 변환 레이어 없이 Supabase 응답을 그대로 사용
 
+## Code Style
+
+- 콜백 변수명에 한 글자 약어 금지. 의미가 명확한 이름 사용할 것
+  - `academies.map(a => ...)` → `academies.map(academy => ...)`
+  - `courses.filter(c => ...)` → `courses.filter(course => ...)`
+  - `errors.forEach(e => ...)` → `errors.forEach(error => ...)`
+- 예외: `index`의 `i`, 좌표의 `x`/`y` 등 관례적으로 통용되는 경우는 허용
+
 ## Data (상수) 구조
 
 - `src/data/{page}/` 폴더에 페이지별 상수 데이터 관리
