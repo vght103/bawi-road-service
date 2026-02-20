@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { EyeIcon, EyeOffIcon, CheckCircleIcon } from "lucide-react";
+import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -98,7 +99,9 @@ export default function SignupPage() {
 
   if (success) {
     return (
-      <div className="flex min-h-dvh items-center justify-center bg-cream px-4">
+      <div className="min-h-dvh bg-cream">
+        <Navbar />
+        <div className="flex items-center justify-center px-4 pt-28">
         <div className="w-full max-w-md text-center">
           <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-accent-green-light">
             <CheckCircleIcon className="h-8 w-8 text-accent-green" />
@@ -118,12 +121,15 @@ export default function SignupPage() {
             로그인 페이지로 이동
           </Button>
         </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-cream px-4 py-12">
+    <div className="min-h-dvh bg-cream">
+      <Navbar />
+      <div className="flex items-center justify-center px-4 py-12 pt-28">
       <div className="flex w-full max-w-[1000px] overflow-hidden rounded-2xl bg-white shadow-lg border border-beige-dark">
       {/* Left: Form */}
       <div className="flex w-full lg:w-1/2 items-center justify-center px-6 sm:px-10 py-12">
@@ -352,6 +358,7 @@ export default function SignupPage() {
             바위로드와 함께 필리핀 어학연수를 준비하세요
           </p>
         </div>
+      </div>
       </div>
       </div>
     </div>
