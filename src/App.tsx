@@ -1,14 +1,14 @@
 import { Routes, Route } from "react-router-dom";
-import HomePage from "@/pages/HomePage";
-import AcademySearchPage from "@/pages/AcademySearchPage";
-import AcademyDetailPage from "@/pages/AcademyDetailPage";
-import WhyPhilippinesPage from "@/pages/WhyPhilippinesPage";
-import ProcessPage from "@/pages/ProcessPage";
-import VisaInfoPage from "@/pages/VisaInfoPage";
-import QuotePage from "@/pages/QuotePage";
-import SignupPage from "@/pages/SignupPage";
-import LoginPage from "@/pages/LoginPage";
-import MyPage from "@/pages/MyPage";
+import HomePage from "@/pages/home/HomePage";
+import AcademySearchPage from "@/pages/academy/AcademySearchPage";
+import AcademyDetailPage from "@/pages/academy/AcademyDetailPage";
+import WhyPhilippinesPage from "@/pages/why-philippines/WhyPhilippinesPage";
+import ProcessPage from "@/pages/process/ProcessPage";
+import VisaInfoPage from "@/pages/visa-info/VisaInfoPage";
+import QuotePage from "@/pages/quote/QuotePage";
+import SignupPage from "@/pages/auth/SignupPage";
+import LoginPage from "@/pages/auth/LoginPage";
+import MyPage from "@/pages/my/MyPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 function App() {
