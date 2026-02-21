@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
+import { useProfile } from "@/hooks/useProfile";
 import { useEnrollments } from "@/hooks/useEnrollments";
 import { STATUS_CONFIG } from "@/data/enrollment/status";
 import { cn } from "@/lib/utils";
@@ -18,7 +19,8 @@ function validatePassword(pw: string) {
 
 export default function MyPage() {
   const navigate = useNavigate();
-  const { user, profile, signOut, changePassword, deleteAccount } = useAuth();
+  const { user, signOut, changePassword, deleteAccount } = useAuth();
+  const { profile } = useProfile();
   const { enrollments, loading: enrollmentsLoading } = useEnrollments(user?.id);
 
   // 비밀번호 변경

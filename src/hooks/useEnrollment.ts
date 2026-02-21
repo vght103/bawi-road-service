@@ -1,42 +1,36 @@
-import { useState, useEffect } from "react";
-import type { Enrollment } from "@/types/enrollment";
-import type { EnrollmentDocument } from "@/types/enrollment";
+import { useQuery } from "@tanstack/react-query";
+import type { Enrollment, EnrollmentDocument } from "@/types/enrollment";
 import { fetchEnrollment } from "@/api/enrollment/enrollments";
 import { fetchDocuments } from "@/api/enrollment/documents";
 
 export function useEnrollment(id: string | undefined) {
-  const [enrollment, setEnrollment] = useState<Enrollment | null>(null);
-  const [documents, setDocuments] = useState<EnrollmentDocument[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!id) {
-      setLoading(false);
-      return;
-    }
-
-    async function load() {
-      setLoading(true);
-
+  const {
+    data,
+    isLoading: loading,
+    error: queryError,
+  } = useQuery({
+    queryKey: ["enrollment", id],
+    queryFn: async () => {
       const enrollmentResult = await fetchEnrollment(id!);
-      if (enrollmentResult.error) {
-        setError(enrollmentResult.error);
-        setLoading(false);
-        return;
-      }
-      setEnrollment(enrollmentResult.data);
+      if (enrollmentResult.error) throw new Error(enrollmentResult.error);
 
+      let documents: EnrollmentDocument[] = [];
       if (enrollmentResult.data) {
         const docsResult = await fetchDocuments(id!);
-        setDocuments(docsResult.data);
+        documents = docsResult.data;
       }
 
-      setLoading(false);
-    }
+      return {
+        enrollment: enrollmentResult.data,
+        documents,
+      };
+    },
+    enabled: !!id,
+  });
 
-    load();
-  }, [id]);
+  const enrollment: Enrollment | null = data?.enrollment ?? null;
+  const documents: EnrollmentDocument[] = data?.documents ?? [];
+  const error = queryError instanceof Error ? queryError.message : null;
 
   return { enrollment, documents, loading, error };
 }

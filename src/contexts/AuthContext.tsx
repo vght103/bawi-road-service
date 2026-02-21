@@ -3,10 +3,10 @@ import {
   useContext,
   useEffect,
   useState,
-  useCallback,
   type ReactNode,
 } from "react";
 import type { User, Session } from "@supabase/supabase-js";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
 
 export type UserRole = "ADMIN" | "STUDENT";
@@ -20,7 +20,6 @@ export interface Profile {
 
 interface AuthContextType {
   user: User | null;
-  profile: Profile | null;
   session: Session | null;
   loading: boolean;
   signUp: (
@@ -41,18 +40,9 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const fetchProfile = useCallback(async (userId: string) => {
-    const { data } = await supabase
-      .from("profiles")
-      .select("id, name, phone, role")
-      .eq("id", userId)
-      .single();
-    setProfile(data as Profile | null);
-  }, []);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!supabaseConfigured) {
@@ -63,11 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchProfile(session.user.id).finally(() => setLoading(false));
-      } else {
-        setLoading(false);
-      }
+      setLoading(false);
     });
 
     const {
@@ -76,14 +62,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        fetchProfile(session.user.id);
+        queryClient.invalidateQueries({ queryKey: ["profile", session.user.id] });
       } else {
-        setProfile(null);
+        queryClient.removeQueries({ queryKey: ["profile"] });
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [fetchProfile]);
+  }, [queryClient]);
 
   async function signUp(
     email: string,
@@ -121,7 +107,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function signOut() {
     await supabase.auth.signOut();
-    setProfile(null);
+    queryClient.removeQueries({ queryKey: ["profile"] });
   }
 
   async function changePassword(newPassword: string) {
@@ -139,13 +125,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { error } = await supabase.rpc("delete_own_account");
     if (error) return { error: error.message };
     await supabase.auth.signOut();
-    setProfile(null);
+    queryClient.removeQueries({ queryKey: ["profile"] });
     return { error: null };
   }
 
   return (
     <AuthContext.Provider
-      value={{ user, profile, session, loading, signUp, signIn, signOut, changePassword, deleteAccount }}
+      value={{ user, session, loading, signUp, signIn, signOut, changePassword, deleteAccount }}
     >
       {children}
     </AuthContext.Provider>
