@@ -110,6 +110,9 @@ export default function Navbar() {
           >
             후기
           </a>
+          <Link to="/enrollment/apply" className={linkClass}>
+            수속 신청
+          </Link>
           <Link
             to="/quote"
             className="bg-terracotta text-white! px-5 py-2 rounded-lg font-semibold text-[0.85rem] hover:bg-terracotta-hover hover:-translate-y-0.5 transition-all no-underline"
@@ -268,6 +271,13 @@ export default function Navbar() {
           >
             후기
           </a>
+          <Link
+            to="/enrollment/apply"
+            className="block text-brown-dark font-medium py-2 no-underline"
+            onClick={() => setMobileOpen(false)}
+          >
+            수속 신청
+          </Link>
           <Link
             to="/quote"
             className="block w-full text-center bg-terracotta text-white py-3 rounded-lg font-semibold no-underline mt-2"

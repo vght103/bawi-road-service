@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
+import { useEnrollments } from "@/hooks/useEnrollments";
+import { STATUS_CONFIG } from "@/data/enrollment/status";
+import { cn } from "@/lib/utils";
 
 function validatePassword(pw: string) {
   const errors: string[] = [];
@@ -16,6 +19,7 @@ function validatePassword(pw: string) {
 export default function MyPage() {
   const navigate = useNavigate();
   const { user, profile, signOut, changePassword, deleteAccount } = useAuth();
+  const { enrollments, loading: enrollmentsLoading } = useEnrollments(user?.id);
 
   // 비밀번호 변경
   const [newPassword, setNewPassword] = useState("");
@@ -125,6 +129,61 @@ export default function MyPage() {
           >
             로그아웃
           </Button>
+        </section>
+
+        {/* 내 수속 */}
+        <section className="mb-8 rounded-2xl border border-beige-dark bg-white p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-brown-text">내 수속</h2>
+            <Button asChild size="sm" variant="outline" className="text-xs">
+              <Link to="/enrollment/apply" className="no-underline">새 수속 신청</Link>
+            </Button>
+          </div>
+
+          {enrollmentsLoading ? (
+            <p className="text-sm text-brown">불러오는 중...</p>
+          ) : enrollments.length === 0 ? (
+            <div className="text-center py-6">
+              <p className="text-sm text-muted-foreground mb-3">아직 수속 신청 내역이 없습니다.</p>
+              <Button asChild size="sm">
+                <Link to="/enrollment/apply" className="no-underline">수속 신청하기</Link>
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {enrollments.map((enrollment) => {
+                const statusConfig = STATUS_CONFIG[enrollment.status];
+                return (
+                  <Link
+                    key={enrollment.id}
+                    to={`/enrollment/${enrollment.id}`}
+                    className="block p-4 rounded-xl border border-beige-dark hover:border-brown/30 transition-colors no-underline"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-semibold text-brown-dark text-sm">
+                        {enrollment.academy_name}
+                      </span>
+                      <span
+                        className={cn(
+                          "px-2 py-0.5 rounded-full text-[0.7rem] font-medium border",
+                          statusConfig.bgColor,
+                          statusConfig.color
+                        )}
+                      >
+                        {statusConfig.label}
+                      </span>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {enrollment.course_name} · {enrollment.dormitory_type} · {enrollment.duration_weeks}주
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {new Date(enrollment.start_date).toLocaleDateString("ko-KR")} 시작
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </section>
 
         {/* 비밀번호 변경 */}

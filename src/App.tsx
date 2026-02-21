@@ -9,6 +9,8 @@ import QuotePage from "@/pages/quote/QuotePage";
 import SignupPage from "@/pages/auth/SignupPage";
 import LoginPage from "@/pages/auth/LoginPage";
 import MyPage from "@/pages/my/MyPage";
+import EnrollmentApplyPage from "@/pages/enrollment/EnrollmentApplyPage";
+import EnrollmentDetailPage from "@/pages/enrollment/EnrollmentDetailPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/my" element={<ProtectedRoute><MyPage /></ProtectedRoute>} />
+      <Route path="/enrollment/apply" element={<ProtectedRoute><EnrollmentApplyPage /></ProtectedRoute>} />
+      <Route path="/enrollment/:id" element={<ProtectedRoute><EnrollmentDetailPage /></ProtectedRoute>} />
       {/* backward compat */}
       <Route path="/search" element={<AcademySearchPage />} />
     </Routes>
