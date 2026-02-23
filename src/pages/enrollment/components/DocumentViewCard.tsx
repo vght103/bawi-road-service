@@ -1,5 +1,10 @@
-import { FileTextIcon, DownloadIcon } from "lucide-react";
+import { useState } from "react";
+import { FileTextIcon, DownloadIcon, EyeIcon, LoaderIcon } from "lucide-react";
 import type { EnrollmentDocument } from "@/types/enrollment";
+import { useDocumentViewUrl } from "@/hooks/useEnrollment";
+import ImagePreviewModal from "./ImagePreviewModal";
+
+const IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 interface DocumentViewCardProps {
   title: string;
@@ -18,28 +23,83 @@ export default function DocumentViewCard({
   description,
   document,
 }: DocumentViewCardProps) {
+  const viewUrlMutation = useDocumentViewUrl();
+  const [viewError, setViewError] = useState<string | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const isImage = document && IMAGE_MIME_TYPES.includes(document.mime_type);
+
+  async function handleView() {
+    if (!document) return;
+    setViewError(null);
+
+    try {
+      const viewUrl = await viewUrlMutation.mutateAsync(document.file_url);
+
+      if (isImage) {
+        setPreviewUrl(viewUrl);
+        setPreviewOpen(true);
+      } else {
+        window.open(viewUrl, "_blank", "noopener,noreferrer");
+      }
+    } catch (error) {
+      setViewError(
+        error instanceof Error ? error.message : "문서를 열 수 없습니다."
+      );
+    }
+  }
+
   return (
     <div className="rounded-[10px] border border-beige-dark bg-white p-5">
       <h4 className="font-semibold text-brown-dark text-sm mb-1">{title}</h4>
       <p className="text-xs text-muted-foreground mb-3">{description}</p>
 
       {document ? (
-        <div className="flex items-center gap-3 p-3 rounded-[10px] border border-beige-dark bg-beige/30">
-          <FileTextIcon className="w-5 h-5 text-brown shrink-0" />
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-brown-dark truncate">{document.file_name}</p>
-            <p className="text-xs text-muted-foreground">
-              {formatFileSize(document.file_size)} · {new Date(document.created_at).toLocaleDateString("ko-KR")}
-            </p>
-          </div>
-          <a
-            href={document.file_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full hover:bg-beige transition-colors"
+        <div className="space-y-2">
+          <div
+            className={`flex items-center gap-3 p-3 rounded-[10px] border border-beige-dark bg-beige/30 ${
+              isImage ? "cursor-pointer hover:bg-beige/50 transition-colors" : ""
+            }`}
+            onClick={isImage ? handleView : undefined}
           >
-            <DownloadIcon className="w-4 h-4 text-brown" />
-          </a>
+            <FileTextIcon className="w-5 h-5 text-brown shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-brown-dark truncate">{document.file_name}</p>
+              <p className="text-xs text-muted-foreground">
+                {formatFileSize(document.file_size)} · {new Date(document.created_at).toLocaleDateString("ko-KR")}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleView();
+              }}
+              disabled={viewUrlMutation.isPending}
+              className="p-2 rounded-full hover:bg-beige transition-colors disabled:opacity-50"
+            >
+              {viewUrlMutation.isPending ? (
+                <LoaderIcon className="w-4 h-4 text-brown animate-spin" />
+              ) : isImage ? (
+                <EyeIcon className="w-4 h-4 text-brown" />
+              ) : (
+                <DownloadIcon className="w-4 h-4 text-brown" />
+              )}
+            </button>
+          </div>
+          {viewError && (
+            <p className="text-terracotta text-xs">{viewError}</p>
+          )}
+
+          {isImage && (
+            <ImagePreviewModal
+              open={previewOpen}
+              onOpenChange={setPreviewOpen}
+              imageUrl={previewUrl}
+              fileName={document.file_name}
+            />
+          )}
         </div>
       ) : (
         <div className="p-4 rounded-[10px] border border-dashed border-beige-dark text-center">

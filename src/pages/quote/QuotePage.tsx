@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { CalendarIcon, CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useAcademies } from "@/hooks/useAcademies";
+import { fetchAcademies } from "@/api/academy/academies";
+import { academies as fallbackAcademies } from "@/data/academies";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,7 +45,11 @@ export default function QuotePage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const { user } = useAuth();
-  const { academies, loading: academiesLoading } = useAcademies();
+  const { data: academies = fallbackAcademies, isLoading: academiesLoading } = useQuery({
+    queryKey: ["academies"],
+    queryFn: fetchAcademies,
+    placeholderData: fallbackAcademies,
+  });
 
   const selectedAcademy = academies.find((a) => a.id === academyId);
 

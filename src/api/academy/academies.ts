@@ -1,9 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
 import { academies as fallbackAcademies } from "@/data/academies";
 import type { Academy } from "@/data/academies";
 
-async function fetchAcademies(): Promise<Academy[]> {
+export async function fetchAcademies(): Promise<Academy[]> {
   if (!supabaseConfigured) return fallbackAcademies;
 
   const { data, error } = await supabase.from("academies").select("*").order("id");
@@ -22,14 +21,4 @@ async function fetchAcademies(): Promise<Academy[]> {
     courses: row.courses as Academy["courses"],
     dormitories: row.dormitories as Academy["dormitories"],
   }));
-}
-
-export function useAcademies() {
-  const { data: academies = fallbackAcademies, isLoading: loading } = useQuery({
-    queryKey: ["academies"],
-    queryFn: fetchAcademies,
-    placeholderData: fallbackAcademies,
-  });
-
-  return { academies, loading };
 }

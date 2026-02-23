@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
-import { useEnrollments } from "@/hooks/useEnrollments";
+import { fetchMyEnrollments } from "@/api/enrollment/enrollments";
+import type { Enrollment } from "@/types/enrollment";
 import { STATUS_CONFIG } from "@/data/enrollment/status";
 import { cn } from "@/lib/utils";
 
@@ -21,7 +23,15 @@ export default function MyPage() {
   const navigate = useNavigate();
   const { user, signOut, changePassword, deleteAccount } = useAuth();
   const { profile } = useProfile();
-  const { enrollments, loading: enrollmentsLoading } = useEnrollments(user?.id);
+  const { data: enrollments = [] as Enrollment[], isLoading: enrollmentsLoading } = useQuery({
+    queryKey: ["enrollments", user?.id],
+    queryFn: async () => {
+      const result = await fetchMyEnrollments(user!.id);
+      if (result.error) throw new Error(result.error);
+      return result.data;
+    },
+    enabled: !!user,
+  });
 
   // 비밀번호 변경
   const [newPassword, setNewPassword] = useState("");

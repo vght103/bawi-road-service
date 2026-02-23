@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { CheckIcon, CalendarIcon } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useAcademies } from "@/hooks/useAcademies";
+import { fetchAcademies } from "@/api/academy/academies";
+import { academies as fallbackAcademies } from "@/data/academies";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { createEnrollment } from "@/api/enrollment/enrollments";
@@ -21,7 +23,11 @@ const STEPS = [
 
 export default function EnrollmentApplyPage() {
   const { user } = useAuth();
-  const { academies, loading: academiesLoading } = useAcademies();
+  const { data: academies = fallbackAcademies, isLoading: academiesLoading } = useQuery({
+    queryKey: ["academies"],
+    queryFn: fetchAcademies,
+    placeholderData: fallbackAcademies,
+  });
 
   const [currentStep, setCurrentStep] = useState(0);
 

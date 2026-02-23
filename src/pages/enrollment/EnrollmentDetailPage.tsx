@@ -13,8 +13,8 @@ export default function EnrollmentDetailPage() {
   const { user } = useAuth();
   const { enrollment, documents, loading, error } = useEnrollment(id);
 
-  const admissionDoc = documents.find((doc) => doc.document_type === "ADMISSION_LETTER");
-  const invoiceDoc = documents.find((doc) => doc.document_type === "INVOICE");
+  const admissionDoc = documents.find((document) => document.document_type === "ADMISSION_LETTER");
+  const invoiceDoc = documents.find((document) => document.document_type === "INVOICE");
 
   if (!user) {
     return (
@@ -159,18 +159,24 @@ export default function EnrollmentDetailPage() {
         <section className="bg-white rounded-[20px] p-6 md:p-8 border border-beige-dark">
           <h2 className="font-bold text-brown-dark text-lg mb-2">서류 업로드</h2>
           <p className="text-sm text-muted-foreground mb-5">
-            수속에 필요한 서류를 업로드해주세요. (현재 UI 미리보기 - 실제 저장은 추후 연동)
+            수속에 필요한 서류를 업로드해주세요.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <DocumentUploadCard
               title="항공권"
               description="e-티켓 또는 항공권 예약 확인서"
               accept=".pdf,.jpg,.jpeg,.png"
+              enrollmentId={enrollment.id}
+              documentType="FLIGHT_TICKET"
+              existingDocument={documents.find((document) => document.document_type === "FLIGHT_TICKET")}
             />
             <DocumentUploadCard
               title="여행자 보험"
               description="해외여행자 보험 가입 확인서"
               accept=".pdf,.jpg,.jpeg,.png"
+              enrollmentId={enrollment.id}
+              documentType="TRAVEL_INSURANCE"
+              existingDocument={documents.find((document) => document.document_type === "TRAVEL_INSURANCE")}
             />
           </div>
         </section>

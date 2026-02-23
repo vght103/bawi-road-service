@@ -95,9 +95,9 @@ CREATE POLICY "Admins can view all enrollments"
   ON enrollments FOR SELECT
   USING (
     EXISTS (
-      SELECT 1 FROM profiles
-      WHERE profiles.id = auth.uid()
-      AND profiles.role = 'ADMIN'
+      SELECT 1 FROM members
+      WHERE members.id = auth.uid()
+      AND members.role = 'ADMIN'
     )
   );
 
@@ -105,9 +105,9 @@ CREATE POLICY "Admins can update all enrollments"
   ON enrollments FOR UPDATE
   USING (
     EXISTS (
-      SELECT 1 FROM profiles
-      WHERE profiles.id = auth.uid()
-      AND profiles.role = 'ADMIN'
+      SELECT 1 FROM members
+      WHERE members.id = auth.uid()
+      AND members.role = 'ADMIN'
     )
   );
 
@@ -138,9 +138,9 @@ CREATE POLICY "Admins can view all documents"
   ON enrollment_documents FOR SELECT
   USING (
     EXISTS (
-      SELECT 1 FROM profiles
-      WHERE profiles.id = auth.uid()
-      AND profiles.role = 'ADMIN'
+      SELECT 1 FROM members
+      WHERE members.id = auth.uid()
+      AND members.role = 'ADMIN'
     )
   );
 
@@ -148,9 +148,9 @@ CREATE POLICY "Admins can upload all documents"
   ON enrollment_documents FOR INSERT
   WITH CHECK (
     EXISTS (
-      SELECT 1 FROM profiles
-      WHERE profiles.id = auth.uid()
-      AND profiles.role = 'ADMIN'
+      SELECT 1 FROM members
+      WHERE members.id = auth.uid()
+      AND members.role = 'ADMIN'
     )
   );
 

@@ -9,6 +9,7 @@ interface FileUploadProps {
   onFileSelect?: (file: File) => void;
   onFileRemove?: () => void;
   disabled?: boolean;
+  uploading?: boolean;
   className?: string;
 }
 
@@ -19,6 +20,7 @@ export default function FileUpload({
   onFileSelect,
   onFileRemove,
   disabled = false,
+  uploading = false,
   className,
 }: FileUploadProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -68,29 +70,35 @@ export default function FileUpload({
 
       {selectedFile ? (
         <div className="flex items-center gap-3 p-3 rounded-[10px] border border-beige-dark bg-white">
-          <FileIcon className="w-5 h-5 text-brown shrink-0" />
+          {uploading ? (
+            <div className="w-5 h-5 border-2 border-brown/30 border-t-brown rounded-full animate-spin shrink-0" />
+          ) : (
+            <FileIcon className="w-5 h-5 text-brown shrink-0" />
+          )}
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-brown-dark truncate">
               {selectedFile.name}
             </p>
             <p className="text-xs text-muted-foreground">
-              {formatFileSize(selectedFile.size)}
+              {uploading ? "업로드 중..." : formatFileSize(selectedFile.size)}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={handleRemove}
-            className="p-1 rounded-full hover:bg-beige transition-colors"
-            disabled={disabled}
-          >
-            <XIcon className="w-4 h-4 text-brown" />
-          </button>
+          {!uploading && (
+            <button
+              type="button"
+              onClick={handleRemove}
+              className="p-1 rounded-full hover:bg-beige transition-colors"
+              disabled={disabled}
+            >
+              <XIcon className="w-4 h-4 text-brown" />
+            </button>
+          )}
         </div>
       ) : (
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          disabled={disabled}
+          disabled={disabled || uploading}
           className={cn(
             "w-full p-6 rounded-[10px] border-2 border-dashed transition-all text-center",
             disabled

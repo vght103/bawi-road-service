@@ -4,11 +4,7 @@ import { supabase } from "@/lib/supabase";
 import type { Profile } from "@/contexts/AuthContext";
 
 async function fetchProfile(userId: string): Promise<Profile | null> {
-  const { data } = await supabase
-    .from("profiles")
-    .select("id, name, phone, role")
-    .eq("id", userId)
-    .single();
+  const { data } = await supabase.from("members").select("id, name, phone, role").eq("id", userId).single();
   return data as Profile | null;
 }
 

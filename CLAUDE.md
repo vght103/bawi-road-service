@@ -25,6 +25,16 @@
   - `errors.forEach(e => ...)` → `errors.forEach(error => ...)`
 - 예외: `index`의 `i`, 좌표의 `x`/`y` 등 관례적으로 통용되는 경우는 허용
 
+## Custom Hook 사용 기준
+
+- **커스텀 훅 사용하지 않는 경우**: 단순 GET/POST API 호출 1~2개로 끝나는 페이지 (목록, 상세 등)
+  - 컴포넌트에서 `useQuery`/`useMutation` 직접 사용
+  - API 함수는 `src/api/` 레이어에 위치
+- **커스텀 훅 사용하는 경우**:
+  - 복잡한 로직 캡슐화가 필요할 때 (파일 업로드, 다단계 mutation 등)
+  - 여러 컴포넌트에서 재사용 + 추가 로직이 있을 때 (캐시 관리 등)
+- 훅 위치: `src/hooks/`
+
 ## Data (상수) 구조
 
 - `src/data/{page}/` 폴더에 페이지별 상수 데이터 관리
