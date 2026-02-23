@@ -10,6 +10,7 @@ interface FileUploadProps {
   onFileRemove?: () => void;
   disabled?: boolean;
   uploading?: boolean;
+  compact?: boolean;
   className?: string;
 }
 
@@ -21,6 +22,7 @@ export default function FileUpload({
   onFileRemove,
   disabled = false,
   uploading = false,
+  compact = false,
   className,
 }: FileUploadProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -38,8 +40,13 @@ export default function FileUpload({
       return;
     }
 
-    setSelectedFile(file);
+    if (!compact) {
+      setSelectedFile(file);
+    }
     onFileSelect?.(file);
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
   }
 
   function handleRemove() {
@@ -100,17 +107,27 @@ export default function FileUpload({
           onClick={() => inputRef.current?.click()}
           disabled={disabled || uploading}
           className={cn(
-            "w-full p-6 rounded-[10px] border-2 border-dashed transition-all text-center",
+            "w-full rounded-[10px] border-2 border-dashed transition-all",
+            compact ? "p-3" : "p-6 text-center",
             disabled
               ? "border-gray-200 bg-gray-50 cursor-not-allowed"
               : "border-beige-dark hover:border-brown/30 hover:bg-beige/30 cursor-pointer"
           )}
         >
-          <UploadIcon className="w-8 h-8 text-brown/50 mx-auto mb-2" />
-          <p className="text-sm font-medium text-brown-dark">{label}</p>
-          <p className="text-xs text-muted-foreground mt-1">
-            PDF, JPG, PNG (최대 {maxSizeMB}MB)
-          </p>
+          {compact ? (
+            <div className="flex items-center justify-center gap-2">
+              <UploadIcon className="w-4 h-4 text-brown/50" />
+              <p className="text-xs font-medium text-brown-dark">{label}</p>
+            </div>
+          ) : (
+            <>
+              <UploadIcon className="w-8 h-8 text-brown/50 mx-auto mb-2" />
+              <p className="text-sm font-medium text-brown-dark">{label}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                PDF, JPG, PNG (최대 {maxSizeMB}MB)
+              </p>
+            </>
+          )}
         </button>
       )}
 

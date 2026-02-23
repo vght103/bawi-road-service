@@ -1,0 +1,2 @@
+[functions.storage-presign]
+verify_jwt = false

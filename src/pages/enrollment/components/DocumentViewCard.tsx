@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { FileTextIcon, DownloadIcon, EyeIcon, LoaderIcon } from "lucide-react";
+import { FileTextIcon, DownloadIcon, EyeIcon } from "lucide-react";
 import type { EnrollmentDocument } from "@/types/enrollment";
-import { useDocumentViewUrl } from "@/hooks/useEnrollment";
 import ImagePreviewModal from "./ImagePreviewModal";
 
 const IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -23,30 +22,17 @@ export default function DocumentViewCard({
   description,
   document,
 }: DocumentViewCardProps) {
-  const viewUrlMutation = useDocumentViewUrl();
-  const [viewError, setViewError] = useState<string | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const isImage = document && IMAGE_MIME_TYPES.includes(document.mime_type);
 
-  async function handleView() {
+  function handleView() {
     if (!document) return;
-    setViewError(null);
 
-    try {
-      const viewUrl = await viewUrlMutation.mutateAsync(document.file_url);
-
-      if (isImage) {
-        setPreviewUrl(viewUrl);
-        setPreviewOpen(true);
-      } else {
-        window.open(viewUrl, "_blank", "noopener,noreferrer");
-      }
-    } catch (error) {
-      setViewError(
-        error instanceof Error ? error.message : "문서를 열 수 없습니다."
-      );
+    if (isImage) {
+      setPreviewOpen(true);
+    } else {
+      window.open(document.file_url, "_blank", "noopener,noreferrer");
     }
   }
 
@@ -76,27 +62,21 @@ export default function DocumentViewCard({
                 event.stopPropagation();
                 handleView();
               }}
-              disabled={viewUrlMutation.isPending}
-              className="p-2 rounded-full hover:bg-beige transition-colors disabled:opacity-50"
+              className="p-2 rounded-full hover:bg-beige transition-colors"
             >
-              {viewUrlMutation.isPending ? (
-                <LoaderIcon className="w-4 h-4 text-brown animate-spin" />
-              ) : isImage ? (
+              {isImage ? (
                 <EyeIcon className="w-4 h-4 text-brown" />
               ) : (
                 <DownloadIcon className="w-4 h-4 text-brown" />
               )}
             </button>
           </div>
-          {viewError && (
-            <p className="text-terracotta text-xs">{viewError}</p>
-          )}
 
           {isImage && (
             <ImagePreviewModal
               open={previewOpen}
               onOpenChange={setPreviewOpen}
-              imageUrl={previewUrl}
+              imageUrl={document.file_url}
               fileName={document.file_name}
             />
           )}

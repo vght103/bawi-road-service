@@ -12,10 +12,6 @@ interface UploadPresignResponse {
   objectKey: string;
 }
 
-interface ViewPresignResponse {
-  viewUrl: string;
-}
-
 export async function getUploadPresignedUrl(
   params: UploadPresignParams
 ): Promise<{ data: UploadPresignResponse | null; error: string | null }> {
@@ -34,20 +30,20 @@ export async function getUploadPresignedUrl(
   return { data: data as UploadPresignResponse, error: null };
 }
 
-export async function getViewPresignedUrl(
-  objectKey: string
-): Promise<{ data: ViewPresignResponse | null; error: string | null }> {
+export async function deleteDocumentFromR2(
+  documentId: string
+): Promise<{ error: string | null }> {
   if (!supabaseConfigured) {
-    return { data: null, error: "서버에 연결할 수 없습니다." };
+    return { error: "서버에 연결할 수 없습니다." };
   }
 
-  const { data, error } = await supabase.functions.invoke("storage-presign", {
-    body: { action: "view", objectKey },
+  const { error } = await supabase.functions.invoke("storage-presign", {
+    body: { action: "delete", documentId },
   });
 
   if (error) {
-    return { data: null, error: error.message };
+    return { error: error.message };
   }
 
-  return { data: data as ViewPresignResponse, error: null };
+  return { error: null };
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { CheckCircleIcon, EyeIcon, LoaderIcon } from "lucide-react";
+import type { UseMutationResult } from "@tanstack/react-query";
+import { CheckCircleIcon, EyeIcon, Trash2Icon } from "lucide-react";
 import FileUpload from "@/components/FileUpload";
-import { useUploadDocument, useDocumentViewUrl } from "@/hooks/useEnrollment";
 import type { DocumentType, EnrollmentDocument } from "@/types/enrollment";
 import ImagePreviewModal from "./ImagePreviewModal";
 
@@ -14,6 +14,8 @@ interface DocumentUploadCardProps {
   documentType: DocumentType;
   existingDocument?: EnrollmentDocument;
   accept?: string;
+  uploadMutation: UseMutationResult<EnrollmentDocument, Error, { file: File; enrollmentId: string; documentType: DocumentType; existingDocumentId?: string }>;
+  deleteMutation: UseMutationResult<void, Error, { documentId: string }>;
 }
 
 export default function DocumentUploadCard({
@@ -23,30 +25,29 @@ export default function DocumentUploadCard({
   documentType,
   existingDocument,
   accept,
+  uploadMutation,
+  deleteMutation,
 }: DocumentUploadCardProps) {
-  const uploadMutation = useUploadDocument(enrollmentId);
-  const viewUrlMutation = useDocumentViewUrl();
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   function handleFileSelect(file: File) {
-    uploadMutation.mutate({ file, enrollmentId, documentType });
+    uploadMutation.mutate({
+      file,
+      enrollmentId,
+      documentType,
+      existingDocumentId: existingDocument?.id,
+    });
   }
 
   const isImage = existingDocument && IMAGE_MIME_TYPES.includes(existingDocument.mime_type);
 
-  async function handlePreview() {
-    if (!existingDocument || !isImage) return;
+  function handleDelete() {
+    if (!existingDocument) return;
+    if (!window.confirm("업로드된 파일을 삭제하시겠습니까?")) return;
 
-    setPreviewOpen(true);
-    setPreviewUrl(null);
-
-    try {
-      const viewUrl = await viewUrlMutation.mutateAsync(existingDocument.file_url);
-      setPreviewUrl(viewUrl);
-    } catch {
-      setPreviewOpen(false);
-    }
+    deleteMutation.mutate({
+      documentId: existingDocument.id,
+    });
   }
 
   if (existingDocument) {
@@ -54,36 +55,60 @@ export default function DocumentUploadCard({
       <div className="rounded-[10px] border border-beige-dark bg-white p-5">
         <h4 className="font-semibold text-brown-dark text-sm mb-1">{title}</h4>
         <p className="text-xs text-muted-foreground mb-3">{description}</p>
-        <div
-          className={`flex items-center gap-2 p-3 rounded-[10px] border border-green-200 bg-green-50 ${
-            isImage ? "cursor-pointer hover:bg-green-100 transition-colors" : ""
-          }`}
-          onClick={isImage ? handlePreview : undefined}
-        >
-          <CheckCircleIcon className="w-5 h-5 text-green-600 shrink-0" />
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-green-800 truncate">
-              {existingDocument.file_name}
-            </p>
-            <p className="text-xs text-green-600">업로드 완료</p>
-          </div>
-          {isImage && (
-            <div className="p-1">
-              {viewUrlMutation.isPending ? (
-                <LoaderIcon className="w-4 h-4 text-green-600 animate-spin" />
-              ) : (
-                <EyeIcon className="w-4 h-4 text-green-600" />
-              )}
+        <div className="flex items-center gap-2 p-3 rounded-[10px] border border-green-200 bg-green-50">
+          <div
+            className={`flex items-center gap-2 flex-1 min-w-0 ${
+              isImage ? "cursor-pointer" : ""
+            }`}
+            onClick={isImage ? () => setPreviewOpen(true) : undefined}
+          >
+            <CheckCircleIcon className="w-5 h-5 text-green-600 shrink-0" />
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-green-800 truncate">
+                {existingDocument.file_name}
+              </p>
+              <p className="text-xs text-green-600">업로드 완료</p>
             </div>
-          )}
+          </div>
+          <div className="flex items-center gap-1 shrink-0">
+            {isImage && (
+              <button
+                type="button"
+                onClick={() => setPreviewOpen(true)}
+                className="p-1.5 rounded-full hover:bg-green-100 transition-colors"
+              >
+                <EyeIcon className="w-4 h-4 text-green-600" />
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="p-1.5 rounded-full hover:bg-red-100 transition-colors"
+            >
+              <Trash2Icon className="w-4 h-4 text-red-400 hover:text-red-600" />
+            </button>
+          </div>
         </div>
 
-        <ImagePreviewModal
-          open={previewOpen}
-          onOpenChange={setPreviewOpen}
-          imageUrl={previewUrl}
-          fileName={existingDocument.file_name}
-        />
+        {isImage && (
+          <ImagePreviewModal
+            open={previewOpen}
+            onOpenChange={setPreviewOpen}
+            imageUrl={existingDocument.file_url}
+            fileName={existingDocument.file_name}
+          />
+        )}
+
+        <div className="mt-3">
+          <FileUpload
+            label="파일 업로드"
+            accept={accept}
+            onFileSelect={handleFileSelect}
+            uploading={uploadMutation.isPending}
+            disabled={uploadMutation.isPending}
+            compact
+          />
+        </div>
       </div>
     );
   }
@@ -93,7 +118,7 @@ export default function DocumentUploadCard({
       <h4 className="font-semibold text-brown-dark text-sm mb-1">{title}</h4>
       <p className="text-xs text-muted-foreground mb-3">{description}</p>
       <FileUpload
-        label={`${title} 업로드`}
+        label="파일 업로드"
         accept={accept}
         onFileSelect={handleFileSelect}
         uploading={uploadMutation.isPending}

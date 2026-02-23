@@ -1,8 +1,9 @@
 import { Link, useParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import LoadingOverlay from "@/components/LoadingOverlay";
 import { useAuth } from "@/contexts/AuthContext";
-import { useEnrollment } from "@/hooks/useEnrollment";
+import { useEnrollment, useUploadDocument, useDeleteDocument } from "@/hooks/useEnrollment";
 import { Button } from "@/components/ui/button";
 import StatusProgress from "./components/StatusProgress";
 import DocumentUploadCard from "./components/DocumentUploadCard";
@@ -12,6 +13,11 @@ export default function EnrollmentDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const { enrollment, documents, loading, error } = useEnrollment(id);
+  const uploadMutation = useUploadDocument(id ?? "");
+  const deleteMutation = useDeleteDocument(id ?? "");
+
+  const isProcessing = uploadMutation.isPending || deleteMutation.isPending;
+  const processingMessage = uploadMutation.isPending ? "업로드 중..." : "삭제 중...";
 
   const admissionDoc = documents.find((document) => document.document_type === "ADMISSION_LETTER");
   const invoiceDoc = documents.find((document) => document.document_type === "INVOICE");
@@ -87,6 +93,7 @@ export default function EnrollmentDetailPage() {
   return (
     <div className="bg-cream min-h-screen">
       <Navbar />
+      <LoadingOverlay visible={isProcessing} message={processingMessage} />
 
       {/* Breadcrumb */}
       <div className="pt-20 bg-white border-b border-beige-dark">
@@ -169,6 +176,8 @@ export default function EnrollmentDetailPage() {
               enrollmentId={enrollment.id}
               documentType="FLIGHT_TICKET"
               existingDocument={documents.find((document) => document.document_type === "FLIGHT_TICKET")}
+              uploadMutation={uploadMutation}
+              deleteMutation={deleteMutation}
             />
             <DocumentUploadCard
               title="여행자 보험"
@@ -177,6 +186,8 @@ export default function EnrollmentDetailPage() {
               enrollmentId={enrollment.id}
               documentType="TRAVEL_INSURANCE"
               existingDocument={documents.find((document) => document.document_type === "TRAVEL_INSURANCE")}
+              uploadMutation={uploadMutation}
+              deleteMutation={deleteMutation}
             />
           </div>
         </section>

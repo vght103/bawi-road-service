@@ -133,6 +133,17 @@ CREATE POLICY "Students can upload own documents"
     )
   );
 
+-- 서류: 학생은 자기 수속의 서류 삭제
+CREATE POLICY "Students can delete own documents"
+  ON enrollment_documents FOR DELETE
+  USING (
+    EXISTS (
+      SELECT 1 FROM enrollments
+      WHERE enrollments.id = enrollment_documents.enrollment_id
+      AND enrollments.user_id = auth.uid()
+    )
+  );
+
 -- 서류: 관리자는 모든 서류 조회/업로드
 CREATE POLICY "Admins can view all documents"
   ON enrollment_documents FOR SELECT
