@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import LoadingOverlay from "@/components/LoadingOverlay";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { useEnrollment, useUploadDocument, useDeleteDocument } from "@/hooks/useEnrollment";
 import { Button } from "@/components/ui/button";
 import StatusProgress from "./components/StatusProgress";

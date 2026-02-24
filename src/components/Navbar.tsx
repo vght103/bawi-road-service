@@ -1,11 +1,11 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { useAuth } from "@/contexts/AuthContext";
-import { useProfile } from "@/hooks/useProfile";
+import { useAuth } from "@/hooks/useAuth";
+import { useMember } from "@/hooks/useMember";
 
 export default function Navbar() {
   const { user, signOut } = useAuth();
-  const { profile } = useProfile();
+  const { member } = useMember();
   const navigate = useNavigate();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
@@ -136,14 +136,14 @@ export default function Navbar() {
             >
               <button className="flex items-center gap-2 text-brown text-[0.85rem] font-medium hover:text-brown-dark transition-colors bg-transparent border-none cursor-pointer p-0">
                 <div className="w-8 h-8 rounded-full bg-beige-dark flex items-center justify-center text-brown-dark text-sm font-bold">
-                  {(profile?.name ?? user.email)?.[0]?.toUpperCase()}
+                  {(member?.name ?? user.email)?.[0]?.toUpperCase()}
                 </div>
               </button>
               {userMenuOpen && (
                 <div className="absolute top-full right-0 pt-3">
                   <div className="bg-white rounded-xl shadow-lg border border-beige-dark py-2 min-w-[160px]">
                     <div className="px-4 py-2 border-b border-beige text-xs text-brown">
-                      {profile?.name ?? user.email}
+                      {member?.name ?? user.email}
                     </div>
                     <Link
                       to="/my"
@@ -195,7 +195,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-cream border-t border-beige-dark px-6 py-4 space-y-1">
+        <div className="md:hidden bg-white border-t border-beige-dark px-6 py-4 space-y-1 shadow-[0_8px_24px_rgba(0,0,0,0.12)] rounded-b-2xl">
           <Link
             to="/academies"
             className="block text-brown-dark font-medium py-2 no-underline"
@@ -275,28 +275,21 @@ export default function Navbar() {
           </a>
           <Link
             to="/enrollment/apply"
-            className="block text-brown-dark font-medium py-2 no-underline"
+            className="block text-brown font-medium py-2 no-underline"
             onClick={() => setMobileOpen(false)}
           >
             수속 신청
-          </Link>
-          <Link
-            to="/quote"
-            className="block w-full text-center bg-terracotta text-white py-3 rounded-lg font-semibold no-underline mt-2"
-            onClick={() => setMobileOpen(false)}
-          >
-            무료 견적 받기
           </Link>
 
           {/* Mobile Auth */}
           {user ? (
             <div className="border-t border-beige-dark mt-3 pt-3 space-y-1">
               <div className="text-xs text-brown px-1 pb-1">
-                {profile?.name ?? user.email}
+                {member?.name ?? user.email}
               </div>
               <Link
                 to="/my"
-                className="block text-brown-dark font-medium py-2 no-underline"
+                className="block text-brown font-medium py-2 no-underline"
                 onClick={() => setMobileOpen(false)}
               >
                 마이페이지
@@ -331,6 +324,15 @@ export default function Navbar() {
               </Link>
             </div>
           )}
+
+          {/* CTA */}
+          <Link
+            to="/quote"
+            className="block w-full text-center bg-terracotta text-white py-3 rounded-lg font-semibold no-underline mt-3"
+            onClick={() => setMobileOpen(false)}
+          >
+            무료 견적 받기
+          </Link>
         </div>
       )}
     </nav>

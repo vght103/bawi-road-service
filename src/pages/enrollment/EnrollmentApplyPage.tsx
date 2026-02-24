@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { fetchAcademies } from "@/api/academy/academies";
 import { academies as fallbackAcademies } from "@/data/academies";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { createEnrollment } from "@/api/enrollment/enrollments";
 import type { EnrollmentInsert } from "@/types/enrollment";

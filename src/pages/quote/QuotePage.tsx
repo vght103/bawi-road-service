@@ -25,7 +25,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import type { QuoteLogInsert } from "@/types/quote";
 
 export default function QuotePage() {

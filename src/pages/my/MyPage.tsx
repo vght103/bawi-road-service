@@ -4,8 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/contexts/AuthContext";
-import { useProfile } from "@/hooks/useProfile";
+import { useAuth } from "@/hooks/useAuth";
+import Navbar from "@/components/Navbar";
+import { useMember } from "@/hooks/useMember";
 import { fetchMyEnrollments } from "@/api/enrollment/enrollments";
 import type { Enrollment } from "@/types/enrollment";
 import { STATUS_CONFIG } from "@/data/enrollment/status";
@@ -22,7 +23,7 @@ function validatePassword(pw: string) {
 export default function MyPage() {
   const navigate = useNavigate();
   const { user, signOut, changePassword, deleteAccount } = useAuth();
-  const { profile } = useProfile();
+  const { member } = useMember();
   const { data: enrollments = [] as Enrollment[], isLoading: enrollmentsLoading } = useQuery({
     queryKey: ["enrollments", user?.id],
     queryFn: async () => {
@@ -108,12 +109,9 @@ export default function MyPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-cream px-4 py-12">
-      <div className="mx-auto w-full max-w-lg">
-        <Link to="/" className="mb-6 inline-block text-sm text-brown hover:text-terracotta">
-          &larr; 홈으로
-        </Link>
-
+    <div className="min-h-dvh bg-cream">
+      <Navbar />
+      <div className="mx-auto w-full max-w-lg px-4 pt-22 pb-12">
         <h1 className="mb-8 text-2xl font-bold text-brown-text">마이페이지</h1>
 
         {/* 내 정보 */}
@@ -121,13 +119,13 @@ export default function MyPage() {
           <h2 className="mb-4 text-lg font-semibold text-brown-text">내 정보</h2>
           <div className="space-y-2 text-sm text-brown">
             <p>
-              <span className="font-medium text-brown-text">이름:</span> {profile?.name ?? "-"}
+              <span className="font-medium text-brown-text">이름:</span> {member?.name ?? "-"}
             </p>
             <p>
               <span className="font-medium text-brown-text">이메일:</span> {user.email}
             </p>
             <p>
-              <span className="font-medium text-brown-text">연락처:</span> {profile?.phone ?? "-"}
+              <span className="font-medium text-brown-text">연락처:</span> {member?.phone ?? "-"}
             </p>
           </div>
 
@@ -147,9 +145,14 @@ export default function MyPage() {
         <section className="mb-8 rounded-2xl border border-beige-dark bg-white p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-brown-text">내 수속</h2>
-            <Button asChild size="sm" variant="outline" className="text-xs">
-              <Link to="/enrollment/apply" className="no-underline">새 수속 신청</Link>
-            </Button>
+
+            {enrollments.length === 0 && (
+              <Button asChild size="sm" variant="outline" className="text-xs">
+                <Link to="/enrollment/apply" className="no-underline">
+                  새 수속 신청
+                </Link>
+              </Button>
+            )}
           </div>
 
           {enrollmentsLoading ? (
@@ -158,7 +161,9 @@ export default function MyPage() {
             <div className="text-center py-6">
               <p className="text-sm text-muted-foreground mb-3">아직 수속 신청 내역이 없습니다.</p>
               <Button asChild size="sm">
-                <Link to="/enrollment/apply" className="no-underline">수속 신청하기</Link>
+                <Link to="/enrollment/apply" className="no-underline">
+                  수속 신청하기
+                </Link>
               </Button>
             </div>
           ) : (
@@ -172,14 +177,12 @@ export default function MyPage() {
                     className="block p-4 rounded-xl border border-beige-dark hover:border-brown/30 transition-colors no-underline"
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-semibold text-brown-dark text-sm">
-                        {enrollment.academy_name}
-                      </span>
+                      <span className="font-semibold text-brown-dark text-sm">{enrollment.academy_name}</span>
                       <span
                         className={cn(
                           "px-2 py-0.5 rounded-full text-[0.7rem] font-medium border",
                           statusConfig.bgColor,
-                          statusConfig.color
+                          statusConfig.color,
                         )}
                       >
                         {statusConfig.label}
