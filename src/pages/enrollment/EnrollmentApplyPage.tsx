@@ -5,7 +5,7 @@ import { CheckIcon, CalendarIcon } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { fetchAcademies } from "@/api/academy/academies";
-import { academies as fallbackAcademies } from "@/data/academies";
+import type { Academy } from "@/data/academies";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { createEnrollment } from "@/api/enrollment/enrollments";
@@ -23,10 +23,9 @@ const STEPS = [
 
 export default function EnrollmentApplyPage() {
   const { user } = useAuth();
-  const { data: academies = fallbackAcademies, isLoading: academiesLoading } = useQuery({
+  const { data: academies = [], isLoading: academiesLoading } = useQuery<Academy[]>({
     queryKey: ["academies"],
     queryFn: fetchAcademies,
-    placeholderData: fallbackAcademies,
   });
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -50,10 +49,8 @@ export default function EnrollmentApplyPage() {
   const [createdId, setCreatedId] = useState<string | null>(null);
 
   const selectedAcademy = academies.find((academy) => academy.id === academyId);
-  const selectedCourse =
-    selectedAcademy && courseIndex !== "" ? selectedAcademy.courses[courseIndex] : null;
-  const selectedDorm =
-    selectedAcademy && dormIndex !== "" ? selectedAcademy.dormitories[dormIndex] : null;
+  const selectedCourse = selectedAcademy && courseIndex !== "" ? selectedAcademy.courses[courseIndex] : null;
+  const selectedDorm = selectedAcademy && dormIndex !== "" ? selectedAcademy.dormitories[dormIndex] : null;
   const weeksNum = Number(weeks) || 0;
 
   const endDate =
@@ -145,15 +142,13 @@ export default function EnrollmentApplyPage() {
         <div className="pt-[140px] pb-20 px-6">
           <div className="max-w-[520px] mx-auto text-center">
             <div className="bg-white rounded-[20px] p-10 border border-beige-dark shadow-lg">
-              <h2 className="text-[1.3rem] font-extrabold text-brown-dark mb-3">
-                로그인이 필요합니다
-              </h2>
-              <p className="text-brown text-[0.9rem] mb-6">
-                수속 신청은 로그인 후 이용하실 수 있습니다.
-              </p>
+              <h2 className="text-[1.3rem] font-extrabold text-brown-dark mb-3">로그인이 필요합니다</h2>
+              <p className="text-brown text-[0.9rem] mb-6">수속 신청은 로그인 후 이용하실 수 있습니다.</p>
               <div className="flex gap-3 justify-center">
                 <Button variant="secondary" asChild>
-                  <Link to="/" className="no-underline">홈으로</Link>
+                  <Link to="/" className="no-underline">
+                    홈으로
+                  </Link>
                 </Button>
                 <Button asChild>
                   <Link to="/login" state={{ from: "/enrollment/apply" }} className="no-underline">
@@ -193,20 +188,18 @@ export default function EnrollmentApplyPage() {
               <div className="w-16 h-16 bg-accent-green-light rounded-full flex items-center justify-center mx-auto mb-5">
                 <CheckIcon className="w-8 h-8 text-accent-green" strokeWidth={2.5} />
               </div>
-              <h2 className="text-[1.5rem] font-extrabold text-brown-dark mb-3">
-                수속 신청이 완료되었습니다
-              </h2>
+              <h2 className="text-[1.5rem] font-extrabold text-brown-dark mb-3">수속 신청이 완료되었습니다</h2>
               <p className="text-brown text-[0.9rem] leading-relaxed mb-2">
                 <span className="font-bold text-brown-dark">{selectedAcademy?.name}</span>
                 <br />
                 수속 신청이 정상적으로 접수되었습니다.
               </p>
-              <p className="text-brown-light text-[0.82rem] mb-6">
-                담당자 확인 후 연락드리겠습니다. (1~2 영업일)
-              </p>
+              <p className="text-brown-light text-[0.82rem] mb-6">담당자 확인 후 연락드리겠습니다. (1~2 영업일)</p>
               <div className="flex gap-3 justify-center">
                 <Button variant="secondary" asChild>
-                  <Link to="/" className="no-underline">홈으로</Link>
+                  <Link to="/" className="no-underline">
+                    홈으로
+                  </Link>
                 </Button>
                 {createdId && (
                   <Button asChild>
@@ -232,7 +225,9 @@ export default function EnrollmentApplyPage() {
       <div className="pt-20 bg-white border-b border-beige-dark">
         <div className="max-w-[1200px] mx-auto px-6 py-3">
           <div className="flex items-center gap-2 text-sm text-brown">
-            <Link to="/" className="hover:text-brown-dark no-underline text-brown">홈</Link>
+            <Link to="/" className="hover:text-brown-dark no-underline text-brown">
+              홈
+            </Link>
             <span>/</span>
             <span className="text-brown-dark font-medium">수속 신청</span>
           </div>
@@ -247,9 +242,7 @@ export default function EnrollmentApplyPage() {
               <h1 className="text-[1.5rem] md:text-[1.8rem] font-extrabold text-brown-dark tracking-tight mb-1">
                 수속 신청
               </h1>
-              <p className="text-brown text-[0.9rem] mb-6">
-                어학원과 코스를 선택하고 수속을 신청하세요.
-              </p>
+              <p className="text-brown text-[0.9rem] mb-6">어학원과 코스를 선택하고 수속을 신청하세요.</p>
 
               <EnrollmentStepper currentStep={currentStep} steps={STEPS} />
 
@@ -303,28 +296,17 @@ export default function EnrollmentApplyPage() {
                 </Button>
 
                 {currentStep < STEPS.length - 1 ? (
-                  <Button
-                    type="button"
-                    onClick={handleNext}
-                    className="rounded-[10px]"
-                  >
+                  <Button type="button" onClick={handleNext} className="rounded-[10px]">
                     다음
                   </Button>
                 ) : (
-                  <Button
-                    type="button"
-                    onClick={handleSubmit}
-                    disabled={submitting}
-                    className="rounded-[10px]"
-                  >
+                  <Button type="button" onClick={handleSubmit} disabled={submitting} className="rounded-[10px]">
                     {submitting ? "신청 중..." : "수속 신청하기"}
                   </Button>
                 )}
               </div>
 
-              {submitError && (
-                <p className="text-terracotta text-[0.8rem] text-center mt-4">{submitError}</p>
-              )}
+              {submitError && <p className="text-terracotta text-[0.8rem] text-center mt-4">{submitError}</p>}
             </div>
           </div>
 
@@ -381,9 +363,7 @@ export default function EnrollmentApplyPage() {
                             )}
                           </div>
                         )}
-                        {weeksNum > 0 && (
-                          <div className="text-[0.75rem] text-muted-foreground">{weeksNum}주</div>
-                        )}
+                        {weeksNum > 0 && <div className="text-[0.75rem] text-muted-foreground">{weeksNum}주</div>}
                       </div>
                     )}
 
@@ -411,8 +391,7 @@ export default function EnrollmentApplyPage() {
 
                 <div className="mt-6 p-3 bg-accent rounded-[10px]">
                   <p className="text-[0.75rem] text-accent-foreground leading-relaxed">
-                    수속 신청 후 담당자가 확인하여 연락드립니다.
-                    진행 상황은 마이페이지에서 확인하실 수 있습니다.
+                    수속 신청 후 담당자가 확인하여 연락드립니다. 진행 상황은 마이페이지에서 확인하실 수 있습니다.
                   </p>
                 </div>
               </div>

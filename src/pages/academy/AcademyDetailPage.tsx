@@ -1,63 +1,41 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
-const academy = {
-  id: "smeag",
-  name: "SMEAG Capital",
-  region: "세부",
-  style: "스파르타",
-  address: "Emilio Osmena St, Guadalupe, Cebu City",
-  shortDesc: "세부 최대 규모의 어학원으로 IELTS, TOEIC 공인시험센터를 보유한 검증된 교육기관",
-  description:
-    "SMEAG Capital은 세부에서 가장 큰 규모의 어학원 중 하나입니다. 브리티시 카운슬 공인 IELTS 시험센터와 ETS 공인 TOEIC 시험센터를 캠퍼스 내에 보유하고 있어, 시험 준비에 최적화된 환경을 제공합니다. 스파르타 규정으로 평일 외출이 제한되며, 집중적인 학습 환경을 원하는 학생들에게 추천합니다.",
-  facilities: ["수영장", "헬스장", "카페", "매점", "자습실", "식당"],
-  pros: ["IELTS/TOEIC 공인시험센터 보유", "대규모 캠퍼스, 다양한 시설", "체계적인 커리큘럼", "다국적 학생 비율"],
-  cons: ["스파르타 규정이 엄격할 수 있음", "시내 중심에서 다소 거리가 있음", "캠퍼스가 오래된 편"],
-  recommendedFor: ["시험 점수가 필요한 분", "집중 학습을 원하는 분", "단기간 성과가 필요한 직장인"],
-  courses: [
-    {
-      name: "ESL General",
-      category: "ESL",
-      manToMan: 4,
-      group: 3,
-      optional: 1,
-      desc: "기본 ESL 과정. 1:1 수업 4시간 + 그룹 3시간으로 균형 잡힌 커리큘럼.",
-    },
-    {
-      name: "ESL Intensive",
-      category: "ESL",
-      manToMan: 6,
-      group: 2,
-      optional: 1,
-      desc: "집중 ESL 과정. 1:1 수업 6시간으로 빠른 실력 향상.",
-    },
-    {
-      name: "IELTS Preparation",
-      category: "IELTS",
-      manToMan: 4,
-      group: 4,
-      optional: 0,
-      desc: "IELTS 시험 대비 과정. 실전 모의시험 + 집중 피드백.",
-    },
-    {
-      name: "TOEIC Intensive",
-      category: "TOEIC",
-      manToMan: 4,
-      group: 3,
-      optional: 1,
-      desc: "TOEIC 집중 과정. 파트별 전략 학습 + 매주 실전 모의시험.",
-    },
-  ],
-  dormitories: [
-    { type: "1인실", meals: "주 3식", desc: "개인 공간에서 집중 학습" },
-    { type: "2인실", meals: "주 3식", desc: "합리적인 가격, 룸메이트와 함께" },
-    { type: "3인실", meals: "주 3식", desc: "가장 경제적인 옵션" },
-    { type: "4인실", meals: "주 3식", desc: "최저가, 다양한 친구와 교류" },
-  ],
-};
+import { fetchAcademy } from "@/api/academy/academies";
+import type { AcademyDetail } from "@/data/academies";
 
 export default function AcademyDetailPage() {
+  const { id } = useParams<{ id: string }>();
+  const { data: academy, isLoading } = useQuery<AcademyDetail | null>({
+    queryKey: ["academy", id],
+    queryFn: () => fetchAcademy(id!),
+    enabled: !!id,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="bg-cream min-h-screen">
+        <Navbar />
+        <div className="pt-20 text-center py-16 text-brown">불러오는 중...</div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!academy) {
+    return (
+      <div className="bg-cream min-h-screen">
+        <Navbar />
+        <div className="pt-20 text-center py-16">
+          <p className="text-brown text-lg">어학원을 찾을 수 없습니다.</p>
+          <Link to="/academies" className="text-terracotta font-medium mt-4 inline-block no-underline">어학원 목록으로 돌아가기</Link>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-cream min-h-screen">
       <Navbar />
@@ -102,68 +80,80 @@ export default function AcademyDetailPage() {
               </span>
             </div>
             <h1 className="text-[1.8rem] md:text-[2.2rem] font-extrabold text-brown-dark tracking-tight">{academy.name}</h1>
-            <p className="mt-2 text-brown text-base leading-relaxed">{academy.shortDesc}</p>
+            <p className="mt-2 text-brown text-base leading-relaxed">{academy.shortDesc ?? academy.desc}</p>
           </div>
 
           {/* Pros & Cons */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-accent-green-light rounded-[16px] p-6 border border-accent-green/20">
-              <h3 className="text-accent-green-dark font-bold mb-3 flex items-center gap-2">
-                <span>👍</span> 장점
-              </h3>
-              <ul className="space-y-2">
-                {academy.pros.map((pro) => (
-                  <li key={pro} className="text-sm text-brown-dark flex items-start gap-2">
-                    <span className="text-accent-green mt-0.5 shrink-0">✓</span>
-                    {pro}
-                  </li>
-                ))}
-              </ul>
+          {(academy.pros?.length || academy.cons?.length) && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {academy.pros?.length && (
+                <div className="bg-accent-green-light rounded-[16px] p-6 border border-accent-green/20">
+                  <h3 className="text-accent-green-dark font-bold mb-3 flex items-center gap-2">
+                    <span>👍</span> 장점
+                  </h3>
+                  <ul className="space-y-2">
+                    {academy.pros.map((pro) => (
+                      <li key={pro} className="text-sm text-brown-dark flex items-start gap-2">
+                        <span className="text-accent-green mt-0.5 shrink-0">✓</span>
+                        {pro}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {academy.cons?.length && (
+                <div className="bg-terracotta-light rounded-[16px] p-6 border border-terracotta/20">
+                  <h3 className="text-terracotta font-bold mb-3 flex items-center gap-2">
+                    <span>📌</span> 참고사항
+                  </h3>
+                  <ul className="space-y-2">
+                    {academy.cons.map((con) => (
+                      <li key={con} className="text-sm text-brown-dark flex items-start gap-2">
+                        <span className="text-terracotta mt-0.5 shrink-0">·</span>
+                        {con}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
-            <div className="bg-terracotta-light rounded-[16px] p-6 border border-terracotta/20">
-              <h3 className="text-terracotta font-bold mb-3 flex items-center gap-2">
-                <span>📌</span> 참고사항
-              </h3>
-              <ul className="space-y-2">
-                {academy.cons.map((con) => (
-                  <li key={con} className="text-sm text-brown-dark flex items-start gap-2">
-                    <span className="text-terracotta mt-0.5 shrink-0">·</span>
-                    {con}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          )}
 
           {/* Recommended For */}
-          <div className="bg-white rounded-[16px] p-6 border border-beige-dark">
-            <h3 className="font-bold text-brown-dark mb-3">🎯 이런 분에게 추천</h3>
-            <div className="flex flex-wrap gap-2">
-              {academy.recommendedFor.map((item) => (
-                <span key={item} className="px-3 py-1.5 bg-green-badge text-accent-green-dark rounded-full text-sm font-medium">
-                  {item}
-                </span>
-              ))}
+          {academy.recommendedFor?.length && (
+            <div className="bg-white rounded-[16px] p-6 border border-beige-dark">
+              <h3 className="font-bold text-brown-dark mb-3">🎯 이런 분에게 추천</h3>
+              <div className="flex flex-wrap gap-2">
+                {academy.recommendedFor.map((item) => (
+                  <span key={item} className="px-3 py-1.5 bg-green-badge text-accent-green-dark rounded-full text-sm font-medium">
+                    {item}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Description */}
-          <div className="bg-white rounded-[16px] p-6 border border-beige-dark">
-            <h3 className="font-bold text-brown-dark mb-3">어학원 소개</h3>
-            <p className="text-brown text-[0.9rem] leading-[1.8]">{academy.description}</p>
-          </div>
+          {academy.description && (
+            <div className="bg-white rounded-[16px] p-6 border border-beige-dark">
+              <h3 className="font-bold text-brown-dark mb-3">어학원 소개</h3>
+              <p className="text-brown text-[0.9rem] leading-[1.8]">{academy.description}</p>
+            </div>
+          )}
 
           {/* Facilities */}
-          <div className="bg-white rounded-[16px] p-6 border border-beige-dark">
-            <h3 className="font-bold text-brown-dark mb-4">시설</h3>
-            <div className="flex flex-wrap gap-2">
-              {academy.facilities.map((facility) => (
-                <span key={facility} className="px-3 py-1.5 bg-beige text-brown rounded-[10px] text-sm font-medium">
-                  {facility}
-                </span>
-              ))}
+          {academy.facilities?.length && (
+            <div className="bg-white rounded-[16px] p-6 border border-beige-dark">
+              <h3 className="font-bold text-brown-dark mb-4">시설</h3>
+              <div className="flex flex-wrap gap-2">
+                {academy.facilities.map((facility) => (
+                  <span key={facility} className="px-3 py-1.5 bg-beige text-brown rounded-[10px] text-sm font-medium">
+                    {facility}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Courses */}
           <div className="bg-white rounded-[16px] p-6 border border-beige-dark">

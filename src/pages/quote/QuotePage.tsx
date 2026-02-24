@@ -5,28 +5,17 @@ import { CalendarIcon, CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { fetchAcademies } from "@/api/academy/academies";
-import { academies as fallbackAcademies } from "@/data/academies";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import type { QuoteLogInsert } from "@/types/quote";
+import type { Academy } from "@/data/academies";
 
 export default function QuotePage() {
   const [email, setEmail] = useState("");
@@ -45,13 +34,12 @@ export default function QuotePage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const { user } = useAuth();
-  const { data: academies = fallbackAcademies, isLoading: academiesLoading } = useQuery({
+  const { data: academies = [], isLoading: academiesLoading } = useQuery<Academy[]>({
     queryKey: ["academies"],
     queryFn: fetchAcademies,
-    placeholderData: fallbackAcademies,
   });
 
-  const selectedAcademy = academies.find((a) => a.id === academyId);
+  const selectedAcademy = academies?.find((a) => a.id === academyId);
 
   useEffect(() => {
     setCourseIndex("");
@@ -71,8 +59,7 @@ export default function QuotePage() {
     if (courseIndex === "") e.course = "코스를 선택해주세요.";
     if (!startDate) e.startDate = "수업 시작 희망일을 선택해주세요.";
     if (!weeks.trim()) e.weeks = "연수 기간을 입력해주세요.";
-    else if (Number(weeks) < 1 || Number(weeks) > 52)
-      e.weeks = "1~52주 사이로 입력해주세요.";
+    else if (Number(weeks) < 1 || Number(weeks) > 52) e.weeks = "1~52주 사이로 입력해주세요.";
     if (dormIndex === "") e.dorm = "기숙사 타입을 선택해주세요.";
     return e;
   }
@@ -119,25 +106,15 @@ export default function QuotePage() {
   }
 
   const weeksNum = Number(weeks) || 0;
-  const selectedCourse =
-    selectedAcademy && courseIndex !== ""
-      ? selectedAcademy.courses[courseIndex]
-      : null;
-  const selectedDorm =
-    selectedAcademy && dormIndex !== ""
-      ? selectedAcademy.dormitories[dormIndex]
-      : null;
+  const selectedCourse = selectedAcademy && courseIndex !== "" ? selectedAcademy.courses[courseIndex] : null;
+  const selectedDorm = selectedAcademy && dormIndex !== "" ? selectedAcademy.dormitories[dormIndex] : null;
 
   const minDate = new Date();
   minDate.setDate(minDate.getDate() + 7);
 
   const endDate =
     startDate && weeksNum > 0
-      ? new Date(
-          startDate.getFullYear(),
-          startDate.getMonth(),
-          startDate.getDate() + weeksNum * 7,
-        )
+      ? new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + weeksNum * 7)
       : null;
 
   if (academiesLoading) {
@@ -164,20 +141,18 @@ export default function QuotePage() {
               <div className="w-16 h-16 bg-accent-green-light rounded-full flex items-center justify-center mx-auto mb-5">
                 <CheckIcon className="w-8 h-8 text-accent-green" strokeWidth={2.5} />
               </div>
-              <h2 className="text-[1.5rem] font-extrabold text-brown-dark mb-3">
-                견적 요청이 완료되었습니다
-              </h2>
+              <h2 className="text-[1.5rem] font-extrabold text-brown-dark mb-3">견적 요청이 완료되었습니다</h2>
               <p className="text-brown text-[0.9rem] leading-relaxed mb-2">
                 <span className="font-bold text-brown-dark">{email}</span>으로
                 <br />
                 견적서를 보내드리겠습니다.
               </p>
-              <p className="text-brown-light text-[0.82rem] mb-4">
-                보통 1~2 영업일 이내에 회신드립니다.
-              </p>
+              <p className="text-brown-light text-[0.82rem] mb-4">보통 1~2 영업일 이내에 회신드립니다.</p>
               <div className="flex gap-3 justify-center">
                 <Button variant="secondary" asChild>
-                  <Link to="/" className="no-underline">홈으로</Link>
+                  <Link to="/" className="no-underline">
+                    홈으로
+                  </Link>
                 </Button>
                 <Button
                   onClick={() => {
@@ -244,9 +219,7 @@ export default function QuotePage() {
                     aria-invalid={!!errors.name}
                     className="h-11 rounded-[10px]"
                   />
-                  {errors.name && (
-                    <p className="text-terracotta text-[0.75rem]">{errors.name}</p>
-                  )}
+                  {errors.name && <p className="text-terracotta text-[0.75rem]">{errors.name}</p>}
                 </div>
 
                 {/* 이메일 */}
@@ -260,9 +233,7 @@ export default function QuotePage() {
                     aria-invalid={!!errors.email}
                     className="h-11 rounded-[10px]"
                   />
-                  {errors.email && (
-                    <p className="text-terracotta text-[0.75rem]">{errors.email}</p>
-                  )}
+                  {errors.email && <p className="text-terracotta text-[0.75rem]">{errors.email}</p>}
                 </div>
 
                 {/* 어학원 - Combobox */}
@@ -298,7 +269,7 @@ export default function QuotePage() {
                         <CommandList>
                           <CommandEmpty>검색 결과가 없습니다</CommandEmpty>
                           <CommandGroup>
-                            {academies.map((a) => (
+                            {academies?.map((a) => (
                               <CommandItem
                                 key={a.id}
                                 value={`${a.name} ${a.region} ${a.style}`}
@@ -310,10 +281,7 @@ export default function QuotePage() {
                               >
                                 <div className="flex items-center gap-2 w-full">
                                   <CheckIcon
-                                    className={cn(
-                                      "h-4 w-4 shrink-0",
-                                      academyId === a.id ? "opacity-100" : "opacity-0",
-                                    )}
+                                    className={cn("h-4 w-4 shrink-0", academyId === a.id ? "opacity-100" : "opacity-0")}
                                   />
                                   <span className="font-medium">{a.name}</span>
                                   <span className="text-[0.75rem] text-muted-foreground">
@@ -337,9 +305,7 @@ export default function QuotePage() {
                       </Command>
                     </PopoverContent>
                   </Popover>
-                  {errors.academy && (
-                    <p className="text-terracotta text-[0.75rem]">{errors.academy}</p>
-                  )}
+                  {errors.academy && <p className="text-terracotta text-[0.75rem]">{errors.academy}</p>}
                 </div>
 
                 {/* 코스 */}
@@ -360,15 +326,11 @@ export default function QuotePage() {
                           )}
                         >
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="font-bold text-sm text-brown-dark">
-                              {c.name}
-                            </span>
+                            <span className="font-bold text-sm text-brown-dark">{c.name}</span>
                             <span className="px-1.5 py-0.5 bg-secondary text-secondary-foreground rounded text-[0.65rem] font-medium">
                               {c.category}
                             </span>
-                            {courseIndex === i && (
-                              <CheckIcon className="h-4 w-4 text-primary ml-auto" />
-                            )}
+                            {courseIndex === i && <CheckIcon className="h-4 w-4 text-primary ml-auto" />}
                           </div>
                           <p className="text-[0.78rem] text-muted-foreground">{c.desc}</p>
                           <div className="flex gap-1.5 mt-1.5 text-[0.7rem]">
@@ -392,9 +354,7 @@ export default function QuotePage() {
                       어학원을 먼저 선택해주세요
                     </div>
                   )}
-                  {errors.course && (
-                    <p className="text-terracotta text-[0.75rem]">{errors.course}</p>
-                  )}
+                  {errors.course && <p className="text-terracotta text-[0.75rem]">{errors.course}</p>}
                 </div>
 
                 {/* 수업 시작 희망일 - Calendar Popover */}
@@ -432,9 +392,7 @@ export default function QuotePage() {
                       />
                     </PopoverContent>
                   </Popover>
-                  {errors.startDate && (
-                    <p className="text-terracotta text-[0.75rem]">{errors.startDate}</p>
-                  )}
+                  {errors.startDate && <p className="text-terracotta text-[0.75rem]">{errors.startDate}</p>}
                   <p className="text-[0.72rem] text-muted-foreground">
                     대부분의 어학원은 매주 월요일 입학이 가능합니다.
                   </p>
@@ -460,9 +418,7 @@ export default function QuotePage() {
                       주
                     </span>
                   </div>
-                  {errors.weeks && (
-                    <p className="text-terracotta text-[0.75rem]">{errors.weeks}</p>
-                  )}
+                  {errors.weeks && <p className="text-terracotta text-[0.75rem]">{errors.weeks}</p>}
                   <div className="flex gap-2 mt-2">
                     {[4, 8, 12, 16, 24].map((w) => (
                       <Button
@@ -496,15 +452,9 @@ export default function QuotePage() {
                               : "border-input bg-white hover:border-muted-foreground/30",
                           )}
                         >
-                          <div className="font-bold text-brown-dark text-sm">
-                            {d.type}
-                          </div>
-                          <div className="text-[0.7rem] text-muted-foreground mt-1">
-                            {d.meals}
-                          </div>
-                          <div className="text-[0.65rem] text-muted-foreground/70 mt-0.5">
-                            {d.desc}
-                          </div>
+                          <div className="font-bold text-brown-dark text-sm">{d.type}</div>
+                          <div className="text-[0.7rem] text-muted-foreground mt-1">{d.meals}</div>
+                          <div className="text-[0.65rem] text-muted-foreground/70 mt-0.5">{d.desc}</div>
                         </button>
                       ))}
                     </div>
@@ -513,23 +463,14 @@ export default function QuotePage() {
                       어학원을 먼저 선택해주세요
                     </div>
                   )}
-                  {errors.dorm && (
-                    <p className="text-terracotta text-[0.75rem]">{errors.dorm}</p>
-                  )}
+                  {errors.dorm && <p className="text-terracotta text-[0.75rem]">{errors.dorm}</p>}
                 </div>
 
                 {/* Submit */}
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full h-12 text-base rounded-[10px]"
-                  disabled={submitting}
-                >
+                <Button type="submit" size="lg" className="w-full h-12 text-base rounded-[10px]" disabled={submitting}>
                   {submitting ? "요청 중..." : "견적서 요청하기"}
                 </Button>
-                {submitError && (
-                  <p className="text-terracotta text-[0.8rem] text-center">{submitError}</p>
-                )}
+                {submitError && <p className="text-terracotta text-[0.8rem] text-center">{submitError}</p>}
               </form>
             </div>
           </div>
@@ -539,9 +480,7 @@ export default function QuotePage() {
             <div className="lg:sticky lg:top-24">
               <div className="bg-white rounded-[20px] p-6 border border-beige-dark shadow-lg relative overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent-green" />
-                <h3 className="font-bold text-brown-dark text-lg mb-5">
-                  요청 요약
-                </h3>
+                <h3 className="font-bold text-brown-dark text-lg mb-5">요청 요약</h3>
 
                 {selectedAcademy ? (
                   <div className="space-y-4">
@@ -582,9 +521,7 @@ export default function QuotePage() {
                             )}
                           </div>
                         )}
-                        {weeksNum > 0 && (
-                          <div className="text-[0.75rem] text-muted-foreground">{weeksNum}주</div>
-                        )}
+                        {weeksNum > 0 && <div className="text-[0.75rem] text-muted-foreground">{weeksNum}주</div>}
                       </div>
                     )}
 
@@ -622,8 +559,7 @@ export default function QuotePage() {
 
                 <div className="mt-6 p-3 bg-accent rounded-[10px]">
                   <p className="text-[0.75rem] text-accent-foreground leading-relaxed">
-                    실제 견적은 프로모션, 등록비, SSP, 비자 연장비 등을 포함하여
-                    이메일로 상세히 안내드립니다.
+                    실제 견적은 프로모션, 등록비, SSP, 비자 연장비 등을 포함하여 이메일로 상세히 안내드립니다.
                   </p>
                 </div>
               </div>
