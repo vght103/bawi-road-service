@@ -2,19 +2,8 @@ import { useState } from "react";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import type { Academy } from "@/data/academies";
 
 interface StepAcademySelectProps {
@@ -24,20 +13,15 @@ interface StepAcademySelectProps {
   error?: string;
 }
 
-export default function StepAcademySelect({
-  academies,
-  academyId,
-  onSelect,
-  error,
-}: StepAcademySelectProps) {
+export default function StepAcademySelect({ academies, academyId, onSelect, error }: StepAcademySelectProps) {
   const [open, setOpen] = useState(false);
   const selected = academies.find((academy) => academy.id === academyId);
 
   return (
     <div className="space-y-1.5">
-      <label className="text-brown-dark font-semibold text-sm">
-        어학원 선택 <span className="text-terracotta">*</span>
-      </label>
+      <div className="my-3">
+        <label className="text-brown-dark font-semibold text-sm required mb-2">어학원 선택</label>
+      </div>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -46,7 +30,7 @@ export default function StepAcademySelect({
             aria-expanded={open}
             className={cn(
               "w-full justify-between h-11 rounded-[10px] font-normal",
-              !academyId && "text-muted-foreground"
+              !academyId && "text-muted-foreground",
             )}
           >
             {selected ? (
@@ -80,10 +64,7 @@ export default function StepAcademySelect({
                   >
                     <div className="flex items-center gap-2 w-full">
                       <CheckIcon
-                        className={cn(
-                          "h-4 w-4 shrink-0",
-                          academyId === academy.id ? "opacity-100" : "opacity-0"
-                        )}
+                        className={cn("h-4 w-4 shrink-0", academyId === academy.id ? "opacity-100" : "opacity-0")}
                       />
                       <span className="font-medium">{academy.name}</span>
                       <span className="text-[0.75rem] text-muted-foreground">

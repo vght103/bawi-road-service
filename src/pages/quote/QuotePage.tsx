@@ -235,9 +235,7 @@ export default function QuotePage() {
               <form onSubmit={handleSubmit} className="space-y-5" noValidate>
                 {/* 이름 */}
                 <div className="space-y-1.5">
-                  <Label className="text-brown-dark font-semibold">
-                    이름 <span className="text-terracotta">*</span>
-                  </Label>
+                  <Label className="text-brown-dark font-semibold required">이름</Label>
                   <Input
                     type="text"
                     value={name}
@@ -253,9 +251,7 @@ export default function QuotePage() {
 
                 {/* 이메일 */}
                 <div className="space-y-1.5">
-                  <Label className="text-brown-dark font-semibold">
-                    이메일 <span className="text-terracotta">*</span>
-                  </Label>
+                  <Label className="text-brown-dark font-semibold required">이메일</Label>
                   <Input
                     type="email"
                     value={email}
@@ -271,9 +267,7 @@ export default function QuotePage() {
 
                 {/* 어학원 - Combobox */}
                 <div className="space-y-1.5">
-                  <Label className="text-brown-dark font-semibold">
-                    관심 어학원 <span className="text-terracotta">*</span>
-                  </Label>
+                  <Label className="text-brown-dark font-semibold required">관심 어학원</Label>
                   <Popover open={academyOpen} onOpenChange={setAcademyOpen}>
                     <PopoverTrigger asChild>
                       <Button
@@ -350,9 +344,7 @@ export default function QuotePage() {
 
                 {/* 코스 */}
                 <div className="space-y-1.5">
-                  <Label className="text-brown-dark font-semibold">
-                    코스 <span className="text-terracotta">*</span>
-                  </Label>
+                  <Label className="text-brown-dark font-semibold required">코스</Label>
                   {selectedAcademy ? (
                     <div className="space-y-2">
                       {selectedAcademy.courses.map((c, i) => (
@@ -407,9 +399,7 @@ export default function QuotePage() {
 
                 {/* 수업 시작 희망일 - Calendar Popover */}
                 <div className="space-y-1.5">
-                  <Label className="text-brown-dark font-semibold">
-                    수업 시작 희망일 <span className="text-terracotta">*</span>
-                  </Label>
+                  <Label className="text-brown-dark font-semibold required">수업 시작 희망일</Label>
                   <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
                     <PopoverTrigger asChild>
                       <Button
@@ -452,9 +442,7 @@ export default function QuotePage() {
 
                 {/* 주수 */}
                 <div className="space-y-1.5">
-                  <Label className="text-brown-dark font-semibold">
-                    연수 기간 (주) <span className="text-terracotta">*</span>
-                  </Label>
+                  <Label className="text-brown-dark font-semibold required">연수 기간 (주)</Label>
                   <div className="relative">
                     <Input
                       type="text"
@@ -493,9 +481,7 @@ export default function QuotePage() {
 
                 {/* 기숙사 */}
                 <div className="space-y-1.5">
-                  <Label className="text-brown-dark font-semibold">
-                    기숙사 타입 <span className="text-terracotta">*</span>
-                  </Label>
+                  <Label className="text-brown-dark font-semibold required">기숙사 타입</Label>
                   {selectedAcademy ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                       {selectedAcademy.dormitories.map((d, i) => (

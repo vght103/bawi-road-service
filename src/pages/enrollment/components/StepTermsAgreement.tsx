@@ -25,9 +25,7 @@ export default function StepTermsAgreement({
     <div className="space-y-6">
       {/* 이용약관 */}
       <div className="space-y-3">
-        <label className="text-brown-dark font-semibold text-sm">
-          이용약관 동의 <span className="text-terracotta">*</span>
-        </label>
+        <label className="text-brown-dark font-semibold text-sm required">이용약관 동의</label>
         <div className="max-h-[200px] overflow-y-auto rounded-[10px] border border-input bg-secondary/30 p-4 text-[0.78rem] text-brown leading-relaxed whitespace-pre-line">
           {TERMS_OF_SERVICE}
         </div>
@@ -46,9 +44,7 @@ export default function StepTermsAgreement({
 
       {/* 환불규정 */}
       <div className="space-y-3">
-        <label className="text-brown-dark font-semibold text-sm">
-          환불 규정 동의 <span className="text-terracotta">*</span>
-        </label>
+        <label className="text-brown-dark font-semibold text-sm required">환불 규정 동의</label>
         <div className="max-h-[200px] overflow-y-auto rounded-[10px] border border-input bg-secondary/30 p-4 text-[0.78rem] text-brown leading-relaxed whitespace-pre-line">
           {REFUND_POLICY}
         </div>

@@ -31,7 +31,7 @@ export default function Navbar() {
     >
       <div className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 no-underline text-brown-dark">
+        <Link to="/" className="flex items-center gap-2.5 no-underline text-brown-dark" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
           <div>
             <div className="font-extrabold text-[1.2rem] tracking-tight leading-tight">바위로드</div>
             <div className="text-[0.65rem] text-brown font-medium tracking-wider">BAWI ROAD</div>

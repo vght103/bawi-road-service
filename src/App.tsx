@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import ScrollToTop from "@/components/ScrollToTop";
 import HomePage from "@/pages/home/HomePage";
 import AcademySearchPage from "@/pages/academy/AcademySearchPage";
 import AcademyDetailPage from "@/pages/academy/AcademyDetailPage";
@@ -15,7 +16,9 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 
 function App() {
   return (
-    <Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/academies" element={<AcademySearchPage />} />
       <Route path="/academy/:id" element={<AcademyDetailPage />} />
@@ -31,6 +34,7 @@ function App() {
       {/* backward compat */}
       <Route path="/search" element={<AcademySearchPage />} />
     </Routes>
+    </>
   );
 }
 

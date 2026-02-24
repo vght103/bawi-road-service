@@ -45,9 +45,7 @@ export default function StepCourseSelect({
     <div className="space-y-5">
       {/* 코스 선택 */}
       <div className="space-y-1.5">
-        <label className="text-brown-dark font-semibold text-sm">
-          코스 <span className="text-terracotta">*</span>
-        </label>
+        <label className="text-brown-dark font-semibold text-sm required">코스</label>
         {academy ? (
           <div className="space-y-2">
             {academy.courses.map((course, index) => (
@@ -98,9 +96,7 @@ export default function StepCourseSelect({
 
       {/* 기숙사 선택 */}
       <div className="space-y-1.5">
-        <label className="text-brown-dark font-semibold text-sm">
-          기숙사 타입 <span className="text-terracotta">*</span>
-        </label>
+        <label className="text-brown-dark font-semibold text-sm required">기숙사 타입</label>
         {academy ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {academy.dormitories.map((dorm, index) => (
@@ -131,9 +127,7 @@ export default function StepCourseSelect({
 
       {/* 수업 시작일 */}
       <div className="space-y-1.5">
-        <label className="text-brown-dark font-semibold text-sm">
-          수업 시작 희망일 <span className="text-terracotta">*</span>
-        </label>
+        <label className="text-brown-dark font-semibold text-sm required">수업 시작 희망일</label>
         <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
           <PopoverTrigger asChild>
             <Button
@@ -174,9 +168,7 @@ export default function StepCourseSelect({
 
       {/* 연수 기간 */}
       <div className="space-y-1.5">
-        <label className="text-brown-dark font-semibold text-sm">
-          연수 기간 (주) <span className="text-terracotta">*</span>
-        </label>
+        <label className="text-brown-dark font-semibold text-sm required">연수 기간 (주)</label>
         <div className="relative">
           <Input
             type="text"
