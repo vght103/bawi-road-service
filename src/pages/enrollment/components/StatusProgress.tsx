@@ -21,48 +21,45 @@ export default function StatusProgress({ currentStatus }: StatusProgressProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-0">
+      <div className="relative flex items-start justify-between">
+        {/* 연결선 (원 중앙 높이에 위치) */}
+        <div className="absolute top-5 left-0 right-0 mx-[calc(100%/8)] h-0.5 bg-secondary" />
+        <div
+          className="absolute top-5 left-0 mx-[calc(100%/8)] h-0.5 bg-primary transition-all"
+          style={{
+            width: currentOrder >= STATUS_STEPS.length - 1
+              ? `calc(100% - 100%/4)`
+              : `calc(${(currentOrder / (STATUS_STEPS.length - 1)) * 100}% * (1 - 1/${STATUS_STEPS.length}) + 0%)`,
+          }}
+        />
+
         {STATUS_STEPS.map((step, index) => {
           const config = STATUS_CONFIG[step];
           const isCompleted = config.order < currentOrder;
           const isCurrent = step === currentStatus;
 
           return (
-            <div key={step} className="flex items-center flex-1">
-              <div className="flex flex-col items-center flex-1">
-                <div
-                  className={cn(
-                    "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all",
-                    isCompleted
-                      ? "bg-primary text-white"
-                      : isCurrent
-                        ? "bg-primary text-white ring-4 ring-primary/20"
-                        : "bg-secondary text-muted-foreground"
-                  )}
-                >
-                  {isCompleted ? (
-                    <CheckIcon className="w-5 h-5" />
-                  ) : (
-                    index + 1
-                  )}
-                </div>
-                <p
-                  className={cn(
-                    "mt-2 text-xs font-medium text-center",
-                    isCompleted || isCurrent ? "text-brown-dark" : "text-muted-foreground"
-                  )}
-                >
-                  {config.label}
-                </p>
+            <div key={step} className="relative z-10 flex flex-col items-center" style={{ width: `${100 / STATUS_STEPS.length}%` }}>
+              <div
+                className={cn(
+                  "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold",
+                  isCompleted
+                    ? "bg-primary text-white"
+                    : isCurrent
+                      ? "bg-primary text-white ring-4 ring-primary/20"
+                      : "bg-secondary text-muted-foreground"
+                )}
+              >
+                {isCompleted ? <CheckIcon className="w-5 h-5" /> : index + 1}
               </div>
-              {index < STATUS_STEPS.length - 1 && (
-                <div
-                  className={cn(
-                    "h-0.5 flex-1 mx-1 mt-[-1.5rem]",
-                    isCompleted ? "bg-primary" : "bg-secondary"
-                  )}
-                />
-              )}
+              <p
+                className={cn(
+                  "mt-2 text-xs font-medium text-center leading-tight",
+                  isCompleted || isCurrent ? "text-brown-dark" : "text-muted-foreground"
+                )}
+              >
+                {config.label}
+              </p>
             </div>
           );
         })}

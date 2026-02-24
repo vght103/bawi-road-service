@@ -82,31 +82,29 @@ export default function HomePage() {
           <div className="bg-white rounded-[20px] p-6 md:p-8 shadow-lg w-full max-w-[440px] border border-beige-dark relative overflow-hidden flex flex-col">
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-terracotta to-accent-green" />
             <div className="flex items-center gap-3 mb-5">
-              <div className="w-12 h-12 rounded-full bg-accent-green-light flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-terracotta to-amber-400 flex items-center justify-center shrink-0 shadow-sm">
                 <svg
-                  width="24"
-                  height="24"
+                  width="22"
+                  height="22"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="currentColor"
+                  stroke="white"
                   strokeWidth="2"
-                  className="text-accent-green"
                 >
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
               </div>
               <div>
-                <div className="font-bold text-[0.95rem]">AI 상담 어시스턴트</div>
+                <div className="font-bold text-[0.95rem]"><span className="bg-gradient-to-r from-terracotta to-amber-500 bg-clip-text text-transparent text-lg font-extrabold">AI</span> 상담 어시스턴트</div>
                 <div className="text-[0.8rem] text-brown">어학연수 궁금한 점을 물어보세요</div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 bg-beige rounded-[12px] px-4 py-3 border border-beige-dark">
+            <div className="flex items-center gap-2 bg-white rounded-[12px] px-4 py-3 border border-beige-dark">
               <input
                 type="text"
-                placeholder="어학연수에 대해 물어보세요..."
+                placeholder="AI와 지금 바로 상담 시작하기"
                 className="flex-1 bg-transparent text-[0.85rem] focus:outline-none placeholder:text-brown-light border-none"
-                disabled
               />
               <button className="w-8 h-8 rounded-full bg-terracotta flex items-center justify-center shrink-0" disabled>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">

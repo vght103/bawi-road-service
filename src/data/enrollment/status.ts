@@ -53,5 +53,4 @@ export const STATUS_STEPS: EnrollmentStatus[] = [
   "CONFIRMED",
   "DOCUMENTS_PENDING",
   "READY_TO_DEPART",
-  "COMPLETED",
 ];
