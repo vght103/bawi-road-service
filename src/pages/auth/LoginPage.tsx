@@ -113,12 +113,23 @@ export default function LoginPage() {
                 </Button>
               </form>
 
-              <p className="mt-6 text-center text-sm text-brown">
-                계정이 없으신가요?{" "}
-                <Link to="/signup" className="font-medium text-terracotta hover:underline">
-                  회원가입
-                </Link>
-              </p>
+              <div className="mt-6 text-center text-sm text-brown space-y-2">
+                <p>
+                  <Link to="/find-account" className="text-brown hover:text-terracotta hover:underline">
+                    이메일 찾기
+                  </Link>
+                  <span className="mx-2 text-beige-dark">|</span>
+                  <Link to="/find-account?tab=find-password" className="text-brown hover:text-terracotta hover:underline">
+                    비밀번호 찾기
+                  </Link>
+                </p>
+                <p>
+                  계정이 없으신가요?{" "}
+                  <Link to="/signup" className="font-medium text-terracotta hover:underline">
+                    회원가입
+                  </Link>
+                </p>
+              </div>
             </div>
           </div>
 

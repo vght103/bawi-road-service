@@ -9,6 +9,8 @@ import VisaInfoPage from "@/pages/visa-info/VisaInfoPage";
 import QuotePage from "@/pages/quote/QuotePage";
 import SignupPage from "@/pages/auth/SignupPage";
 import LoginPage from "@/pages/auth/LoginPage";
+import FindAccountPage from "@/pages/auth/FindAccountPage";
+import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
 import MyPage from "@/pages/my/MyPage";
 import EnrollmentApplyPage from "@/pages/enrollment/EnrollmentApplyPage";
 import EnrollmentDetailPage from "@/pages/enrollment/EnrollmentDetailPage";
@@ -28,6 +30,8 @@ function App() {
       <Route path="/quote" element={<QuotePage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/find-account" element={<FindAccountPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/my" element={<ProtectedRoute><MyPage /></ProtectedRoute>} />
       <Route path="/enrollment/apply" element={<ProtectedRoute><EnrollmentApplyPage /></ProtectedRoute>} />
       <Route path="/enrollment/:id" element={<ProtectedRoute><EnrollmentDetailPage /></ProtectedRoute>} />
