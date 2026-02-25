@@ -35,7 +35,7 @@ export default function HomePage() {
       <Navbar />
 
       {/* HERO */}
-      <section className="pt-[100px] pb-20 px-6 max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-[60px] items-center md:min-h-[90vh]">
+      <section className="pt-[120px] pb-14 px-6 max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-[60px] items-center">
         <div className="relative">
           <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3.5 py-1.5 rounded-full text-[0.8rem] font-semibold mb-5 animate-fade-in-up">
             <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5">
@@ -78,47 +78,93 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Hero Visual - Quote Card */}
+        {/* Hero Visual - Quote CTA Card */}
         <div
-          className="relative flex justify-center items-center animate-fade-in-up order-first md:order-last"
+          className="relative flex justify-center items-center animate-fade-in-up"
           style={{ animationDelay: "0.2s" }}
         >
-          <div className="bg-white rounded-[20px] p-6 md:p-8 shadow-lg w-full max-w-[440px] border border-beige-dark relative overflow-hidden flex flex-col">
+          <div className="bg-white rounded-[20px] p-7 md:p-9 shadow-lg w-full max-w-[440px] border border-beige-dark relative overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-terracotta to-accent-green" />
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-terracotta to-amber-400 flex items-center justify-center shrink-0 shadow-sm">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                </svg>
-              </div>
-              <div>
-                <div className="font-bold text-[0.95rem]">
-                  <span className="bg-gradient-to-r from-terracotta to-amber-500 bg-clip-text text-transparent text-lg font-extrabold">
-                    AI
-                  </span>{" "}
-                  상담 어시스턴트
-                </div>
-                <div className="text-[0.8rem] text-brown">어학연수 궁금한 점을 물어보세요</div>
-              </div>
+
+            <div className="inline-flex items-center gap-1.5 bg-terracotta-light text-terracotta px-3 py-1 rounded-full text-[0.75rem] font-bold mb-4">
+              무료 견적 서비스
             </div>
 
-            <div className="flex items-center gap-2 bg-white rounded-[12px] px-4 py-3 border border-beige-dark">
-              <Input
-                type="text"
-                value={aiKeyword}
-                onChange={(e) => setAiKeyword(e.target.value)}
-                placeholder="AI와 지금 바로 상담 시작하기"
-                className="flex-1 bg-transparent text-[0.85rem] placeholder:text-brown-light border-none shadow-none focus-visible:ring-0 h-auto p-0"
-              />
-              <Button
-                size="icon-sm"
-                className="rounded-full bg-terracotta hover:bg-terracotta-hover shrink-0"
-                disabled={!aiKeyword}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                  <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-                </svg>
-              </Button>
+            <h3 className="text-[1.3rem] md:text-[1.5rem] font-extrabold text-brown-dark leading-[1.3] mb-2">
+              내 연수 비용,
+              <br />
+              <span className="text-terracotta">30초만에 확인</span>하세요
+            </h3>
+            <p className="text-[0.85rem] text-brown leading-[1.6] mb-5">
+              어학원, 기간, 기숙사를 선택하면 예상 비용이 바로 나와요.
+            </p>
+
+            <div className="flex flex-col gap-2.5 mb-6">
+              {["수수료 0원 — 학생 부담 제로", "가격 100% 공개 — 숨김 비용 없음", "상담 없이 바로 확인 가능"].map(
+                (point) => (
+                  <div key={point} className="flex items-center gap-2.5 text-[0.82rem] text-brown-dark">
+                    <div className="w-5 h-5 rounded-full bg-accent-green-light flex items-center justify-center shrink-0">
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        className="text-accent-green-dark"
+                      >
+                        <path d="M20 6L9 17l-5-5" />
+                      </svg>
+                    </div>
+                    <span className="font-medium">{point}</span>
+                  </div>
+                ),
+              )}
+            </div>
+
+            <Link
+              to="/quote"
+              className="flex items-center justify-center gap-2 w-full bg-terracotta text-white py-3.5 rounded-[10px] text-[0.95rem] font-bold no-underline shadow-[0_4px_14px_rgba(196,96,58,0.3)] hover:bg-terracotta-hover hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(196,96,58,0.35)] transition-all"
+            >
+              무료 견적서 받기
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </Link>
+
+            {/* AI 상담 인풋 */}
+            <div className="mt-4 pt-4 border-t border-beige-dark">
+              <div className="flex items-center gap-2.5 mb-2.5">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-terracotta to-amber-400 flex items-center justify-center shrink-0">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                </div>
+                <span className="text-[0.8rem] font-semibold text-brown">
+                  <span className="bg-gradient-to-r from-terracotta to-amber-500 bg-clip-text text-transparent font-extrabold">
+                    AI
+                  </span>{" "}
+                  상담으로 물어보기
+                </span>
+              </div>
+              <div className="flex items-center gap-2 bg-cream rounded-[10px] px-3.5 py-2.5 border border-beige-dark">
+                <Input
+                  type="text"
+                  value={aiKeyword}
+                  onChange={(event) => setAiKeyword(event.target.value)}
+                  placeholder="어학연수 궁금한 점을 물어보세요"
+                  className="flex-1 bg-transparent text-[0.82rem] placeholder:text-brown-light border-none shadow-none focus-visible:ring-0 h-auto p-0"
+                />
+                <Button
+                  size="icon-sm"
+                  className="rounded-full bg-terracotta hover:bg-terracotta-hover shrink-0"
+                  disabled={!aiKeyword}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                  </svg>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -182,6 +228,67 @@ export default function HomePage() {
                 <p className="text-[0.9rem] leading-[1.65] text-brown">{card.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PROCESS SECTION */}
+      <section className="py-20 px-6 bg-beige">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
+            📋 수속 절차
+          </div>
+          <h2 className="text-[1.6rem] md:text-[2.2rem] font-extrabold tracking-tight text-brown-dark leading-[1.3]">
+            상담부터 출국까지, 4단계로 끝
+          </h2>
+          <p className="mt-3 text-base leading-[1.7] text-brown max-w-[600px]">
+            복잡할 거 없어요. 바위로드가 전부 안내해드려요.
+          </p>
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-5">
+            {[
+              {
+                step: "01",
+                title: "무료 상담",
+                desc: "카카오톡이나 견적 폼으로 간편 상담. 어학원 추천부터 비용까지 안내해드려요.",
+              },
+              {
+                step: "02",
+                title: "어학원 확정",
+                desc: "비교표와 상세 정보를 보고 나에게 맞는 어학원을 직접 선택하세요.",
+              },
+              {
+                step: "03",
+                title: "수속 진행",
+                desc: "입학 신청, 항공권, 보험 등 출국 준비를 도와드립니다. 서류 걱정 없어요.",
+              },
+              {
+                step: "04",
+                title: "출국!",
+                desc: "현지 픽업부터 어학원 입학까지 바위로드가 끝까지 함께합니다.",
+              },
+            ].map((stepItem) => (
+              <div
+                key={stepItem.step}
+                className="reveal bg-white rounded-[20px] p-6 border border-beige-dark text-center hover:-translate-y-1 hover:shadow-md transition-all"
+              >
+                <div className="w-11 h-11 rounded-full bg-terracotta-light flex items-center justify-center mx-auto mb-4">
+                  <span className="text-[0.75rem] font-extrabold text-terracotta">{stepItem.step}</span>
+                </div>
+                <h3 className="text-[1.05rem] font-bold text-brown-dark mb-2">{stepItem.title}</h3>
+                <p className="text-[0.82rem] leading-[1.65] text-brown">{stepItem.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8">
+            <Link
+              to="/process"
+              className="inline-flex items-center gap-1.5 text-[0.9rem] font-semibold text-terracotta hover:text-terracotta-hover no-underline transition-colors"
+            >
+              자세한 절차 보기
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>
@@ -397,28 +504,50 @@ export default function HomePage() {
       </section>
 
       {/* CTA SECTION */}
-      <section className="py-20 px-6 bg-beige text-center relative overflow-hidden">
-        <div className="absolute bottom-[-100px] left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[radial-gradient(ellipse,rgba(196,96,58,0.08)_0%,transparent_70%)]" />
-        <div className="max-w-[1200px] mx-auto relative">
-          <h2 className="text-[2rem] font-extrabold tracking-tight text-brown-dark leading-[1.3]">
-            어학연수, 어렵지 않아요
+      <section className="py-24 px-6 bg-brown-dark text-center relative overflow-hidden">
+        {/* 배경 radial glow 효과 */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_120%,rgba(196,96,58,0.25)_0%,transparent_70%)]" />
+        <div className="absolute -top-[200px] -left-[200px] w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(196,96,58,0.08)_0%,transparent_70%)] rounded-full" />
+        <div className="absolute -bottom-[150px] -right-[150px] w-[400px] h-[400px] bg-[radial-gradient(circle,rgba(74,140,92,0.06)_0%,transparent_70%)] rounded-full" />
+        <div className="max-w-[720px] mx-auto relative">
+          <div className="reveal inline-flex items-center gap-1.5 bg-[rgba(255,255,255,0.08)] text-brown-light px-3.5 py-1.5 rounded-full text-[0.78rem] font-semibold mb-6 border border-white/10">
+            무료 견적 서비스
+          </div>
+          <h2 className="reveal text-[2rem] md:text-[2.8rem] font-extrabold tracking-tight text-cream leading-[1.2]">
+            내 연수 비용,
+            <br />
+            <span className="text-terracotta">1분이면 확인돼요</span>
           </h2>
-          <p className="mt-3 text-base leading-[1.7] text-brown max-w-[500px] mx-auto">
-            어학원 비교, 견적, 수속까지 한번에 해결하세요.
+          <p className="reveal mt-5 text-[0.95rem] md:text-[1.05rem] leading-[1.75] text-brown-light max-w-[500px] mx-auto">
+            어학원, 기간, 기숙사 옵션을 선택하면 예상 비용이 바로 나와요.
+            <br />
+            상담 없이도 견적서를 받아보세요.
           </p>
-          <div className="mt-8 flex gap-3.5 justify-center flex-wrap">
+          {/* 강조 포인트 배지 3개 */}
+          <div className="reveal mt-7 flex flex-wrap justify-center gap-2.5">
+            {["✓ 30초 만에 견적 확인", "✓ 상담 없이 가능", "✓ 가격 100% 투명 공개"].map((badge) => (
+              <span
+                key={badge}
+                className="inline-flex items-center px-3.5 py-1.5 rounded-full bg-white/[0.07] border border-white/15 text-[0.8rem] font-semibold text-cream"
+              >
+                {badge}
+              </span>
+            ))}
+          </div>
+          {/* CTA 버튼 */}
+          <div className="reveal mt-10 flex gap-3.5 justify-center flex-wrap">
             <Link
               to="/quote"
-              className="bg-terracotta text-white px-8 py-3.5 rounded-[10px] text-base font-bold no-underline inline-flex items-center gap-2 shadow-[0_4px_14px_rgba(196,96,58,0.3)] hover:bg-terracotta-hover hover:-translate-y-0.5 transition-all"
+              className="bg-terracotta text-white px-10 py-4 rounded-[10px] text-base font-bold no-underline inline-flex items-center gap-2.5 shadow-[0_6px_24px_rgba(196,96,58,0.4)] hover:bg-terracotta-hover hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(196,96,58,0.45)] transition-all"
             >
-              무료 견적 받기
+              무료 견적서 받기
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </Link>
             <a
               href="#"
-              className="bg-white text-brown-dark px-8 py-3.5 rounded-[10px] text-base font-semibold border-2 border-beige-dark no-underline inline-flex items-center gap-2 hover:border-brown-light hover:bg-beige hover:-translate-y-0.5 transition-all"
+              className="bg-white/8 text-cream px-8 py-4 rounded-[10px] text-base font-semibold border border-white/20 no-underline inline-flex items-center gap-2 hover:bg-white/14 hover:-translate-y-0.5 transition-all"
             >
               카카오톡 상담
             </a>
