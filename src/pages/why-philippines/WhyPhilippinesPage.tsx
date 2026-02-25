@@ -342,7 +342,7 @@ export default function WhyPhilippinesPage() {
           <div className="reveal grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                image: "https://images.unsplash.com/photo-1436491865332-7a61a109db05?auto=format&fit=crop&w=600&q=80",
+                image: "https://images.unsplash.com/photo-1556388158-158ea5ccacbd?auto=format&fit=crop&w=600&q=80",
                 title: "직항 약 4시간",
                 desc: "인천에서 세부·마닐라까지 직항으로 약 4시간. 항공권도 편도 10~20만원대로 저렴합니다. 주말에 가족이 방문하기에도 부담 없는 거리예요.",
               },
