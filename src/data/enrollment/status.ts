@@ -37,7 +37,7 @@ export const STATUS_CONFIG: Record<
     color: "text-gray-700",
     bgColor: "bg-gray-50 border-gray-200",
     order: 4,
-    description: "수속이 모두 완료되었습니다.",
+    description: "모든 수속이 완료되었습니다.",
   },
   CANCELLED: {
     label: "취소됨",
@@ -48,9 +48,4 @@ export const STATUS_CONFIG: Record<
   },
 };
 
-export const STATUS_STEPS: EnrollmentStatus[] = [
-  "PENDING",
-  "CONFIRMED",
-  "DOCUMENTS_PENDING",
-  "READY_TO_DEPART",
-];
+export const STATUS_STEPS: EnrollmentStatus[] = ["PENDING", "CONFIRMED", "DOCUMENTS_PENDING", "READY_TO_DEPART"];

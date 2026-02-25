@@ -93,11 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
     if (error) return { error: error.message };
 
-    const { data: member } = await supabase
-      .from("members")
-      .select("role")
-      .eq("id", data.user.id)
-      .single();
+    const { data: member } = await supabase.from("members").select("role").eq("id", data.user.id).single();
 
     if (member?.role !== "STUDENT") {
       await supabase.auth.signOut();
@@ -130,7 +126,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function findEmail(name: string, phone: string) {
-    if (!supabaseConfigured) return { maskedEmail: null, error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
+    if (!supabaseConfigured)
+      return { maskedEmail: null, error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
     const { data, error } = await supabase.rpc("find_email_by_name_and_phone", {
       p_name: name,
       p_phone: phone,
@@ -156,7 +153,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signOut, changePassword, deleteAccount, findEmail, sendPasswordResetEmail }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        session,
+        loading,
+        signUp,
+        signIn,
+        signOut,
+        changePassword,
+        deleteAccount,
+        findEmail,
+        sendPasswordResetEmail,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

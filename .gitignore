@@ -26,3 +26,4 @@ dist-ssr
 .env
 .omc/
 supabase/.env.local
+supabase/.temp/

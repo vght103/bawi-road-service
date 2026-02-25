@@ -2,6 +2,7 @@ import { AwsClient } from "https://esm.sh/aws4fetch@1.0.20";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const ALLOWED_ORIGINS = [
+  "http://localhost:3000",
   "http://localhost:3001",
   "https://bawiroad.com",
   "https://www.bawiroad.com",
@@ -61,6 +62,19 @@ function extractObjectKey(fileUrl: string): string | null {
   } catch {
     return null;
   }
+}
+
+async function isAdmin(
+  supabase: ReturnType<typeof createClient>,
+  userId: string
+): Promise<boolean> {
+  const { data: member } = await supabase
+    .from("members")
+    .select("role")
+    .eq("id", userId)
+    .single();
+
+  return member?.role === "ADMIN";
 }
 
 Deno.serve(async (req) => {
@@ -162,6 +176,80 @@ Deno.serve(async (req) => {
       );
     }
 
+    if (action === "admin-upload") {
+      const { fileName, fileSize, mimeType, enrollmentId } = body;
+
+      if (!fileName || !fileSize || !mimeType || !enrollmentId) {
+        return jsonResponse(
+          { error: "필수 파라미터가 누락되었습니다." },
+          400,
+          corsHeaders
+        );
+      }
+
+      if (fileSize > MAX_FILE_SIZE) {
+        return jsonResponse(
+          { error: "파일 크기는 10MB 이하여야 합니다." },
+          400,
+          corsHeaders
+        );
+      }
+
+      if (!ALLOWED_MIME_TYPES.includes(mimeType)) {
+        return jsonResponse(
+          { error: "허용되지 않는 파일 형식입니다." },
+          400,
+          corsHeaders
+        );
+      }
+
+      // 어드민 역할 확인
+      if (!(await isAdmin(supabase, user.id))) {
+        return jsonResponse(
+          { error: "어드민만 이 작업을 수행할 수 있습니다." },
+          403,
+          corsHeaders
+        );
+      }
+
+      // enrollment 존재 확인 (소유권 검증 없음)
+      const { data: enrollment, error: enrollmentError } = await supabase
+        .from("enrollments")
+        .select("id")
+        .eq("id", enrollmentId)
+        .single();
+
+      if (enrollmentError || !enrollment) {
+        return jsonResponse(
+          { error: "수속 신청을 찾을 수 없습니다." },
+          404,
+          corsHeaders
+        );
+      }
+
+      const uuid = crypto.randomUUID();
+      const sanitized = sanitizeFileName(fileName);
+      const folder = `enrollments/documents/${enrollmentId}`;
+      const objectKey = `${folder}/${uuid}_${sanitized}`;
+
+      const url = new URL(`${R2_ENDPOINT}/${R2_BUCKET}/${objectKey}`);
+      url.searchParams.set("X-Amz-Expires", "3600");
+
+      const signed = await r2.sign(
+        new Request(url, {
+          method: "PUT",
+          headers: { "Content-Type": mimeType },
+        }),
+        { aws: { signQuery: true } }
+      );
+
+      return jsonResponse(
+        { uploadUrl: signed.url, objectKey },
+        200,
+        corsHeaders
+      );
+    }
+
     if (action === "view") {
       const { documentId } = body;
 
@@ -190,7 +278,7 @@ Deno.serve(async (req) => {
       const enrollmentData = docRecord.enrollments as unknown as {
         user_id: string;
       };
-      if (enrollmentData.user_id !== user.id) {
+      if (enrollmentData.user_id !== user.id && !(await isAdmin(supabase, user.id))) {
         return jsonResponse(
           { error: "이 문서에 대한 접근 권한이 없습니다." },
           403,
@@ -246,7 +334,7 @@ Deno.serve(async (req) => {
       const ownerData = docRecord.enrollments as unknown as {
         user_id: string;
       };
-      if (ownerData.user_id !== user.id) {
+      if (ownerData.user_id !== user.id && !(await isAdmin(supabase, user.id))) {
         return jsonResponse(
           { error: "이 문서에 대한 삭제 권한이 없습니다." },
           403,
@@ -300,7 +388,7 @@ Deno.serve(async (req) => {
     return jsonResponse(
       {
         error:
-          "유효하지 않은 action입니다. 'upload', 'view', 'delete'를 사용하세요.",
+          "유효하지 않은 action입니다. 'upload', 'admin-upload', 'view', 'delete'를 사용하세요.",
       },
       400,
       corsHeaders

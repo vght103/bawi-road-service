@@ -1,5 +1,11 @@
 # Project Rules
 
+## Package Manager
+
+- **pnpm만 사용**. npm, yarn 사용 금지
+- 패키지 설치: `pnpm install`, `pnpm add`
+- 스크립트 실행: `pnpm run dev`, `pnpm run build` 등
+
 ## Component Co-location
 
 - **페이지 전용 컴포넌트**: `src/pages/{page}/components/` 에 생성
@@ -24,6 +30,21 @@
   - `courses.filter(c => ...)` → `courses.filter(course => ...)`
   - `errors.forEach(e => ...)` → `errors.forEach(error => ...)`
 - 예외: `index`의 `i`, 좌표의 `x`/`y` 등 관례적으로 통용되는 경우는 허용
+
+## 백엔드 접근 규칙 (필수 숙지)
+
+> **상세 문서: `docs/backend-access-rules.md` (요약) / 전체: `bawi-abroad-admin/docs/backend-access-rules.md`**
+
+새로운 API, 테이블, Edge Function을 추가/수정할 때 반드시 이 규칙을 따릅니다.
+
+- **Admin = 모든 데이터에 전체 CRUD 권한**
+- **Student = 본인 소유(`user_id = auth.uid()`) 데이터에만 접근 가능**
+- 모든 테이블에 RLS 활성화. Admin은 `FOR ALL`, Student는 작업별 개별 정책
+- Edge Function에서 `serviceClient`(service_role) 사용 시 **코드 레벨 권한 검증 필수** (RLS 우회되므로)
+- 프론트엔드 가드는 UX 목적. 실제 보안은 서버(RLS + Edge Function)에서 담당
+- 파일 업로드: Service는 `upload` 액션 + `uploaded_by: "STUDENT"` 사용. `admin-upload` 사용 금지
+
+---
 
 ## Custom Hook 사용 기준
 
