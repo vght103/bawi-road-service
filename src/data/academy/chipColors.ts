@@ -1,5 +1,5 @@
-/** 어학원 학습 스타일 칩 색상 */
-export const STYLE_CHIP_COLORS: Record<string, string> = {
+/** 어학원 학습 시스템 칩 색상 */
+export const ACADEMY_SYSTEM_CHIP_COLORS: Record<string, string> = {
   세미스파르타: "bg-accent-green text-white",
   스파르타: "bg-terracotta text-white",
 };
@@ -14,11 +14,11 @@ export const TAG_CHIP_COLORS: Record<string, string> = {
   스피킹: "bg-pink-100 text-pink-700",
 };
 
-const DEFAULT_STYLE_CHIP = "bg-brown-light text-white";
+const DEFAULT_ACADEMY_SYSTEM_CHIP = "bg-brown-light text-white";
 const DEFAULT_TAG_CHIP = "bg-beige text-brown";
 
-export function getStyleChipClass(style: string): string {
-  return STYLE_CHIP_COLORS[style] ?? DEFAULT_STYLE_CHIP;
+export function getAcademySystemChipClass(academySystem: string): string {
+  return ACADEMY_SYSTEM_CHIP_COLORS[academySystem] ?? DEFAULT_ACADEMY_SYSTEM_CHIP;
 }
 
 export function getTagChipClass(tag: string): string {

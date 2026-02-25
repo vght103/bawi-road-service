@@ -254,7 +254,7 @@ export default function QuotePage() {
                           <span>
                             {selectedAcademy.name}
                             <span className="ml-2 text-muted-foreground text-[0.75rem]">
-                              {selectedAcademy.region} · {selectedAcademy.style}
+                              {selectedAcademy.region} · {selectedAcademy.academy_system}
                             </span>
                           </span>
                         ) : (
@@ -272,7 +272,7 @@ export default function QuotePage() {
                             {academies?.map((a) => (
                               <CommandItem
                                 key={a.id}
-                                value={`${a.name} ${a.region} ${a.style}`}
+                                value={`${a.name} ${a.region} ${a.academy_system}`}
                                 onSelect={() => {
                                   setAcademyId(a.id);
                                   setAcademyOpen(false);
@@ -285,7 +285,7 @@ export default function QuotePage() {
                                   />
                                   <span className="font-medium">{a.name}</span>
                                   <span className="text-[0.75rem] text-muted-foreground">
-                                    {a.region} · {a.style}
+                                    {a.region} · {a.academy_system}
                                   </span>
                                 </div>
                                 <div className="flex gap-1 ml-6">
@@ -488,7 +488,7 @@ export default function QuotePage() {
                       <div className="text-[0.75rem] text-muted-foreground mb-1">어학원</div>
                       <div className="font-bold text-brown-dark">{selectedAcademy.name}</div>
                       <div className="text-[0.75rem] text-muted-foreground">
-                        {selectedAcademy.region} · {selectedAcademy.style}
+                        {selectedAcademy.region} · {selectedAcademy.academy_system}
                       </div>
                     </div>
 

@@ -19,9 +19,8 @@ export interface Academy {
   id: string; // 어학원 고유 ID ("1", "2", ...)
   name: string; // 어학원명
   region: string; // 지역 (세부, 바기오 등)
-  style: string; // 학습 스타일 (스파르타, 세미스파르타)
+  academy_system: string; // 학습 시스템 (스파르타, 세미스파르타)
   desc: string; // 어학원 소개 설명
-  rating: string; // 평점 ("4.5")
   tags: string[]; // 태그 목록 (ESL, IELTS 등)
   image: string; // 대표 이미지 URL
   courses: Course[]; // 제공 코스 목록

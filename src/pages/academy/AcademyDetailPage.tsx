@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { fetchAcademy } from "@/api/academy/academies";
 import type { AcademyDetail } from "@/data/academies";
-import { getStyleChipClass, getTagChipClass } from "@/data/academy/chipColors";
+import { getAcademySystemChipClass, getTagChipClass } from "@/data/academy/chipColors";
 
 export default function AcademyDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -76,8 +76,8 @@ export default function AcademyDetailPage() {
               <span className="px-2.5 py-1 rounded-md text-[0.75rem] font-semibold bg-white text-brown-dark border border-beige-dark">
                 {academy.region}
               </span>
-              <span className={`px-2.5 py-1 rounded-md text-[0.75rem] font-semibold ${getStyleChipClass(academy.style)}`}>
-                {academy.style}
+              <span className={`px-2.5 py-1 rounded-md text-[0.75rem] font-semibold ${getAcademySystemChipClass(academy.academy_system)}`}>
+                {academy.academy_system}
               </span>
             </div>
             <h1 className="text-[1.8rem] md:text-[2.2rem] font-extrabold text-brown-dark tracking-tight">{academy.name}</h1>

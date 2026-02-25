@@ -204,7 +204,7 @@ export default function HomePage() {
                 id: "smeag",
                 name: "SMEAG Capital",
                 region: "세부",
-                style: "스파르타",
+                academy_system: "스파르타",
                 desc: "세부 최대 규모 어학원. IELTS, TOEIC 공인시험 센터를 보유하고 있어 시험 준비에 최적화된 환경.",
                 image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80",
               },
@@ -212,7 +212,7 @@ export default function HomePage() {
                 id: "cpi",
                 name: "CPI (Cebu Pelis Institute)",
                 region: "세부",
-                style: "세미스파르타",
+                academy_system: "세미스파르타",
                 desc: "리조트형 캠퍼스로 수영장, 헬스장 등 시설이 뛰어남. ESL 과정이 강하며 쾌적한 학습 환경 제공.",
                 image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80",
               },
@@ -220,7 +220,7 @@ export default function HomePage() {
                 id: "pines",
                 name: "PINES Main",
                 region: "바기오",
-                style: "스파르타",
+                academy_system: "스파르타",
                 desc: "바기오의 명문 스파르타 어학원. 시원한 기후와 집중적인 커리큘럼으로 단기간 실력 향상에 최적.",
                 image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80",
               },
@@ -237,7 +237,7 @@ export default function HomePage() {
                       {academy.region}
                     </span>
                     <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-accent-green text-white">
-                      {academy.style}
+                      {academy.academy_system}
                     </span>
                   </div>
                 </div>

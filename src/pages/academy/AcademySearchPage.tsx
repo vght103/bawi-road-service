@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { fetchAcademies } from "@/api/academy/academies";
 import type { Academy } from "@/data/academies";
-import { getStyleChipClass, getTagChipClass } from "@/data/academy/chipColors";
+import { getAcademySystemChipClass, getTagChipClass } from "@/data/academy/chipColors";
 
 export default function AcademySearchPage() {
   const { data: academies = [], isLoading } = useQuery<Academy[]>({
@@ -85,8 +85,8 @@ export default function AcademySearchPage() {
                     <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-white/90 text-brown-dark">
                       {academy.region}
                     </span>
-                    <span className={`px-2.5 py-1 rounded-md text-[0.7rem] font-semibold ${getStyleChipClass(academy.style)}`}>
-                      {academy.style}
+                    <span className={`px-2.5 py-1 rounded-md text-[0.7rem] font-semibold ${getAcademySystemChipClass(academy.academy_system)}`}>
+                      {academy.academy_system}
                     </span>
                   </div>
                 </div>

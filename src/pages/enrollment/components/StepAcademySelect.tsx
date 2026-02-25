@@ -37,7 +37,7 @@ export default function StepAcademySelect({ academies, academyId, onSelect, erro
               <span>
                 {selected.name}
                 <span className="ml-2 text-muted-foreground text-[0.75rem]">
-                  {selected.region} · {selected.style}
+                  {selected.region} · {selected.academy_system}
                 </span>
               </span>
             ) : (
@@ -55,7 +55,7 @@ export default function StepAcademySelect({ academies, academyId, onSelect, erro
                 {academies.map((academy) => (
                   <CommandItem
                     key={academy.id}
-                    value={`${academy.name} ${academy.region} ${academy.style}`}
+                    value={`${academy.name} ${academy.region} ${academy.academy_system}`}
                     onSelect={() => {
                       onSelect(academy.id);
                       setOpen(false);
@@ -68,7 +68,7 @@ export default function StepAcademySelect({ academies, academyId, onSelect, erro
                       />
                       <span className="font-medium">{academy.name}</span>
                       <span className="text-[0.75rem] text-muted-foreground">
-                        {academy.region} · {academy.style}
+                        {academy.region} · {academy.academy_system}
                       </span>
                     </div>
                     <div className="flex gap-1 ml-6">

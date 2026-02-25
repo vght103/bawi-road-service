@@ -323,7 +323,7 @@ export default function EnrollmentApplyPage() {
                       <div className="text-[0.75rem] text-muted-foreground mb-1">어학원</div>
                       <div className="font-bold text-brown-dark">{selectedAcademy.name}</div>
                       <div className="text-[0.75rem] text-muted-foreground">
-                        {selectedAcademy.region} · {selectedAcademy.style}
+                        {selectedAcademy.region} · {selectedAcademy.academy_system}
                       </div>
                     </div>
 
