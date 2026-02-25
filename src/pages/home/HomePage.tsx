@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
+  const [aiKeyword, setAiKeyword] = useState("");
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -83,34 +87,38 @@ export default function HomePage() {
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-terracotta to-accent-green" />
             <div className="flex items-center gap-3 mb-5">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-terracotta to-amber-400 flex items-center justify-center shrink-0 shadow-sm">
-                <svg
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="2"
-                >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
               </div>
               <div>
-                <div className="font-bold text-[0.95rem]"><span className="bg-gradient-to-r from-terracotta to-amber-500 bg-clip-text text-transparent text-lg font-extrabold">AI</span> 상담 어시스턴트</div>
+                <div className="font-bold text-[0.95rem]">
+                  <span className="bg-gradient-to-r from-terracotta to-amber-500 bg-clip-text text-transparent text-lg font-extrabold">
+                    AI
+                  </span>{" "}
+                  상담 어시스턴트
+                </div>
                 <div className="text-[0.8rem] text-brown">어학연수 궁금한 점을 물어보세요</div>
               </div>
             </div>
 
             <div className="flex items-center gap-2 bg-white rounded-[12px] px-4 py-3 border border-beige-dark">
-              <input
+              <Input
                 type="text"
+                value={aiKeyword}
+                onChange={(e) => setAiKeyword(e.target.value)}
                 placeholder="AI와 지금 바로 상담 시작하기"
-                className="flex-1 bg-transparent text-[0.85rem] focus:outline-none placeholder:text-brown-light border-none"
+                className="flex-1 bg-transparent text-[0.85rem] placeholder:text-brown-light border-none shadow-none focus-visible:ring-0 h-auto p-0"
               />
-              <button className="w-8 h-8 rounded-full bg-terracotta flex items-center justify-center shrink-0" disabled>
+              <Button
+                size="icon-sm"
+                className="rounded-full bg-terracotta hover:bg-terracotta-hover shrink-0"
+                disabled={!aiKeyword}
+              >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
                   <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
                 </svg>
-              </button>
+              </Button>
             </div>
           </div>
         </div>
