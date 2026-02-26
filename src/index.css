@@ -195,3 +195,18 @@ body {
   content: " *";
   color: var(--color-terracotta);
 }
+
+/* Swiper 커스텀 스타일 */
+.academy-swiper .swiper-pagination-bullet {
+  background: white;
+  opacity: 0.5;
+  width: 8px;
+  height: 8px;
+}
+
+.academy-swiper .swiper-pagination-bullet-active {
+  background: white;
+  opacity: 1;
+  width: 20px;
+  border-radius: 4px;
+}

@@ -8,17 +8,24 @@ export async function fetchAcademies(): Promise<Academy[]> {
 
   if (error || !data || data.length === 0) return [];
 
-  return data.map((row: Record<string, unknown>) => ({
-    id: row.id as string,
-    name: row.name as string,
-    region: row.region as string,
-    academy_system: row.academy_system as string,
-    desc: row.desc as string,
-    tags: row.tags as string[],
-    image: row.image as string,
-    courses: row.courses as Academy["courses"],
-    dormitories: row.dormitories as Academy["dormitories"],
-  }));
+  return data
+    .map((row: Record<string, unknown>) => ({
+      id: row.id as string,
+      name: row.name as string,
+      region: row.region as string,
+      academy_system: row.academy_system as string,
+      desc: row.desc as string,
+      tags: row.tags as string[],
+      images: (row.images as string[]) ?? [],
+      courses: row.courses as Academy["courses"],
+      dormitories: row.dormitories as Academy["dormitories"],
+      established_year: row.established_year as number | undefined,
+      capacity: row.capacity as number | undefined,
+      korean_ratio: row.korean_ratio as string | undefined,
+      location_detail: row.location_detail as string | undefined,
+      website: row.website as string | undefined,
+    }))
+    .sort((a, b) => Number(a.id) - Number(b.id));
 }
 
 export async function fetchAcademy(id: string): Promise<AcademyDetail | null> {
@@ -40,9 +47,14 @@ export async function fetchAcademy(id: string): Promise<AcademyDetail | null> {
     academy_system: row.academy_system as string,
     desc: row.desc as string,
     tags: row.tags as string[],
-    image: row.image as string,
+    images: (row.images as string[]) ?? [],
     courses: row.courses as Academy["courses"],
     dormitories: row.dormitories as Academy["dormitories"],
+    established_year: row.established_year as number | undefined,
+    capacity: row.capacity as number | undefined,
+    korean_ratio: row.korean_ratio as string | undefined,
+    location_detail: row.location_detail as string | undefined,
+    website: row.website as string | undefined,
     address: row.address as string | undefined,
     shortDesc: (row.short_desc as string) ?? undefined,
     description: row.description as string | undefined,
