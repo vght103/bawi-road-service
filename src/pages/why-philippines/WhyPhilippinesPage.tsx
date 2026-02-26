@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
+import { CircleCheck, ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -82,9 +83,9 @@ export default function WhyPhilippinesPage() {
               <span className="text-terracotta">확실한 스피킹 향상</span>
             </h2>
             <p className="mt-5 text-[0.95rem] leading-[1.75] text-brown">
-              필리핀 어학연수의 가장 큰 장점은 <strong>하루 4~6시간의 1:1 수업</strong>입니다.
-              서양권 어학연수는 대부분 10~15명 그룹 수업이라 말할 기회가 적지만,
-              필리핀에서는 선생님과 단둘이 수업하기 때문에 <strong>내성적인 성격이라도 영어를 말할 수밖에 없는 환경</strong>이 만들어집니다.
+              필리핀 어학연수의 가장 큰 장점은 <strong>하루 4~6시간의 1:1 수업</strong>입니다. 서양권 어학연수는 대부분
+              10~15명 그룹 수업이라 말할 기회가 적지만, 필리핀에서는 선생님과 단둘이 수업하기 때문에{" "}
+              <strong>내성적인 성격이라도 영어를 말할 수밖에 없는 환경</strong>이 만들어집니다.
             </p>
             <ul className="mt-6 space-y-3">
               {[
@@ -94,13 +95,7 @@ export default function WhyPhilippinesPage() {
                 "내향적인 성격도 자연스럽게 스피킹 연습",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2.5 text-[0.9rem] text-brown leading-[1.6]">
-                  <svg className="w-5 h-5 text-accent-green shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  <CircleCheck className="w-5 h-5 text-accent-green shrink-0 mt-0.5" />
                   {item}
                 </li>
               ))}
@@ -144,7 +139,12 @@ export default function WhyPhilippinesPage() {
                 textColor: "text-terracotta",
                 hours: "하루 10~12시간",
                 curfew: "평일 외출 금지",
-                features: ["의무 자습 + 단어 시험", "평일 외출 불가 (주말 가능)", "단기간 집중 학습에 최적", "강제성이 있어 자기관리 약한 분에게 추천"],
+                features: [
+                  "의무 자습 + 단어 시험",
+                  "평일 외출 불가 (주말 가능)",
+                  "단기간 집중 학습에 최적",
+                  "강제성이 있어 자기관리 약한 분에게 추천",
+                ],
                 best: "단기간 확실한 성과가 필요한 분",
               },
               {
@@ -155,7 +155,12 @@ export default function WhyPhilippinesPage() {
                 textColor: "text-accent-green-dark",
                 hours: "하루 8~10시간",
                 curfew: "평일 저녁 외출 가능",
-                features: ["수업 참여 의무 + 자율 복습", "평일 저녁 외출 가능 (통금 있음)", "학습과 생활의 균형", "가장 인기 있는 스타일"],
+                features: [
+                  "수업 참여 의무 + 자율 복습",
+                  "평일 저녁 외출 가능 (통금 있음)",
+                  "학습과 생활의 균형",
+                  "가장 인기 있는 스타일",
+                ],
                 best: "학습과 여가를 균형 있게 즐기고 싶은 분",
               },
               {
@@ -166,7 +171,12 @@ export default function WhyPhilippinesPage() {
                 textColor: "text-brown-dark",
                 hours: "하루 6~8시간",
                 curfew: "자유 외출",
-                features: ["수업 외 시간 완전 자율", "외출·외박 자유", "자기주도 학습 가능한 분에게 적합", "현지 문화 체험 병행 가능"],
+                features: [
+                  "수업 외 시간 완전 자율",
+                  "외출·외박 자유",
+                  "자기주도 학습 가능한 분에게 적합",
+                  "현지 문화 체험 병행 가능",
+                ],
                 best: "자기관리를 잘하는 분, 장기 연수자",
               },
             ].map((item) => (
@@ -174,7 +184,9 @@ export default function WhyPhilippinesPage() {
                 key={item.type}
                 className={`bg-white rounded-[20px] p-7 border ${item.borderColor} hover:-translate-y-1 hover:shadow-md transition-all`}
               >
-                <div className={`inline-flex px-3 py-1.5 rounded-lg text-[0.8rem] font-bold ${item.bgColor} ${item.textColor} mb-4`}>
+                <div
+                  className={`inline-flex px-3 py-1.5 rounded-lg text-[0.8rem] font-bold ${item.bgColor} ${item.textColor} mb-4`}
+                >
                   {item.type}
                 </div>
                 <div className="space-y-2 mb-5">
@@ -225,8 +237,8 @@ export default function WhyPhilippinesPage() {
               <span className="text-terracotta">올인원 시스템</span>
             </h2>
             <p className="mt-5 text-[0.95rem] leading-[1.75] text-brown">
-              필리핀 어학원은 대부분 <strong>기숙사, 식당, 강의실이 한 캠퍼스</strong> 안에 있습니다.
-              숙소를 따로 구하거나 밥을 챙겨 먹을 걱정 없이 <strong>오직 공부에만 집중</strong>할 수 있어요.
+              필리핀 어학원은 대부분 <strong>기숙사, 식당, 강의실이 한 캠퍼스</strong> 안에 있습니다. 숙소를 따로
+              구하거나 밥을 챙겨 먹을 걱정 없이 <strong>오직 공부에만 집중</strong>할 수 있어요.
             </p>
             <div className="mt-8 grid grid-cols-1 gap-3">
               {[
@@ -236,7 +248,10 @@ export default function WhyPhilippinesPage() {
                 { icon: "👥", text: "외국인 룸메이트와 자연스러운 영어 사용" },
                 { icon: "🛡️", text: "한국인 매니저 상주, 생활 상담 가능" },
               ].map((item) => (
-                <div key={item.text} className="flex items-center gap-3 bg-cream rounded-xl px-5 py-3.5 border border-beige-dark">
+                <div
+                  key={item.text}
+                  className="flex items-center gap-3 bg-cream rounded-xl px-5 py-3.5 border border-beige-dark"
+                >
                   <span className="text-xl shrink-0">{item.icon}</span>
                   <span className="text-[0.9rem] text-brown-dark">{item.text}</span>
                 </div>
@@ -390,9 +405,7 @@ export default function WhyPhilippinesPage() {
               className="bg-terracotta text-white px-8 py-3.5 rounded-[10px] text-base font-bold no-underline inline-flex items-center gap-2 shadow-[0_4px_14px_rgba(196,96,58,0.3)] hover:bg-terracotta-hover hover:-translate-y-0.5 transition-all"
             >
               어학원 비교하기
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+              <ArrowRight size={18} strokeWidth={2.5} />
             </Link>
             <Link
               to="/process"

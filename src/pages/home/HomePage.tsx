@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Star, ArrowRight, Check, MessageCircle, Send } from "lucide-react";
 
 export default function HomePage() {
   const [aiKeyword, setAiKeyword] = useState("");
@@ -38,9 +39,7 @@ export default function HomePage() {
       <section className="pt-[120px] pb-14 px-6 max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-[60px] items-center">
         <div className="relative">
           <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3.5 py-1.5 rounded-full text-[0.8rem] font-semibold mb-5 animate-fade-in-up">
-            <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5">
-              <path d="M8 0l2 5h5l-4 3.5 1.5 5L8 10.5 3.5 13.5 5 8.5 1 5h5z" />
-            </svg>
+            <Star size={14} fill="currentColor" />
             수수료 0원, 가격 완전 공개
           </div>
           <h1
@@ -59,22 +58,35 @@ export default function HomePage() {
             <br />
             숨기는 거 없이, 비교하고 직접 고르세요.
           </p>
-          <div className="mt-9 flex gap-3.5 flex-wrap animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
-            <Link
-              to="/academies"
-              className="bg-terracotta text-white px-8 py-3.5 rounded-[10px] text-base font-bold no-underline inline-flex items-center gap-2 shadow-[0_4px_14px_rgba(196,96,58,0.3)] hover:bg-terracotta-hover hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(196,96,58,0.35)] transition-all"
-            >
-              어학원 비교하기
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </Link>
-            <a
-              href="#"
-              className="bg-white text-brown-dark px-8 py-3.5 rounded-[10px] text-base font-semibold border-2 border-beige-dark no-underline inline-flex items-center gap-2 hover:border-brown-light hover:bg-beige hover:-translate-y-0.5 transition-all"
-            >
-              카카오톡 상담
-            </a>
+          {/* AI 상담 */}
+          <div className="mt-9 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+            <div className="flex items-center gap-2.5 mb-2.5">
+              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-terracotta to-amber-400 flex items-center justify-center shrink-0">
+                <MessageCircle size={12} strokeWidth={2.5} className="text-white" />
+              </div>
+              <span className="text-[0.8rem] font-semibold text-brown">
+                <span className="bg-gradient-to-r from-terracotta to-amber-500 bg-clip-text text-transparent font-extrabold">
+                  AI
+                </span>{" "}
+                상담으로 물어보기
+              </span>
+            </div>
+            <div className="flex items-center gap-2 bg-white rounded-[10px] px-3.5 py-2.5 border border-beige-dark max-w-[440px]">
+              <Input
+                type="text"
+                value={aiKeyword}
+                onChange={(event) => setAiKeyword(event.target.value)}
+                placeholder="어학연수 궁금한 점을 물어보세요"
+                className="flex-1 bg-transparent text-[0.82rem] placeholder:text-brown-light border-none shadow-none focus-visible:ring-0 h-auto p-0"
+              />
+              <Button
+                size="icon-sm"
+                className="rounded-full bg-terracotta hover:bg-terracotta-hover shrink-0"
+                disabled={!aiKeyword}
+              >
+                <Send size={14} strokeWidth={2.5} className="text-white" />
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -93,7 +105,7 @@ export default function HomePage() {
             <h3 className="text-[1.3rem] md:text-[1.5rem] font-extrabold text-brown-dark leading-[1.3] mb-2">
               내 연수 비용,
               <br />
-              <span className="text-terracotta">30초만에 확인</span>하세요
+              <span className="text-terracotta">무료로 확인</span>하세요
             </h3>
             <p className="text-[0.85rem] text-brown leading-[1.6] mb-5">
               어학원, 기간, 기숙사를 선택하면 예상 비용이 바로 나와요.
@@ -104,17 +116,7 @@ export default function HomePage() {
                 (point) => (
                   <div key={point} className="flex items-center gap-2.5 text-[0.82rem] text-brown-dark">
                     <div className="w-5 h-5 rounded-full bg-accent-green-light flex items-center justify-center shrink-0">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="3"
-                        className="text-accent-green-dark"
-                      >
-                        <path d="M20 6L9 17l-5-5" />
-                      </svg>
+                      <Check size={12} strokeWidth={3} className="text-accent-green-dark" />
                     </div>
                     <span className="font-medium">{point}</span>
                   </div>
@@ -127,45 +129,9 @@ export default function HomePage() {
               className="flex items-center justify-center gap-2 w-full bg-terracotta text-white py-3.5 rounded-[10px] text-[0.95rem] font-bold no-underline shadow-[0_4px_14px_rgba(196,96,58,0.3)] hover:bg-terracotta-hover hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(196,96,58,0.35)] transition-all"
             >
               무료 견적서 받기
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+              <ArrowRight size={18} strokeWidth={2.5} />
             </Link>
 
-            {/* AI 상담 인풋 */}
-            <div className="mt-4 pt-4 border-t border-beige-dark">
-              <div className="flex items-center gap-2.5 mb-2.5">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-terracotta to-amber-400 flex items-center justify-center shrink-0">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                  </svg>
-                </div>
-                <span className="text-[0.8rem] font-semibold text-brown">
-                  <span className="bg-gradient-to-r from-terracotta to-amber-500 bg-clip-text text-transparent font-extrabold">
-                    AI
-                  </span>{" "}
-                  상담으로 물어보기
-                </span>
-              </div>
-              <div className="flex items-center gap-2 bg-cream rounded-[10px] px-3.5 py-2.5 border border-beige-dark">
-                <Input
-                  type="text"
-                  value={aiKeyword}
-                  onChange={(event) => setAiKeyword(event.target.value)}
-                  placeholder="어학연수 궁금한 점을 물어보세요"
-                  className="flex-1 bg-transparent text-[0.82rem] placeholder:text-brown-light border-none shadow-none focus-visible:ring-0 h-auto p-0"
-                />
-                <Button
-                  size="icon-sm"
-                  className="rounded-full bg-terracotta hover:bg-terracotta-hover shrink-0"
-                  disabled={!aiKeyword}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-                  </svg>
-                </Button>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -181,6 +147,80 @@ export default function HomePage() {
           ))}
         </div>
       </div>
+
+      {/* ACADEMIES SECTION */}
+      <section className="py-20 px-6 bg-cream">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
+            인기 어학원
+          </div>
+          <h2 className="text-[1.6rem] md:text-[2.2rem] font-extrabold tracking-tight text-brown-dark leading-[1.3]">
+            학생들이 많이 찾는 어학원
+          </h2>
+          <p className="mt-3 text-base leading-[1.7] text-brown max-w-[600px]">
+            가격, 시설, 수업 스타일까지 한눈에 비교해보세요.
+          </p>
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                id: "smeag",
+                name: "SMEAG Capital",
+                region: "세부",
+                academy_system: "스파르타",
+                desc: "세부 최대 규모 어학원. IELTS, TOEIC 공인시험 센터를 보유하고 있어 시험 준비에 최적화된 환경.",
+                image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80",
+              },
+              {
+                id: "cpi",
+                name: "CPI (Cebu Pelis Institute)",
+                region: "세부",
+                academy_system: "세미스파르타",
+                desc: "리조트형 캠퍼스로 수영장, 헬스장 등 시설이 뛰어남. ESL 과정이 강하며 쾌적한 학습 환경 제공.",
+                image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80",
+              },
+              {
+                id: "pines",
+                name: "PINES Main",
+                region: "바기오",
+                academy_system: "스파르타",
+                desc: "바기오의 명문 스파르타 어학원. 시원한 기후와 집중적인 커리큘럼으로 단기간 실력 향상에 최적.",
+                image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80",
+              },
+            ].map((academy) => (
+              <Link
+                to={`/academy/${academy.id}`}
+                key={academy.id}
+                className="reveal bg-white rounded-[20px] overflow-hidden border border-beige-dark hover:-translate-y-1 hover:shadow-lg transition-all no-underline text-brown-text"
+              >
+                <div className="h-[180px] relative overflow-hidden">
+                  <img src={academy.image} alt={academy.name} className="w-full h-full object-cover" loading="lazy" />
+                  <div className="absolute top-3 left-3 flex gap-1.5">
+                    <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-white/90 text-brown-dark">
+                      {academy.region}
+                    </span>
+                    <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-accent-green text-white">
+                      {academy.academy_system}
+                    </span>
+                  </div>
+                </div>
+                <div className="p-5">
+                  <div className="text-[1.1rem] font-bold text-brown-dark">{academy.name}</div>
+                  <p className="mt-1.5 text-[0.82rem] text-brown leading-[1.5] line-clamp-2">{academy.desc}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="mt-10 text-center">
+            <Link
+              to="/academies"
+              className="inline-flex items-center gap-2 px-9 py-3.5 bg-white text-brown-dark border-2 border-beige-dark rounded-[10px] font-semibold text-[0.95rem] no-underline hover:border-terracotta hover:text-terracotta hover:-translate-y-0.5 hover:shadow-sm transition-all"
+            >
+              전체 어학원 보기
+              <ArrowRight size={16} strokeWidth={2.5} />
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* WHY SECTION */}
       <section className="py-20 px-6 bg-white">
@@ -285,85 +325,7 @@ export default function HomePage() {
               className="inline-flex items-center gap-1.5 text-[0.9rem] font-semibold text-terracotta hover:text-terracotta-hover no-underline transition-colors"
             >
               자세한 절차 보기
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ACADEMIES SECTION */}
-      <section className="py-20 px-6 bg-cream">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
-            인기 어학원
-          </div>
-          <h2 className="text-[1.6rem] md:text-[2.2rem] font-extrabold tracking-tight text-brown-dark leading-[1.3]">
-            학생들이 많이 찾는 어학원
-          </h2>
-          <p className="mt-3 text-base leading-[1.7] text-brown max-w-[600px]">
-            가격, 시설, 수업 스타일까지 한눈에 비교해보세요.
-          </p>
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                id: "smeag",
-                name: "SMEAG Capital",
-                region: "세부",
-                academy_system: "스파르타",
-                desc: "세부 최대 규모 어학원. IELTS, TOEIC 공인시험 센터를 보유하고 있어 시험 준비에 최적화된 환경.",
-                image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                id: "cpi",
-                name: "CPI (Cebu Pelis Institute)",
-                region: "세부",
-                academy_system: "세미스파르타",
-                desc: "리조트형 캠퍼스로 수영장, 헬스장 등 시설이 뛰어남. ESL 과정이 강하며 쾌적한 학습 환경 제공.",
-                image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                id: "pines",
-                name: "PINES Main",
-                region: "바기오",
-                academy_system: "스파르타",
-                desc: "바기오의 명문 스파르타 어학원. 시원한 기후와 집중적인 커리큘럼으로 단기간 실력 향상에 최적.",
-                image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80",
-              },
-            ].map((academy) => (
-              <Link
-                to={`/academy/${academy.id}`}
-                key={academy.id}
-                className="reveal bg-white rounded-[20px] overflow-hidden border border-beige-dark hover:-translate-y-1 hover:shadow-lg transition-all no-underline text-brown-text"
-              >
-                <div className="h-[180px] relative overflow-hidden">
-                  <img src={academy.image} alt={academy.name} className="w-full h-full object-cover" loading="lazy" />
-                  <div className="absolute top-3 left-3 flex gap-1.5">
-                    <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-white/90 text-brown-dark">
-                      {academy.region}
-                    </span>
-                    <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-accent-green text-white">
-                      {academy.academy_system}
-                    </span>
-                  </div>
-                </div>
-                <div className="p-5">
-                  <div className="text-[1.1rem] font-bold text-brown-dark">{academy.name}</div>
-                  <p className="mt-1.5 text-[0.82rem] text-brown leading-[1.5] line-clamp-2">{academy.desc}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-          <div className="mt-10 text-center">
-            <Link
-              to="/academies"
-              className="inline-flex items-center gap-2 px-9 py-3.5 bg-white text-brown-dark border-2 border-beige-dark rounded-[10px] font-semibold text-[0.95rem] no-underline hover:border-terracotta hover:text-terracotta hover:-translate-y-0.5 hover:shadow-sm transition-all"
-            >
-              전체 어학원 보기
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+              <ArrowRight size={16} strokeWidth={2.5} />
             </Link>
           </div>
         </div>
@@ -441,9 +403,7 @@ export default function HomePage() {
               className="inline-flex items-center gap-2 text-[0.9rem] text-brown-light hover:text-cream font-medium no-underline transition-colors"
             >
               현지에서 발생하는 부대비용 알아보기
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+              <ArrowRight size={16} strokeWidth={2} />
             </Link>
           </div>
         </div>
@@ -541,9 +501,7 @@ export default function HomePage() {
               className="bg-terracotta text-white px-10 py-4 rounded-[10px] text-base font-bold no-underline inline-flex items-center gap-2.5 shadow-[0_6px_24px_rgba(196,96,58,0.4)] hover:bg-terracotta-hover hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(196,96,58,0.45)] transition-all"
             >
               무료 견적서 받기
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+              <ArrowRight size={18} strokeWidth={2.5} />
             </Link>
             <a
               href="#"
