@@ -23,25 +23,29 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const linkClass =
-    "text-brown text-[0.9rem] font-medium hover:text-brown-dark transition-colors no-underline relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-terracotta after:transition-all hover:after:w-full";
+  const isGuideActive = ["/why-philippines", "/process", "/visa-info"].includes(location.pathname);
+
+  const getLinkClass = (path: string) => {
+    const active = location.pathname === path || location.pathname.startsWith(path + "/");
+    return `text-[0.9rem] font-semibold no-underline transition-all rounded-md px-2.5 py-1 ${active ? "bg-white/15 text-white" : "text-white hover:bg-white/10"}`;
+  };
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 bg-cream/85 backdrop-blur-[16px] border-b border-beige-dark transition-shadow ${scrolled ? "shadow-md" : ""}`}
+      className={`fixed top-0 left-0 right-0 z-50 bg-brown backdrop-blur-[16px] border-b border-brown-dark/20 transition-shadow ${scrolled ? "shadow-md" : ""}`}
     >
       <div className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 no-underline text-brown-dark" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+        <Link to="/" className="flex items-center gap-2.5 no-underline text-cream" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
           <div>
             <div className="font-extrabold text-[1.2rem] tracking-tight leading-tight">바위로드</div>
-            <div className="text-[0.65rem] text-brown font-medium tracking-wider">BAWI ROAD</div>
+            <div className="text-[0.65rem] text-cream/60 font-medium tracking-wider">BAWI ROAD</div>
           </div>
         </Link>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-7">
-          <Link to="/academies" className={linkClass}>
+          <Link to="/academies" className={getLinkClass("/academies")}>
             어학원 비교
           </Link>
 
@@ -57,7 +61,7 @@ export default function Navbar() {
             }}
           >
             <button
-              className="text-brown text-[0.9rem] font-medium hover:text-brown-dark transition-colors cursor-pointer bg-transparent border-none p-0 flex items-center gap-1 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-terracotta after:transition-all hover:after:w-full"
+              className={`text-[0.9rem] font-semibold cursor-pointer border-none flex items-center gap-1 no-underline transition-all rounded-md px-2.5 py-1 ${isGuideActive ? "bg-white/15 text-white" : "bg-transparent text-white hover:bg-white/10"}`}
             >
               연수 가이드
               <ChevronDown size={12} strokeWidth={2.5} className={`transition-transform ${guideOpen ? "rotate-180" : ""}`} />
@@ -91,19 +95,8 @@ export default function Navbar() {
             )}
           </div>
 
-          <a
-            href="/#cost"
-            className={linkClass}
-          >
-            비용 가이드
-          </a>
-          <a
-            href="/#reviews"
-            className={linkClass}
-          >
-            후기
-          </a>
-          <Link to="/enrollment/apply" className={linkClass}>
+          <Link to="/with-bawi" className={getLinkClass("/with-bawi")}>바위로드와 함께</Link>
+          <Link to="/enrollment/apply" className={getLinkClass("/enrollment")}>
             수속 신청
           </Link>
           <Link
@@ -125,8 +118,8 @@ export default function Navbar() {
                 userMenuRef.current = setTimeout(() => setUserMenuOpen(false), 150);
               }}
             >
-              <button className="flex items-center gap-2 text-brown text-[0.85rem] font-medium hover:text-brown-dark transition-colors bg-transparent border-none cursor-pointer p-0">
-                <div className="w-8 h-8 rounded-full bg-beige-dark flex items-center justify-center text-brown-dark text-sm font-bold">
+              <button className="flex items-center gap-2 text-cream/80 text-[0.85rem] font-medium hover:text-white transition-colors bg-transparent border-none cursor-pointer p-0">
+                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-cream text-sm font-bold">
                   {(member?.name ?? user.email)?.[0]?.toUpperCase()}
                 </div>
               </button>
@@ -161,7 +154,7 @@ export default function Navbar() {
             <Link
               to="/login"
               state={{ from: location.pathname }}
-              className="text-brown text-[0.85rem] font-medium hover:text-brown-dark transition-colors no-underline"
+              className="text-white text-[0.85rem] font-semibold bg-white/15 hover:bg-white/25 px-4 py-1.5 rounded-md transition-all no-underline"
             >
               로그인
             </Link>
@@ -230,20 +223,7 @@ export default function Navbar() {
             )}
           </div>
 
-          <a
-            href="/#cost"
-            className="block text-brown font-medium py-2 no-underline"
-            onClick={() => setMobileOpen(false)}
-          >
-            비용 가이드
-          </a>
-          <a
-            href="/#reviews"
-            className="block text-brown font-medium py-2 no-underline"
-            onClick={() => setMobileOpen(false)}
-          >
-            후기
-          </a>
+          <Link to="/with-bawi" className="block text-brown font-medium py-2 no-underline" onClick={() => setMobileOpen(false)}>바위로드와 함께</Link>
           <Link
             to="/enrollment/apply"
             className="block text-brown font-medium py-2 no-underline"

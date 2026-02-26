@@ -15,6 +15,7 @@ import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
 import MyPage from "@/pages/my/MyPage";
 import EnrollmentApplyPage from "@/pages/enrollment/EnrollmentApplyPage";
 import EnrollmentDetailPage from "@/pages/enrollment/EnrollmentDetailPage";
+import WithBawiPage from "@/pages/with-bawi/WithBawiPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
       <Route path="/visa-info" element={<VisaInfoPage />} />
       <Route path="/quote" element={<QuotePage />} />
       <Route path="/inquiry" element={<InquiryPage />} />
+      <Route path="/with-bawi" element={<WithBawiPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/find-account" element={<FindAccountPage />} />
