@@ -51,114 +51,119 @@ export default function HomePage() {
       <Navbar />
 
       {/* HERO */}
-      <section className="pt-[120px] pb-14 px-6 max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-[60px] items-center">
-        <div className="relative">
-          <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3.5 py-1.5 rounded-full text-[0.8rem] font-semibold mb-5 animate-fade-in-up">
-            <Star size={14} fill="currentColor" />
-            수수료 0원, 가격 완전 공개
+      <section className="bg-cream pt-[120px] pb-14 px-6">
+        <div className="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-[60px] items-center">
+          <div className="relative">
+            <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3.5 py-1.5 rounded-full text-[0.8rem] font-semibold mb-5 animate-fade-in-up">
+              <Star size={14} fill="currentColor" />
+              수수료 0원, 가격 완전 공개
+            </div>
+            <h1
+              className="text-[2rem] md:text-[3.2rem] font-black leading-[1.25] tracking-tight text-brown-dark animate-fade-in-up"
+              style={{ animationDelay: "0.1s" }}
+            >
+              필리핀 어학연수
+              <br />
+              <span className="text-terracotta">다 보여주는</span> 유학원
+            </h1>
+            <p
+              className="mt-5 text-[0.95rem] md:text-[1.1rem] leading-[1.7] text-brown animate-fade-in-up"
+              style={{ animationDelay: "0.2s" }}
+            >
+              어학원 가격, 시설, 장단점까지 전부 공개합니다.
+              <br />
+              숨기는 거 없이, 비교하고 직접 고르세요.
+            </p>
+            {/* AI 상담 */}
+            <div
+              className="mt-9 animate-fade-in-up max-w-[440px] bg-white rounded-[16px] p-5 border border-beige-dark shadow-sm relative overflow-hidden"
+              style={{ animationDelay: "0.3s" }}
+            >
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-terracotta to-accent-green" />
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-terracotta to-amber-400 flex items-center justify-center shrink-0">
+                  <MessageCircle size={12} strokeWidth={2.5} className="text-white" />
+                </div>
+                <span className="text-[0.8rem] font-semibold text-brown">
+                  <span className="bg-gradient-to-r from-terracotta to-amber-500 bg-clip-text text-transparent font-extrabold">
+                    AI
+                  </span>{" "}
+                  상담으로 물어보기
+                </span>
+              </div>
+              <div className="flex items-center gap-2 bg-cream rounded-[10px] px-3.5 py-2.5 border border-beige-dark">
+                <Input
+                  type="text"
+                  value={aiKeyword}
+                  onChange={(event) => setAiKeyword(event.target.value)}
+                  placeholder="어학연수 궁금한 점을 물어보세요"
+                  className="flex-1 bg-transparent text-brown-dark text-[0.82rem] placeholder:text-brown-light border-none shadow-none focus-visible:ring-0 h-auto p-0"
+                />
+                <Button
+                  size="icon-sm"
+                  className="rounded-full bg-terracotta hover:bg-terracotta-hover shrink-0"
+                  disabled={!aiKeyword}
+                >
+                  <Send size={14} strokeWidth={2.5} className="text-white" />
+                </Button>
+              </div>
+            </div>
           </div>
-          <h1
-            className="text-[2rem] md:text-[3.2rem] font-black leading-[1.25] tracking-tight text-brown-dark animate-fade-in-up"
-            style={{ animationDelay: "0.1s" }}
-          >
-            필리핀 어학연수
-            <br />
-            <span className="text-terracotta">다 보여주는</span> 유학원
-          </h1>
-          <p
-            className="mt-5 text-[0.95rem] md:text-[1.1rem] leading-[1.7] text-brown animate-fade-in-up"
+
+          {/* Hero Visual - Quote CTA Card */}
+          <div
+            className="relative flex justify-center items-center animate-fade-in-up"
             style={{ animationDelay: "0.2s" }}
           >
-            어학원 가격, 시설, 장단점까지 전부 공개합니다.
-            <br />
-            숨기는 거 없이, 비교하고 직접 고르세요.
-          </p>
-          {/* AI 상담 */}
-          <div className="mt-9 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
-            <div className="flex items-center gap-2.5 mb-2.5">
-              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-terracotta to-amber-400 flex items-center justify-center shrink-0">
-                <MessageCircle size={12} strokeWidth={2.5} className="text-white" />
+            <div className="bg-white rounded-[20px] p-7 md:p-9 shadow-lg w-full max-w-[440px] border border-beige-dark relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-terracotta to-accent-green" />
+
+              <div className="inline-flex items-center gap-1.5 bg-terracotta-light text-terracotta px-3 py-1 rounded-full text-[0.75rem] font-bold mb-4">
+                무료 견적 서비스
               </div>
-              <span className="text-[0.8rem] font-semibold text-brown">
-                <span className="bg-gradient-to-r from-terracotta to-amber-500 bg-clip-text text-transparent font-extrabold">
-                  AI
-                </span>{" "}
-                상담으로 물어보기
-              </span>
-            </div>
-            <div className="flex items-center gap-2 bg-white rounded-[10px] px-3.5 py-2.5 border border-beige-dark max-w-[440px]">
-              <Input
-                type="text"
-                value={aiKeyword}
-                onChange={(event) => setAiKeyword(event.target.value)}
-                placeholder="어학연수 궁금한 점을 물어보세요"
-                className="flex-1 bg-transparent text-[0.82rem] placeholder:text-brown-light border-none shadow-none focus-visible:ring-0 h-auto p-0"
-              />
-              <Button
-                size="icon-sm"
-                className="rounded-full bg-terracotta hover:bg-terracotta-hover shrink-0"
-                disabled={!aiKeyword}
-              >
-                <Send size={14} strokeWidth={2.5} className="text-white" />
-              </Button>
-            </div>
-          </div>
-        </div>
 
-        {/* Hero Visual - Quote CTA Card */}
-        <div
-          className="relative flex justify-center items-center animate-fade-in-up"
-          style={{ animationDelay: "0.2s" }}
-        >
-          <div className="bg-white rounded-[20px] p-7 md:p-9 shadow-lg w-full max-w-[440px] border border-beige-dark relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-terracotta to-accent-green" />
+              <h3 className="text-[1.3rem] md:text-[1.5rem] font-extrabold text-brown-dark leading-[1.3] mb-2">
+                내 연수 비용,
+                <br />
+                <span className="text-terracotta">무료로 확인</span>하세요
+              </h3>
+              <p className="text-[0.85rem] text-brown leading-[1.6] mb-5">
+                어학원, 기간, 기숙사를 선택하면 예상 비용이 바로 나와요.
+              </p>
 
-            <div className="inline-flex items-center gap-1.5 bg-terracotta-light text-terracotta px-3 py-1 rounded-full text-[0.75rem] font-bold mb-4">
-              무료 견적 서비스
-            </div>
-
-            <h3 className="text-[1.3rem] md:text-[1.5rem] font-extrabold text-brown-dark leading-[1.3] mb-2">
-              내 연수 비용,
-              <br />
-              <span className="text-terracotta">무료로 확인</span>하세요
-            </h3>
-            <p className="text-[0.85rem] text-brown leading-[1.6] mb-5">
-              어학원, 기간, 기숙사를 선택하면 예상 비용이 바로 나와요.
-            </p>
-
-            <div className="flex flex-col gap-2.5 mb-6">
-              {["수수료 0원 — 학생 부담 제로", "가격 100% 공개 — 숨김 비용 없음", "상담 없이 바로 확인 가능"].map(
-                (point) => (
-                  <div key={point} className="flex items-center gap-2.5 text-[0.82rem] text-brown-dark">
-                    <div className="w-5 h-5 rounded-full bg-accent-green-light flex items-center justify-center shrink-0">
-                      <Check size={12} strokeWidth={3} className="text-accent-green-dark" />
+              <div className="flex flex-col gap-2.5 mb-6">
+                {["수수료 0원 — 학생 부담 제로", "가격 100% 공개 — 숨김 비용 없음", "상담 없이 바로 확인 가능"].map(
+                  (point) => (
+                    <div key={point} className="flex items-center gap-2.5 text-[0.82rem] text-brown-dark">
+                      <div className="w-5 h-5 rounded-full bg-accent-green-light flex items-center justify-center shrink-0">
+                        <Check size={12} strokeWidth={3} className="text-accent-green-dark" />
+                      </div>
+                      <span className="font-medium">{point}</span>
                     </div>
-                    <span className="font-medium">{point}</span>
-                  </div>
-                ),
-              )}
+                  ),
+                )}
+              </div>
+
+              <Link
+                to="/quote"
+                className="flex items-center justify-center gap-2 w-full bg-terracotta text-white py-3.5 rounded-[10px] text-[0.95rem] font-bold no-underline shadow-[0_4px_14px_rgba(196,96,58,0.3)] hover:bg-terracotta-hover hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(196,96,58,0.35)] transition-all"
+              >
+                무료 견적서 받기
+                <ArrowRight size={18} strokeWidth={2.5} />
+              </Link>
+              <Link
+                to="/inquiry"
+                className="flex items-center justify-center gap-2 w-full mt-2.5 bg-transparent text-brown border border-beige-dark py-3 rounded-[10px] text-[0.88rem] font-semibold no-underline hover:border-terracotta hover:text-terracotta hover:-translate-y-0.5 transition-all"
+              >
+                1:1 상담 신청하기
+              </Link>
             </div>
-
-            <Link
-              to="/quote"
-              className="flex items-center justify-center gap-2 w-full bg-terracotta text-white py-3.5 rounded-[10px] text-[0.95rem] font-bold no-underline shadow-[0_4px_14px_rgba(196,96,58,0.3)] hover:bg-terracotta-hover hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(196,96,58,0.35)] transition-all"
-            >
-              무료 견적서 받기
-              <ArrowRight size={18} strokeWidth={2.5} />
-            </Link>
-            <Link
-              to="/inquiry"
-              className="flex items-center justify-center gap-2 w-full mt-2.5 bg-transparent text-brown border border-beige-dark py-3 rounded-[10px] text-[0.88rem] font-semibold no-underline hover:border-terracotta hover:text-terracotta hover:-translate-y-0.5 transition-all"
-            >
-              1:1 상담 신청하기
-            </Link>
-
           </div>
         </div>
       </section>
 
       {/* TRUST BAR */}
-      <div className="bg-beige py-10 px-6 border-y border-beige-dark">
+      <div className="bg-white py-10 px-6 border-y border-beige-dark">
         <div className="max-w-[1200px] mx-auto flex justify-center gap-6 md:gap-12 flex-wrap">
           {["학생 수수료 0원", "가격 100% 공개", "검증된 어학원만", "솔직한 장단점 비교"].map((text) => (
             <div key={text} className="flex items-center gap-2.5 text-[0.95rem] font-semibold text-brown">
@@ -203,12 +208,19 @@ export default function HomePage() {
                     className="block bg-white rounded-[20px] overflow-hidden border border-beige-dark hover:-translate-y-1 hover:shadow-lg transition-all no-underline text-brown-text"
                   >
                     <div className="h-[180px] relative overflow-hidden">
-                      <img src={academy.images[0]} alt={academy.name} className="w-full h-full object-cover" loading="lazy" />
+                      <img
+                        src={academy.images[0]}
+                        alt={academy.name}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
                       <div className="absolute top-3 left-3 flex gap-1.5">
                         <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-white/90 text-brown-dark">
                           {academy.region}
                         </span>
-                        <span className={`px-2.5 py-1 rounded-md text-[0.7rem] font-semibold ${getAcademySystemChipClass(academy.academy_system)}`}>
+                        <span
+                          className={`px-2.5 py-1 rounded-md text-[0.7rem] font-semibold ${getAcademySystemChipClass(academy.academy_system)}`}
+                        >
                           {academy.academy_system}
                         </span>
                       </div>
@@ -297,7 +309,7 @@ export default function HomePage() {
       </section>
 
       {/* PROCESS SECTION */}
-      <section className="py-20 px-6 bg-beige">
+      <section className="py-20 px-6 bg-cream">
         <div className="max-w-[1200px] mx-auto">
           <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
             📋 수속 절차
@@ -355,184 +367,36 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* COST SECTION */}
-      <section id="cost" className="py-20 px-6 bg-brown-dark text-cream relative overflow-hidden">
-        <div className="absolute -top-1/2 -right-[20%] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(196,96,58,0.15)_0%,transparent_70%)] rounded-full" />
-        <div className="max-w-[1200px] mx-auto relative">
-          <div className="inline-flex items-center gap-1.5 bg-[rgba(74,140,92,0.2)] text-[#8FD4A0] px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
-            비용 한눈에
+      {/* 바위로드와 함께 CTA */}
+      <section className="py-24 px-6 bg-white text-center">
+        <div className="max-w-[720px] mx-auto">
+          <div className="reveal inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3.5 py-1.5 rounded-full text-[0.78rem] font-semibold mb-6">
+            바위로드 서포트
           </div>
-          <h2 className="text-[1.6rem] md:text-[2.2rem] font-extrabold tracking-tight text-cream leading-[1.3]">
-            기간별 예상 비용
-          </h2>
-          <p className="mt-3 text-base leading-[1.7] text-brown-light max-w-[600px]">
-            학비 + 기숙사 기준, 어학원과 옵션에 따라 달라질 수 있어요.
-          </p>
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
-            {[
-              {
-                weeks: "4주",
-                price: "150만원~",
-                sub: "약 $1,100~",
-                detail: "단기 체험\n기초 회화 집중",
-                popular: false,
-              },
-              {
-                weeks: "8주",
-                price: "280만원~",
-                sub: "약 $2,000~",
-                detail: "가장 인기\n실력 향상 체감",
-                popular: true,
-              },
-              {
-                weeks: "12주",
-                price: "400만원~",
-                sub: "약 $2,900~",
-                detail: "중급 목표\n시험 준비 가능",
-                popular: false,
-              },
-              {
-                weeks: "24주",
-                price: "750만원~",
-                sub: "약 $5,500~",
-                detail: "장기 마스터\n고급 레벨 도달",
-                popular: false,
-              },
-            ].map((item) => (
-              <div
-                key={item.weeks}
-                className={`reveal rounded-[20px] p-7 text-center backdrop-blur-[4px] border transition-all hover:-translate-y-1 relative ${
-                  item.popular
-                    ? "bg-[rgba(196,96,58,0.15)] border-terracotta"
-                    : "bg-white/[0.06] border-white/10 hover:bg-white/10"
-                }`}
-              >
-                {item.popular && (
-                  <span className="absolute -top-2.5 right-4 bg-terracotta text-white px-3 py-0.5 rounded-[10px] text-[0.7rem] font-bold">
-                    인기
-                  </span>
-                )}
-                <div className="text-[0.85rem] text-brown-light font-semibold mb-2">{item.weeks}</div>
-                <div className="text-[1.8rem] font-black text-cream tracking-tight">{item.price}</div>
-                <div className="text-[0.75rem] text-brown-light mt-1">{item.sub}</div>
-                <div className="mt-4 pt-4 border-t border-white/10 text-[0.78rem] text-brown-light leading-[1.6] whitespace-pre-line">
-                  {item.detail}
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-8 text-center">
-            <Link
-              to="/visa-info"
-              className="inline-flex items-center gap-2 text-[0.9rem] text-brown-light hover:text-cream font-medium no-underline transition-colors"
-            >
-              현지에서 발생하는 부대비용 알아보기
-              <ArrowRight size={16} strokeWidth={2} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* REVIEWS SECTION */}
-      <section id="reviews" className="py-20 px-6 bg-white">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
-            💬 학생 후기
-          </div>
-          <h2 className="text-[1.6rem] md:text-[2.2rem] font-extrabold tracking-tight text-brown-dark leading-[1.3]">
-            바위로드와 함께한 이야기
-          </h2>
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                stars: "★★★★★",
-                text: '"다른 유학원은 상담해야 가격을 알려주는데, 여기는 웹사이트에서 다 비교할 수 있어서 편했어요. 진짜 숨기는 거 없더라구요."',
-                name: "김OO님",
-                meta: "SMEAG Capital · ESL 8주",
-                avatar: "김O",
-              },
-              {
-                stars: "★★★★★",
-                text: '"직장 다니면서 준비하느라 시간이 없었는데, 견적도 바로 나오고 수속도 온라인으로 끝나서 정말 편했습니다."',
-                name: "이OO님",
-                meta: "CPI · ESL 12주",
-                avatar: "이O",
-              },
-              {
-                stars: "★★★★☆",
-                text: '"장단점을 솔직하게 알려줘서 오히려 믿음이 갔어요. 바기오가 저한테 맞는다는 걸 여기서 알게 됐습니다."',
-                name: "박OO님",
-                meta: "PINES · ESL 8주",
-                avatar: "박O",
-              },
-            ].map((review) => (
-              <div
-                key={review.name}
-                className="reveal bg-cream rounded-[20px] p-7 border border-beige-dark hover:-translate-y-0.5 hover:shadow-md transition-all"
-              >
-                <div className="text-gold text-[0.9rem] mb-3.5 tracking-widest">{review.stars}</div>
-                <p className="font-serif text-[0.95rem] leading-[1.8] text-brown-dark mb-5">{review.text}</p>
-                <div className="flex items-center gap-3 pt-4 border-t border-beige-dark">
-                  <div className="w-10 h-10 rounded-full bg-beige-dark flex items-center justify-center text-[0.85rem] font-bold text-brown">
-                    {review.avatar}
-                  </div>
-                  <div>
-                    <div className="font-semibold text-[0.85rem]">{review.name}</div>
-                    <div className="text-[0.75rem] text-brown">{review.meta}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA SECTION */}
-      <section className="py-24 px-6 bg-brown-dark text-center relative overflow-hidden">
-        {/* 배경 radial glow 효과 */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_120%,rgba(196,96,58,0.25)_0%,transparent_70%)]" />
-        <div className="absolute -top-[200px] -left-[200px] w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(196,96,58,0.08)_0%,transparent_70%)] rounded-full" />
-        <div className="absolute -bottom-[150px] -right-[150px] w-[400px] h-[400px] bg-[radial-gradient(circle,rgba(74,140,92,0.06)_0%,transparent_70%)] rounded-full" />
-        <div className="max-w-[720px] mx-auto relative">
-          <div className="reveal inline-flex items-center gap-1.5 bg-[rgba(255,255,255,0.08)] text-brown-light px-3.5 py-1.5 rounded-full text-[0.78rem] font-semibold mb-6 border border-white/10">
-            무료 견적 서비스
-          </div>
-          <h2 className="reveal text-[2rem] md:text-[2.8rem] font-extrabold tracking-tight text-cream leading-[1.2]">
-            내 연수 비용,
+          <h2 className="reveal text-[2rem] md:text-[2.8rem] font-extrabold tracking-tight text-brown-dark leading-[1.2]">
+            출국 준비부터 현지 도착까지,
             <br />
-            <span className="text-terracotta">1분이면 확인돼요</span>
+            <span className="text-terracotta">바위로드가 함께합니다</span>
           </h2>
-          <p className="reveal mt-5 text-[0.95rem] md:text-[1.05rem] leading-[1.75] text-brown-light max-w-[500px] mx-auto">
-            어학원, 기간, 기숙사 옵션을 선택하면 예상 비용이 바로 나와요.
+          <p className="reveal mt-5 text-[0.95rem] md:text-[1.05rem] leading-[1.75] text-brown max-w-[500px] mx-auto">
+            오리엔테이션, 웰컴 키트, 공항 픽업까지
             <br />
-            상담 없이도 견적서를 받아보세요.
+            바위로드만의 특별한 케어를 경험하세요.
           </p>
-          {/* 강조 포인트 배지 3개 */}
-          <div className="reveal mt-7 flex flex-wrap justify-center gap-2.5">
-            {["✓ 30초 만에 견적 확인", "✓ 상담 없이 가능", "✓ 가격 100% 투명 공개"].map((badge) => (
-              <span
-                key={badge}
-                className="inline-flex items-center px-3.5 py-1.5 rounded-full bg-white/[0.07] border border-white/15 text-[0.8rem] font-semibold text-cream"
-              >
-                {badge}
-              </span>
-            ))}
-          </div>
-          {/* CTA 버튼 */}
           <div className="reveal mt-10 flex gap-3.5 justify-center flex-wrap">
             <Link
-              to="/quote"
+              to="/with-bawi"
               className="bg-terracotta text-white px-10 py-4 rounded-[10px] text-base font-bold no-underline inline-flex items-center gap-2.5 shadow-[0_6px_24px_rgba(196,96,58,0.4)] hover:bg-terracotta-hover hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(196,96,58,0.45)] transition-all"
             >
-              무료 견적서 받기
+              자세히 알아보기
               <ArrowRight size={18} strokeWidth={2.5} />
             </Link>
-            <a
-              href="#"
-              className="bg-white/8 text-cream px-8 py-4 rounded-[10px] text-base font-semibold border border-white/20 no-underline inline-flex items-center gap-2 hover:bg-white/14 hover:-translate-y-0.5 transition-all"
+            <Link
+              to="/inquiry"
+              className="bg-brown-dark text-cream px-8 py-4 rounded-[10px] text-base font-semibold no-underline inline-flex items-center gap-2 hover:bg-brown-dark/90 hover:-translate-y-0.5 transition-all"
             >
-              카카오톡 상담
-            </a>
+              1:1 상담 신청
+            </Link>
           </div>
         </div>
       </section>
