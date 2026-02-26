@@ -146,6 +146,12 @@ export default function HomePage() {
               무료 견적서 받기
               <ArrowRight size={18} strokeWidth={2.5} />
             </Link>
+            <Link
+              to="/inquiry"
+              className="flex items-center justify-center gap-2 w-full mt-2.5 bg-transparent text-brown border border-beige-dark py-3 rounded-[10px] text-[0.88rem] font-semibold no-underline hover:border-terracotta hover:text-terracotta hover:-translate-y-0.5 transition-all"
+            >
+              1:1 상담 신청하기
+            </Link>
 
           </div>
         </div>

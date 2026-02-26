@@ -7,6 +7,7 @@ import WhyPhilippinesPage from "@/pages/why-philippines/WhyPhilippinesPage";
 import ProcessPage from "@/pages/process/ProcessPage";
 import VisaInfoPage from "@/pages/visa-info/VisaInfoPage";
 import QuotePage from "@/pages/quote/QuotePage";
+import InquiryPage from "@/pages/inquiry/InquiryPage";
 import SignupPage from "@/pages/auth/SignupPage";
 import LoginPage from "@/pages/auth/LoginPage";
 import FindAccountPage from "@/pages/auth/FindAccountPage";
@@ -28,6 +29,7 @@ function App() {
       <Route path="/process" element={<ProcessPage />} />
       <Route path="/visa-info" element={<VisaInfoPage />} />
       <Route path="/quote" element={<QuotePage />} />
+      <Route path="/inquiry" element={<InquiryPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/find-account" element={<FindAccountPage />} />
