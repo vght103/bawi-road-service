@@ -1,13 +1,28 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Star, ArrowRight, Check, MessageCircle, Send } from "lucide-react";
+import type { Swiper as SwiperType } from "swiper";
+import { Star, ArrowRight, ChevronLeft, ChevronRight, Check, MessageCircle, Send } from "lucide-react";
+import { fetchAcademies } from "@/api/academy/academies";
+import type { Academy } from "@/data/academies";
+import { getAcademySystemChipClass } from "@/data/academy/chipColors";
 
 export default function HomePage() {
   const [aiKeyword, setAiKeyword] = useState("");
+  const [academySwiper, setAcademySwiper] = useState<SwiperType | null>(null);
+
+  const { data: academies = [] } = useQuery<Academy[]>({
+    queryKey: ["academies"],
+    queryFn: fetchAcademies,
+  });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -150,7 +165,7 @@ export default function HomePage() {
 
       {/* ACADEMIES SECTION */}
       <section className="py-20 px-6 bg-cream">
-        <div className="max-w-[1200px] mx-auto">
+        <div className="max-w-[1200px] mx-auto md:px-7">
           <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
             인기 어학원
           </div>
@@ -160,55 +175,58 @@ export default function HomePage() {
           <p className="mt-3 text-base leading-[1.7] text-brown max-w-[600px]">
             가격, 시설, 수업 스타일까지 한눈에 비교해보세요.
           </p>
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                id: "smeag",
-                name: "SMEAG Capital",
-                region: "세부",
-                academy_system: "스파르타",
-                desc: "세부 최대 규모 어학원. IELTS, TOEIC 공인시험 센터를 보유하고 있어 시험 준비에 최적화된 환경.",
-                image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                id: "cpi",
-                name: "CPI (Cebu Pelis Institute)",
-                region: "세부",
-                academy_system: "세미스파르타",
-                desc: "리조트형 캠퍼스로 수영장, 헬스장 등 시설이 뛰어남. ESL 과정이 강하며 쾌적한 학습 환경 제공.",
-                image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80",
-              },
-              {
-                id: "pines",
-                name: "PINES Main",
-                region: "바기오",
-                academy_system: "스파르타",
-                desc: "바기오의 명문 스파르타 어학원. 시원한 기후와 집중적인 커리큘럼으로 단기간 실력 향상에 최적.",
-                image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80",
-              },
-            ].map((academy) => (
-              <Link
-                to={`/academy/${academy.id}`}
-                key={academy.id}
-                className="reveal bg-white rounded-[20px] overflow-hidden border border-beige-dark hover:-translate-y-1 hover:shadow-lg transition-all no-underline text-brown-text"
-              >
-                <div className="h-[180px] relative overflow-hidden">
-                  <img src={academy.image} alt={academy.name} className="w-full h-full object-cover" loading="lazy" />
-                  <div className="absolute top-3 left-3 flex gap-1.5">
-                    <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-white/90 text-brown-dark">
-                      {academy.region}
-                    </span>
-                    <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-accent-green text-white">
-                      {academy.academy_system}
-                    </span>
-                  </div>
-                </div>
-                <div className="p-5">
-                  <div className="text-[1.1rem] font-bold text-brown-dark">{academy.name}</div>
-                  <p className="mt-1.5 text-[0.82rem] text-brown leading-[1.5] line-clamp-2">{academy.desc}</p>
-                </div>
-              </Link>
-            ))}
+          <div className="mt-12 relative">
+            <Swiper
+              modules={[Pagination]}
+              pagination={{ clickable: true }}
+              spaceBetween={20}
+              slidesPerView={1}
+              slidesPerGroup={1}
+              loop
+              breakpoints={{
+                768: { slidesPerView: 2, slidesPerGroup: 2 },
+                1024: { slidesPerView: 3, slidesPerGroup: 3 },
+              }}
+              onSwiper={setAcademySwiper}
+              className="pb-12"
+            >
+              {academies.slice(0, 9).map((academy) => (
+                <SwiperSlide key={academy.id}>
+                  <Link
+                    to={`/academy/${academy.id}`}
+                    className="block bg-white rounded-[20px] overflow-hidden border border-beige-dark hover:-translate-y-1 hover:shadow-lg transition-all no-underline text-brown-text"
+                  >
+                    <div className="h-[180px] relative overflow-hidden">
+                      <img src={academy.images[0]} alt={academy.name} className="w-full h-full object-cover" loading="lazy" />
+                      <div className="absolute top-3 left-3 flex gap-1.5">
+                        <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-white/90 text-brown-dark">
+                          {academy.region}
+                        </span>
+                        <span className={`px-2.5 py-1 rounded-md text-[0.7rem] font-semibold ${getAcademySystemChipClass(academy.academy_system)}`}>
+                          {academy.academy_system}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="p-5">
+                      <div className="text-[1.1rem] font-bold text-brown-dark">{academy.name}</div>
+                      <p className="mt-1.5 text-[0.82rem] text-brown leading-[1.5] line-clamp-2">{academy.desc}</p>
+                    </div>
+                  </Link>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            <button
+              onClick={() => academySwiper?.slidePrev()}
+              className="absolute -left-5 top-[calc(50%-24px)] z-10 w-10 h-10 rounded-full bg-white shadow-md border border-beige-dark items-center justify-center text-brown-dark hover:bg-beige hover:border-brown-light transition-all hidden md:flex"
+            >
+              <ChevronLeft size={18} strokeWidth={2.5} />
+            </button>
+            <button
+              onClick={() => academySwiper?.slideNext()}
+              className="absolute -right-5 top-[calc(50%-24px)] z-10 w-10 h-10 rounded-full bg-white shadow-md border border-beige-dark items-center justify-center text-brown-dark hover:bg-beige hover:border-brown-light transition-all hidden md:flex"
+            >
+              <ChevronRight size={18} strokeWidth={2.5} />
+            </button>
           </div>
           <div className="mt-10 text-center">
             <Link
