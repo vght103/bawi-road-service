@@ -1,3 +1,4 @@
+import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
@@ -29,10 +30,7 @@ export default function AcademySearchPage() {
         <div className="max-w-[1200px] mx-auto px-6 py-4">
           <div className="flex items-stretch rounded-xl h-12 border border-beige-dark bg-cream overflow-hidden">
             <div className="flex items-center justify-center pl-4 text-brown">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-              </svg>
+              <Search size={20} strokeWidth={2} className="text-brown" />
             </div>
             <input
               className="flex-1 bg-transparent px-3 text-sm focus:outline-none placeholder:text-brown-light border-none"

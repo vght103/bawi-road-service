@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
+import { Info, CircleCheck, ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -57,13 +58,7 @@ export default function ProcessPage() {
       {/* 안내 배너 */}
       <div className="bg-accent-green-light border-y border-accent-green/20 py-4 px-6">
         <div className="max-w-[1200px] mx-auto flex items-center justify-center gap-3 text-[0.9rem] text-accent-green-dark font-medium">
-          <svg className="w-5 h-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-            <path
-              fillRule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z"
-              clipRule="evenodd"
-            />
-          </svg>
+          <Info className="w-5 h-5 shrink-0" />
           필리핀은 30일 무비자 입국 가능. SSP, 비자 연장, 유심 등은 현지 어학원에서 모두 대행해줍니다.
         </div>
       </div>
@@ -186,13 +181,7 @@ export default function ProcessPage() {
                   { doc: "e-Travel", detail: "입국 QR코드 (온라인 등록)" },
                 ].map((item) => (
                   <div key={item.doc} className="flex items-start gap-3">
-                    <svg className="w-5 h-5 text-accent-green shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+                    <CircleCheck className="w-5 h-5 text-accent-green shrink-0 mt-0.5" />
                     <div>
                       <div className="text-[0.9rem] font-semibold text-brown-dark">{item.doc}</div>
                       <div className="text-[0.8rem] text-brown">{item.detail}</div>
@@ -217,13 +206,7 @@ export default function ProcessPage() {
                   { doc: "영문 가족관계증명서", detail: "주민센터 발급 가능" },
                 ].map((item) => (
                   <div key={item.doc} className="flex items-start gap-3">
-                    <svg className="w-5 h-5 text-accent-green shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+                    <CircleCheck className="w-5 h-5 text-accent-green shrink-0 mt-0.5" />
                     <div>
                       <div className="text-[0.9rem] font-semibold text-brown-dark">{item.doc}</div>
                       <div className="text-[0.8rem] text-brown">{item.detail}</div>
@@ -249,13 +232,7 @@ export default function ProcessPage() {
                   { doc: "동행 인솔자", detail: "만 18세 이상 동행인 또는 UM 서비스" },
                 ].map((item) => (
                   <div key={item.doc} className="flex items-start gap-3">
-                    <svg className="w-5 h-5 text-accent-green shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+                    <CircleCheck className="w-5 h-5 text-accent-green shrink-0 mt-0.5" />
                     <div>
                       <div className="text-[0.9rem] font-semibold text-brown-dark">{item.doc}</div>
                       <div className="text-[0.8rem] text-brown">{item.detail}</div>
@@ -284,9 +261,7 @@ export default function ProcessPage() {
               className="bg-terracotta text-white px-8 py-3.5 rounded-[10px] text-base font-bold no-underline inline-flex items-center gap-2 shadow-[0_4px_14px_rgba(196,96,58,0.3)] hover:bg-terracotta-hover hover:-translate-y-0.5 transition-all"
             >
               어학원 비교하기
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+              <ArrowRight size={18} strokeWidth={2.5} />
             </Link>
             <Link
               to="/visa-info"

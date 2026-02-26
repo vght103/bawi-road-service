@@ -1,5 +1,6 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useMember } from "@/hooks/useMember";
 
@@ -59,17 +60,7 @@ export default function Navbar() {
               className="text-brown text-[0.9rem] font-medium hover:text-brown-dark transition-colors cursor-pointer bg-transparent border-none p-0 flex items-center gap-1 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-terracotta after:transition-all hover:after:w-full"
             >
               연수 가이드
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                className={`transition-transform ${guideOpen ? "rotate-180" : ""}`}
-              >
-                <path d="M6 9l6 6 6-6" />
-              </svg>
+              <ChevronDown size={12} strokeWidth={2.5} className={`transition-transform ${guideOpen ? "rotate-180" : ""}`} />
             </button>
             {guideOpen && (
               <div className="absolute top-full left-1/2 -translate-x-1/2 pt-3">
@@ -179,17 +170,7 @@ export default function Navbar() {
 
         {/* Mobile Toggle */}
         <button className="md:hidden p-1" onClick={() => setMobileOpen(!mobileOpen)}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            {mobileOpen ? (
-              <path d="M6 6l12 12M6 18L18 6" />
-            ) : (
-              <>
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-              </>
-            )}
-          </svg>
+          {mobileOpen ? <X size={24} strokeWidth={2} /> : <Menu size={24} strokeWidth={2} />}
         </button>
       </div>
 
@@ -211,17 +192,7 @@ export default function Navbar() {
               onClick={() => setMobileGuideOpen(!mobileGuideOpen)}
             >
               연수 가이드
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                className={`transition-transform ${mobileGuideOpen ? "rotate-180" : ""}`}
-              >
-                <path d="M6 9l6 6 6-6" />
-              </svg>
+              <ChevronDown size={14} strokeWidth={2.5} className={`transition-transform ${mobileGuideOpen ? "rotate-180" : ""}`} />
             </button>
             {mobileGuideOpen && (
               <div className="pl-4 space-y-0.5 pb-1">
