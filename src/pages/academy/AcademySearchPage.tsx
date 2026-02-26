@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +13,38 @@ export default function AcademySearchPage() {
     queryKey: ["academies"],
     queryFn: fetchAcademies,
   });
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [regionFilter, setRegionFilter] = useState<string | null>(null);
+  const [tagFilters, setTagFilters] = useState<string[]>([]);
+
+  const filteredAcademies = useMemo(() => {
+    return academies.filter((academy) => {
+      // Text search: match name, region, or desc
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesText =
+          academy.name.toLowerCase().includes(query) ||
+          academy.region.includes(searchQuery) ||
+          academy.desc.includes(searchQuery);
+        if (!matchesText) return false;
+      }
+
+      // Region filter
+      if (regionFilter && academy.region !== regionFilter) return false;
+
+      // Tag filters (match ANY): check academy_system AND tags
+      if (tagFilters.length > 0) {
+        const academyAllTags = [academy.academy_system, ...academy.tags];
+        const matchesAnyTag = tagFilters.some((filter) =>
+          academyAllTags.includes(filter)
+        );
+        if (!matchesAnyTag) return false;
+      }
+
+      return true;
+    });
+  }, [academies, searchQuery, regionFilter, tagFilters]);
 
   return (
     <div className="bg-cream min-h-screen">
@@ -35,50 +68,85 @@ export default function AcademySearchPage() {
             <input
               className="flex-1 bg-transparent px-3 text-sm focus:outline-none placeholder:text-brown-light border-none"
               placeholder="어학원 이름 또는 지역으로 검색..."
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
             />
           </div>
-          <div className="flex gap-2 mt-3 overflow-x-auto hide-scrollbar pb-1">
-            {["전체", "세부", "바기오", "클락", "스파르타", "세미스파르타", "ESL", "IELTS", "TOEIC"].map(
-              (filter, i) => (
-                <button
-                  key={filter}
-                  className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    i === 0
-                      ? "bg-terracotta text-white font-semibold"
-                      : "bg-white border border-beige-dark text-brown hover:border-brown-light"
-                  }`}
-                >
-                  {filter}
-                </button>
-              ),
-            )}
+
+          {/* 지역 filter row */}
+          <div className="flex items-center gap-2 mt-3">
+            <span className="text-xs font-semibold text-brown-light shrink-0 w-8">지역</span>
+            <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
+              {["전체", "세부", "바기오"].map((region) => {
+                const isActive = region === "전체" ? regionFilter === null : regionFilter === region;
+                return (
+                  <button
+                    key={region}
+                    onClick={() => setRegionFilter(region === "전체" ? null : region)}
+                    className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-terracotta text-white font-semibold"
+                        : "bg-white border border-beige-dark text-brown hover:border-brown-light"
+                    }`}
+                  >
+                    {region}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 코스 filter row */}
+          <div className="flex items-center gap-2 mt-2">
+            <span className="text-xs font-semibold text-brown-light shrink-0 w-8">코스</span>
+            <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
+              {["스파르타", "세미스파르타", "자율형", "ESL", "IELTS", "TOEIC", "TOEFL", "비즈니스", "스피킹"].map((tag) => {
+                const isActive = tagFilters.includes(tag);
+                return (
+                  <button
+                    key={tag}
+                    onClick={() =>
+                      setTagFilters((prev) =>
+                        prev.includes(tag) ? prev.filter((selected) => selected !== tag) : [...prev, tag]
+                      )
+                    }
+                    className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-brown-dark text-white font-semibold"
+                        : "bg-white border border-beige-dark text-brown hover:border-brown-light"
+                    }`}
+                  >
+                    {tag}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Results */}
       <div className="max-w-[1200px] mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-bold text-brown-dark">{isLoading ? "..." : academies.length}개 어학원</h2>
-          <select className="bg-white border border-beige-dark rounded-lg px-3 py-2 text-sm text-brown focus:outline-none cursor-pointer">
-            <option>추천순</option>
-          </select>
+        <div className="flex items-center mb-6">
+          <h2 className="text-lg font-bold text-brown-dark">{isLoading ? "..." : filteredAcademies.length}개 어학원</h2>
         </div>
 
         {isLoading ? (
           <div className="text-center py-16 text-brown">불러오는 중...</div>
+        ) : filteredAcademies.length === 0 && academies.length > 0 ? (
+          <div className="text-center py-16 text-brown">검색 결과가 없습니다.</div>
         ) : academies.length === 0 ? (
           <div className="text-center py-16 text-brown">등록된 어학원이 없습니다.</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {academies.map((academy) => (
+            {filteredAcademies.map((academy) => (
               <Link
                 to={`/academy/${academy.id}`}
                 key={academy.id}
                 className="bg-white rounded-[20px] overflow-hidden border border-beige-dark hover:-translate-y-1 hover:shadow-lg transition-all no-underline text-brown-text"
               >
                 <div className="h-[180px] relative overflow-hidden">
-                  <img src={academy.image} alt={academy.name} className="w-full h-full object-cover" loading="lazy" />
+                  <img src={academy.images[0]} alt={academy.name} className="w-full h-full object-cover" loading="lazy" />
                   <div className="absolute top-3 left-3 flex gap-1.5">
                     <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-white/90 text-brown-dark">
                       {academy.region}

@@ -2,6 +2,7 @@
 export const ACADEMY_SYSTEM_CHIP_COLORS: Record<string, string> = {
   세미스파르타: "bg-accent-green text-white",
   스파르타: "bg-terracotta text-white",
+  자율형: "bg-blue-500 text-white",
 };
 
 /** 코스/태그 칩 색상 */

@@ -1,5 +1,12 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import "swiper/css";
+import "swiper/css/pagination";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { fetchAcademy } from "@/api/academy/academies";
@@ -8,6 +15,7 @@ import { getAcademySystemChipClass, getTagChipClass } from "@/data/academy/chipC
 
 export default function AcademyDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
   const { data: academy, isLoading } = useQuery<AcademyDetail | null>({
     queryKey: ["academy", id],
     queryFn: () => fetchAcademy(id!),
@@ -60,14 +68,49 @@ export default function AcademyDetailPage() {
 
       <main className="max-w-[900px] mx-auto px-6 py-8">
         <div className="space-y-6">
-          {/* Image Gallery Placeholder */}
-          <div className="rounded-[20px] overflow-hidden border border-beige-dark">
-            <div className="h-[300px] md:h-[400px] bg-gradient-to-br from-beige to-beige-dark relative flex items-center justify-center">
-              <span className="text-[0.85rem] font-semibold text-brown-light">사진 준비중</span>
-              <div className="absolute bottom-4 right-4 bg-brown-dark/60 text-white text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm">
-                1 / 12
+          {/* Image Swiper */}
+          <div className="rounded-[20px] overflow-hidden border border-beige-dark relative group">
+            {academy.images.length > 1 ? (
+              <>
+                <Swiper
+                  modules={[Pagination]}
+                  pagination={{ clickable: true }}
+                  loop
+                  onSwiper={(swiper) => setSwiperInstance(swiper)}
+                  className="h-[300px] md:h-[400px] academy-swiper"
+                >
+                  {academy.images.map((imageUrl, index) => (
+                    <SwiperSlide key={imageUrl}>
+                      <img
+                        src={imageUrl}
+                        alt={`${academy.name} ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                <button
+                  onClick={() => swiperInstance?.slidePrev()}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm shadow-md flex items-center justify-center text-brown-dark hover:bg-white transition-all opacity-0 group-hover:opacity-100"
+                >
+                  <ChevronLeft size={20} strokeWidth={2.5} />
+                </button>
+                <button
+                  onClick={() => swiperInstance?.slideNext()}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm shadow-md flex items-center justify-center text-brown-dark hover:bg-white transition-all opacity-0 group-hover:opacity-100"
+                >
+                  <ChevronRight size={20} strokeWidth={2.5} />
+                </button>
+              </>
+            ) : (
+              <div className="h-[300px] md:h-[400px]">
+                <img
+                  src={academy.images[0]}
+                  alt={academy.name}
+                  className="w-full h-full object-cover"
+                />
               </div>
-            </div>
+            )}
           </div>
 
           {/* Academy Header */}
@@ -79,9 +122,64 @@ export default function AcademyDetailPage() {
               <span className={`px-2.5 py-1 rounded-md text-[0.75rem] font-semibold ${getAcademySystemChipClass(academy.academy_system)}`}>
                 {academy.academy_system}
               </span>
+              {academy.tags.map((tag) => (
+                <span key={tag} className={`px-2.5 py-1 rounded-md text-[0.75rem] font-semibold ${getTagChipClass(tag)}`}>
+                  {tag}
+                </span>
+              ))}
             </div>
             <h1 className="text-[1.8rem] md:text-[2.2rem] font-extrabold text-brown-dark tracking-tight">{academy.name}</h1>
             <p className="mt-2 text-brown text-base leading-relaxed">{academy.shortDesc ?? academy.desc}</p>
+          </div>
+
+          {/* 기본 정보 */}
+          <div className="bg-white rounded-[16px] p-6 border border-beige-dark">
+            <h3 className="font-bold text-brown-dark mb-4">기본 정보</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {academy.established_year && (
+                <div>
+                  <div className="text-xs text-brown-light mb-1">설립연도</div>
+                  <div className="text-sm font-semibold text-brown-dark">{academy.established_year}년</div>
+                </div>
+              )}
+              {academy.capacity && (
+                <div>
+                  <div className="text-xs text-brown-light mb-1">정원</div>
+                  <div className="text-sm font-semibold text-brown-dark">{academy.capacity}명</div>
+                </div>
+              )}
+              {academy.korean_ratio && (
+                <div>
+                  <div className="text-xs text-brown-light mb-1">한국인 비율</div>
+                  <div className="text-sm font-semibold text-brown-dark">{academy.korean_ratio}</div>
+                </div>
+              )}
+              {academy.location_detail && (
+                <div>
+                  <div className="text-xs text-brown-light mb-1">세부 위치</div>
+                  <div className="text-sm font-semibold text-brown-dark">{academy.location_detail}</div>
+                </div>
+              )}
+              {academy.address && (
+                <div>
+                  <div className="text-xs text-brown-light mb-1">주소</div>
+                  <div className="text-sm font-semibold text-brown-dark">{academy.address}</div>
+                </div>
+              )}
+              {academy.website && (
+                <div>
+                  <div className="text-xs text-brown-light mb-1">웹사이트</div>
+                  <a
+                    href={academy.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-semibold text-terracotta hover:underline no-underline"
+                  >
+                    {academy.website.replace(/^https?:\/\//, "")}
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Pros & Cons */}
@@ -192,6 +290,7 @@ export default function AcademyDetailPage() {
                   className="p-4 rounded-[12px] border border-beige-dark bg-beige/30 text-center"
                 >
                   <div className="font-bold text-brown-dark mb-1">{dormitory.type}</div>
+                  <div className="text-sm font-bold text-terracotta">{(dormitory.pricePerWeek / 10000).toFixed(0)}만원<span className="text-[0.7rem] font-normal text-brown-light">/주</span></div>
                   <div className="text-[0.75rem] text-brown mt-1">{dormitory.meals}</div>
                   <div className="text-[0.72rem] text-brown-light mt-1">{dormitory.desc}</div>
                 </div>
