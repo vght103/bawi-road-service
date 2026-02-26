@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { supabase, supabaseConfigured } from "@/lib/supabase";
+import { createInquiry } from "@/api/inquiry/inquiries";
 
 export default function InquiryPage() {
   const [name, setName] = useState("");
@@ -46,14 +46,9 @@ export default function InquiryPage() {
     setSubmitError(null);
     if (Object.keys(fieldErrors).length > 0) return;
 
-    if (!supabaseConfigured) {
-      setSubmitted(true);
-      return;
-    }
-
     setSubmitting(true);
     try {
-      const { error } = await supabase.from("inquiry_logs").insert({ name, phone, message });
+      const { error } = await createInquiry({ name, phone, message });
       if (error) {
         setSubmitError("상담 신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
         setSubmitting(false);
@@ -108,7 +103,7 @@ export default function InquiryPage() {
         {/* 폼 카드 */}
         <div className="mx-auto" style={{ maxWidth: 540 }}>
           <div className="bg-white rounded-[20px] p-7 md:p-9 border border-beige-dark shadow-sm">
-            <div className="bg-beige rounded-xl p-4 border border-beige-dark mb-7 flex items-start gap-3 mb-5">
+            <div className="bg-beige rounded-xl p-4 border border-beige-dark flex items-start gap-3 mb-5">
               <div className="w-5 h-5 rounded-full bg-terracotta-light flex items-center justify-center shrink-0 mt-0.5">
                 <MessageCircle size={11} strokeWidth={2.5} className="text-terracotta" />
               </div>
