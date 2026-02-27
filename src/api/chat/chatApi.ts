@@ -58,6 +58,25 @@ export async function sendChatStream(
   }
 }
 
+export function trackCtaClick(
+  sessionId: string | null,
+  ctaType: "quote" | "inquiry",
+  source: "bubble" | "static",
+): void {
+  if (!SUPABASE_URL) return;
+
+  // fire-and-forget: 클릭 추적은 사용자 경험에 영향 없도록
+  fetch(`${SUPABASE_URL}/functions/v1/ai-chat`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      session_id: sessionId,
+      cta_type: ctaType,
+      source,
+    }),
+  }).catch(() => {});
+}
+
 export async function loadChatSession(
   sessionId: string
 ): Promise<{ data: ChatHistoryResponse | null; error: string | null }> {

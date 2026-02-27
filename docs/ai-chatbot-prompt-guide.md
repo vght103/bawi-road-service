@@ -1029,14 +1029,18 @@ const academyKeywords = [
 
 6. **Rate Limiting**: IP 기반 분당 10회 제한으로 남용 방지 ✓
 
-7. **테스트 시나리오 5가지 검증**: 프롬프트 변경 후 항상 실행
+7. **CTA 클릭 추적**: 말풍선 버튼 + 고정 버튼 클릭 시 `cta_clicks` 테이블에 기록 ✓
+
+8. **상담 키워드 감지**: 사용자/AI 응답에서 상담 키워드 → 1:1 상담 CTA 자동 노출 ✓
+
+9. **테스트 시나리오 5가지 검증**: 프롬프트 변경 후 항상 실행
 
 ---
 
 **참고:**
 
 - **Edge Function 코드:** `supabase/functions/ai-chat/index.ts`
-- **마이그레이션:** `supabase/migrations/20260227_create_chat_sessions.sql`
+- **마이그레이션:** `supabase/migrations/20260227_create_chat_sessions.sql`, `20260227_create_cta_clicks.sql`
 - **프론트엔드 타입:** `src/types/chat.ts`
 - **구현 스펙:** `docs/ai-chatbot-implementation.md`
 - **v3 구조:**
