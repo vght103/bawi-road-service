@@ -6,10 +6,11 @@ const ALLOWED_ORIGINS = [
   "http://localhost:3001",
   "https://bawiroad.com",
   "https://www.bawiroad.com",
+  "https://bawi-road-service.pages.dev",
 ];
 
 const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY")!;
-const OPENAI_MODEL = "gpt-4.1-nano";
+const OPENAI_MODEL = "gpt-4.1-mini";
 const MAX_HISTORY_MESSAGES = 10; // 최근 10개 메시지만 OpenAI에 전송 (왕복 5회)
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 
@@ -39,6 +40,7 @@ function getServiceClient() {
 let cachedSummary: string | null = null;
 let cacheTime = 0;
 const CACHE_TTL = 5 * 60 * 1000; // 5분
+let cachedAcademyData: Array<{ id: string; name: string }> = [];
 
 // ===== 어학원 요약 조회 (시스템 프롬프트용) =====
 async function getAcademySummary(): Promise<string> {
@@ -48,14 +50,16 @@ async function getAcademySummary(): Promise<string> {
   }
 
   const supabase = getServiceClient();
-  const { data } = await supabase.from("academies").select("id, name, region, academy_system, tags").order("id");
+  const { data } = await supabase.from("academies").select("id, name, region, academy_system, tags, established_year").order("id");
 
   if (!data || data.length === 0) return "어학원 데이터 없음";
+
+  cachedAcademyData = data.map((academy) => ({ id: academy.id, name: academy.name }));
 
   cachedSummary = data
     .map(
       (academy) =>
-        `- ${academy.name} (ID: ${academy.id}) | ${academy.region} | ${academy.academy_system} | Tags: ${(academy.tags ?? []).join(", ")}`,
+        `- ${academy.name} (ID: ${academy.id}) | ${academy.region} | ${academy.academy_system} | 설립: ${academy.established_year ?? "정보없음"} | Tags: ${(academy.tags ?? []).join(", ")}`,
     )
     .join("\n");
   cacheTime = now;
@@ -86,7 +90,7 @@ async function searchAcademies(params: { region?: string; academy_system?: strin
 // ===== 키워드 기반 검색 파라미터 추출 =====
 function extractSearchParams(message: string): { region?: string; academy_system?: string; tags?: string[] } | null {
   const regions = ["세부", "바기오", "클락", "마닐라"];
-  const systems = ["스파르타", "세미스파르타", "자율형"];
+  const systems = ["세미스파르타", "스파르타", "자율형"];
   const tagKeywords: Record<string, string> = {
     ESL: "ESL",
     이에스엘: "ESL",
@@ -115,6 +119,38 @@ function extractSearchParams(message: string): { region?: string; academy_system
   };
 }
 
+// ===== 특정 어학원 언급 감지 =====
+function detectAcademyMention(message: string): boolean {
+  if (cachedAcademyData.length === 0) return false;
+  const lowerMsg = message.toLowerCase();
+  return cachedAcademyData.some((academy) => {
+    const lowerName = academy.name.toLowerCase();
+    // Full name match (spaces removed)
+    if (lowerMsg.replace(/\s/g, "").includes(lowerName.replace(/\s/g, ""))) return true;
+    // First word match (e.g., "ev", "smeag", "philinter")
+    const firstName = lowerName.split(/\s+/)[0];
+    if (firstName.length >= 2 && lowerMsg.includes(firstName)) return true;
+    return false;
+  });
+}
+
+// ===== 시설 키워드 감지 =====
+function detectFacilityQuery(message: string): boolean {
+  const facilityKeywords = ["시설", "건물", "신축", "깨끗", "새로운", "최신", "리모델링", "리노베이션", "캠퍼스"];
+  return facilityKeywords.some((keyword) => message.includes(keyword));
+}
+
+// ===== 최신 어학원 검색 (설립연도 기준) =====
+async function searchNewestAcademies(limit = 3) {
+  const supabase = getServiceClient();
+  const { data } = await supabase
+    .from("academies")
+    .select("id, name, region, academy_system, desc, tags, established_year")
+    .order("established_year", { ascending: false })
+    .limit(limit);
+  return data ?? [];
+}
+
 // ===== 시스템 프롬프트 =====
 function buildSystemPrompt(academySummary: string): string {
   return `당신은 "바위로드 AI 상담 어시스턴트"입니다. 필리핀 어학연수 전문 상담사 역할을 합니다.
@@ -124,13 +160,18 @@ function buildSystemPrompt(academySummary: string): string {
 1. 항상 한국어로 답변하세요.
 2. 바위로드(BAWI ROAD)는 필리핀 어학연수 중개 서비스입니다.
 3. 어학원/어학연수 관련 질문에만 답변하세요. DB에 있는 어학원 정보를 기반으로 답변합니다.
-4. **비용/가격 관련 질문**: 절대 구체적인 가격을 계산하거나 안내하지 마세요. "정확한 비용은 기간, 코스, 기숙사 옵션에 따라 달라집니다. 무료 견적을 받아보세요!"라고 안내하세요.
+4. **비용/가격 관련 질문**: 비용 질문은 어학연수 관련 질문이므로 반드시 친절하게 응대하세요. 단, 구체적인 가격을 직접 계산하거나 숫자로 안내하지 마세요. 공감하며 자연스럽게 안내하세요. 예시: "어학연수 비용이 궁금하시군요! \n 정확한 비용은 어학원, 연수기간, 코스, 기숙사 옵션에 따라 달라지는데요. 무료 견적 서비스에서 원하시는 조건을 설정하시면 바로 확인하실 수 있어요!"
 5. **모호한 어학원 질문 → 되물어보기**: "세부 어학원 궁금해", "어학원 추천해줘" 같이 구체적인 조건 없이 광범위하게 물어보면, 바로 검색하지 말고 선호사항을 먼저 질문하세요.
-   - 예시: "어떤 학습 스타일을 선호하세요? (스파르타/세미스파르타/자율형)" 또는 "선호하는 지역이 있으신가요? (세부/바기오/클락)"
+   - 예시: "어떤 학습 스타일을 선호하세요? (스파르타/세미스파르타/IELTS 등)" 또는 "선호하는 지역이 있으신가요? (세부/바기오)"
 6. **구체적 조건이 있는 추천 요청**: "세부 스파르타 추천", "IELTS 준비할 수 있는 곳" 등 명확한 조건이 있으면 바로 검색하여 어학원 정보를 안내하세요.
 7. **어학연수와 무관한 질문**: 정중하게 "저는 필리핀 어학연수 전문 상담 AI입니다. 어학연수 관련 질문을 해주세요!"라고 안내하세요.
 8. **추천 결과가 없을 때**: "조건에 맞는 어학원을 찾지 못했습니다. 더 자세한 상담은 1:1 상담을 이용해주세요!"라고 안내하세요.
 9. 답변은 친근하고 전문적인 톤으로, **200자 이내로 간결하게** 작성하세요.
+10. 어학원 추천 관련한 질문을 받았을 때만 어학원 목록을 보여준다. ex) 스파르타 어학원 알려줘 / 스파르타 어학원 추천해줘 / 세부 어학원 추천해줘 / 바기오 세미스파르타 어학원 알려줘 등. 어학원 목록을 보여주면서 DB 데이터를 기반으로 어학원 특징을 간단히 알려줘.
+11. **시설/건물 관련 질문**: "시설 좋은 곳", "깨끗한 어학원", "신축" 등 시설 관련 질문에는 어학원 목록의 설립연도를 기반으로 최근에 지어지거나 리뉴얼한 어학원을 3개 정도 추천하세요. 답변 형식:
+   - 시설 좋은 어학원으로 ~, ~, ~ 어학원들이 있어요. (3개 추천 + 간략한 이유)
+   - "정확한 답변은 1:1 상담을 통해 확인하세요!"
+   - 마지막 줄: "※ 본 답변은 AI가 생성한 답변으로, 바위로드의 공식적인 의견이 아닙니다."
 
 ## 사용 가능한 어학원 목록
 
@@ -138,7 +179,11 @@ ${academySummary}
 
 ## 출력 형식
 
-답변만 출력하세요. JSON이나 마크다운 포맷 없이 일반 텍스트로 작성합니다.`;
+1. **문단 구분**: 의미가 달라지는 부분에서 반드시 빈 줄(줄바꿈 2번)로 문단을 나누세요.
+2. **구조**: 인사/공감 → 본문 설명 → 안내/CTA 순서로 작성하세요.
+3. **나열할 때**: 여러 항목을 나열할 때는 "• " 불릿 기호를 사용하고, 각 항목 사이에 줄바꿈을 넣으세요.
+4. **면책 문구**: "※" 로 시작하는 문구는 반드시 별도 문단으로 분리하세요.
+5. JSON이나 마크다운(**볼드**, # 제목 등) 포맷은 사용하지 마세요. 순수 텍스트 + 줄바꿈만 사용합니다.`;
 }
 
 // ===== 대화 세션 관리 =====
@@ -245,6 +290,11 @@ Deno.serve(async (req) => {
     const searchParams = lastUserMsg ? extractSearchParams(lastUserMsg.content) : null;
     const searchResults = searchParams ? await searchAcademies(searchParams) : [];
 
+    // 시설 관련 질문 감지 → 설립연도 기준 검색
+    const isFacilityQuery = detectFacilityQuery(lastUserMsg?.content ?? "");
+    const facilityResults = isFacilityQuery ? await searchNewestAcademies() : [];
+    const componentResults = facilityResults.length > 0 ? facilityResults : searchResults;
+
     // OpenAI에는 최근 N개 메시지만 전송 (토큰 절약), DB에는 전체 저장
     const recentMessages = messages.slice(-MAX_HISTORY_MESSAGES);
 
@@ -291,24 +341,29 @@ Deno.serve(async (req) => {
           }
 
           // 검색 결과가 있으면 컴포넌트 전송
-          if (searchResults.length > 0) {
-            send({ type: "components", data: searchResults });
+          if (componentResults.length > 0) {
+            send({ type: "components", data: componentResults });
           }
 
           // 가격 관련 키워드 → 견적 CTA 전송
           const priceKeywords = ["가격", "비용", "얼마", "견적", "돈", "페소", "할인"];
-          const hasPriceKeyword = priceKeywords.some(
-            (keyword) => lastUserMsg?.content.includes(keyword)
-          );
+          const hasPriceKeyword = priceKeywords.some((keyword) => lastUserMsg?.content.includes(keyword));
           if (hasPriceKeyword) {
             send({ type: "cta", data: { label: "무료 견적 받기", link: "/quote" } });
+          }
+
+          // 특정 어학원 언급 → 1:1 상담 CTA 전송
+          const hasAcademyMention = detectAcademyMention(lastUserMsg?.content ?? "");
+          if (hasAcademyMention) {
+            send({ type: "cta", data: { label: "1:1 상담 신청", link: "/inquiry" } });
           }
 
           // DB 저장
           const timestamp = new Date().toISOString();
           const savedComponents = [
-            ...(searchResults.length > 0 ? [{ type: "academy_cards", data: searchResults }] : []),
+            ...(componentResults.length > 0 ? [{ type: "academy_cards", data: componentResults }] : []),
             ...(hasPriceKeyword ? [{ type: "cta_button", data: { label: "무료 견적 받기", link: "/quote" } }] : []),
+            ...(hasAcademyMention ? [{ type: "cta_button", data: { label: "1:1 상담 신청", link: "/inquiry" } }] : []),
           ];
           const fullMessages = [
             ...messages.map((msg: { role: string; content: string; timestamp?: string }) => ({
