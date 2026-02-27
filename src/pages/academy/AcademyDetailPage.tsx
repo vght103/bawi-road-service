@@ -12,6 +12,7 @@ import Footer from "@/components/Footer";
 import { fetchAcademy } from "@/api/academy/academies";
 import type { AcademyDetail } from "@/data/academies";
 import { getAcademySystemChipClass, getTagChipClass } from "@/data/academy/chipColors";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 export default function AcademyDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -23,13 +24,7 @@ export default function AcademyDetailPage() {
   });
 
   if (isLoading) {
-    return (
-      <div className="bg-cream min-h-screen">
-        <Navbar />
-        <div className="pt-20 text-center py-16 text-brown">불러오는 중...</div>
-        <Footer />
-      </div>
-    );
+    return <LoadingOverlay visible />;
   }
 
   if (!academy) {

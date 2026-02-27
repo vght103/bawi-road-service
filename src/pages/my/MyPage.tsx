@@ -11,6 +11,7 @@ import { fetchMyEnrollments } from "@/api/enrollment/enrollments";
 import type { Enrollment } from "@/types/enrollment";
 import { STATUS_CONFIG } from "@/data/enrollment/status";
 import { cn } from "@/lib/utils";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 function validatePassword(pw: string) {
   const errors: string[] = [];
@@ -110,6 +111,7 @@ export default function MyPage() {
 
   return (
     <div className="min-h-dvh bg-cream">
+      <LoadingOverlay visible={enrollmentsLoading || pwSubmitting || deleteSubmitting} />
       <Navbar />
       <div className="mx-auto w-full max-w-lg px-4 pt-22 pb-12">
         <h1 className="mb-8 text-2xl font-bold text-brown-text">마이페이지</h1>
@@ -155,9 +157,8 @@ export default function MyPage() {
             )}
           </div>
 
-          {enrollmentsLoading ? (
-            <p className="text-sm text-brown">불러오는 중...</p>
-          ) : enrollments.length === 0 ? (
+          {enrollmentsLoading ? null
+          : enrollments.length === 0 ? (
             <div className="text-center py-6">
               <p className="text-sm text-muted-foreground mb-3">아직 수속 신청 내역이 없습니다.</p>
               <Button asChild size="sm">

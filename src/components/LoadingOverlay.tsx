@@ -1,20 +1,25 @@
-import { LoaderIcon } from "lucide-react";
+import bawiLoading from "@/assets/bawi-loading.png";
 
 interface LoadingOverlayProps {
   visible: boolean;
-  message?: string;
 }
 
-export default function LoadingOverlay({ visible, message }: LoadingOverlayProps) {
+export default function LoadingOverlay({ visible }: LoadingOverlayProps) {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-      <div className="bg-white rounded-2xl px-8 py-6 shadow-xl flex flex-col items-center gap-3">
-        <LoaderIcon className="w-8 h-8 text-brown animate-spin" />
-        {message && (
-          <p className="text-sm text-brown-dark font-medium">{message}</p>
-        )}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div className="flex flex-col items-center">
+        <img
+          src={bawiLoading}
+          alt="로딩 중"
+          className="w-28 h-28 object-contain"
+        />
+        <div className="flex items-center gap-1.5 mt-3">
+          <span className="loading-dot w-2 h-2 bg-white rounded-full" />
+          <span className="loading-dot w-2 h-2 bg-white rounded-full" />
+          <span className="loading-dot w-2 h-2 bg-white rounded-full" />
+        </div>
       </div>
     </div>
   );

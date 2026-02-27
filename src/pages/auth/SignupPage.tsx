@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { useAuth } from "@/hooks/useAuth";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 /* ─── 유효성 검사 스키마 (zod) ─── */
 
@@ -145,6 +146,7 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-dvh bg-cream">
+      <LoadingOverlay visible={form.formState.isSubmitting} />
       <Navbar />
       <div className="flex items-center justify-center px-4 py-12 pt-22">
         <div className="flex w-full max-w-[1000px] overflow-hidden rounded-2xl bg-white shadow-lg border border-beige-dark">
