@@ -9,4 +9,5 @@ export interface QuoteLogInsert {
   dormitory_type: string;
   duration_weeks: number;
   start_date?: string | null;
+  source?: string | null;
 }

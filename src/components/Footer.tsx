@@ -19,7 +19,7 @@ export default function Footer() {
           <h4 className="text-[0.8rem] font-bold text-cream mb-4 uppercase tracking-wider">서비스</h4>
           <Link to="/academies" className={linkClass}>어학원 비교</Link>
           <a href="/#cost" className={linkClass}>비용 가이드</a>
-          <Link to="/quote" className={linkClass}>무료 견적</Link>
+          <Link to="/quote?from=footer" className={linkClass}>무료 견적</Link>
         </div>
         <div>
           <h4 className="text-[0.8rem] font-bold text-cream mb-4 uppercase tracking-wider">약관 및 정책</h4>

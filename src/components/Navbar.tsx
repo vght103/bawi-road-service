@@ -96,11 +96,11 @@ export default function Navbar() {
           </div>
 
           <Link to="/with-bawi" className={getLinkClass("/with-bawi")}>바위로드와 함께</Link>
-          <Link to="/enrollment/apply" className={getLinkClass("/enrollment")}>
+          <Link to="/enrollment/apply?from=navbar" className={getLinkClass("/enrollment")}>
             수속 신청
           </Link>
           <Link
-            to="/quote"
+            to="/quote?from=navbar"
             className="bg-terracotta text-white! px-5 py-2 rounded-lg font-semibold text-[0.85rem] hover:bg-terracotta-hover hover:-translate-y-0.5 transition-all no-underline"
           >
             무료 견적 받기
@@ -225,7 +225,7 @@ export default function Navbar() {
 
           <Link to="/with-bawi" className="block text-brown font-medium py-2 no-underline" onClick={() => setMobileOpen(false)}>바위로드와 함께</Link>
           <Link
-            to="/enrollment/apply"
+            to="/enrollment/apply?from=navbar"
             className="block text-brown font-medium py-2 no-underline"
             onClick={() => setMobileOpen(false)}
           >
@@ -278,7 +278,7 @@ export default function Navbar() {
 
           {/* CTA */}
           <Link
-            to="/quote"
+            to="/quote?from=navbar"
             className="block w-full text-center bg-terracotta text-white py-3 rounded-lg font-semibold no-underline mt-3"
             onClick={() => setMobileOpen(false)}
           >

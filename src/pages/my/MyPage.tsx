@@ -148,7 +148,7 @@ export default function MyPage() {
 
             {enrollments.length === 0 && (
               <Button asChild size="sm" variant="outline" className="text-xs">
-                <Link to="/enrollment/apply" className="no-underline">
+                <Link to="/enrollment/apply?from=my-page" className="no-underline">
                   새 수속 신청
                 </Link>
               </Button>
@@ -161,7 +161,7 @@ export default function MyPage() {
             <div className="text-center py-6">
               <p className="text-sm text-muted-foreground mb-3">아직 수속 신청 내역이 없습니다.</p>
               <Button asChild size="sm">
-                <Link to="/enrollment/apply" className="no-underline">
+                <Link to="/enrollment/apply?from=my-page" className="no-underline">
                   수속 신청하기
                 </Link>
               </Button>

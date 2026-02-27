@@ -300,7 +300,7 @@ export default function AcademyDetailPage() {
 
           {/* CTA */}
           <div className="bg-white rounded-[16px] p-6 border border-beige-dark text-center space-y-3">
-            <Link to="/quote" className="block w-full py-3.5 bg-terracotta text-white rounded-[10px] font-bold hover:bg-terracotta-hover transition-colors text-center no-underline">
+            <Link to="/quote?from=academy-detail" className="block w-full py-3.5 bg-terracotta text-white rounded-[10px] font-bold hover:bg-terracotta-hover transition-colors text-center no-underline">
               무료 견적 받기
             </Link>
             <Link to="/process" className="block w-full py-3.5 bg-brown-dark text-white rounded-[10px] font-bold hover:bg-brown-text transition-colors text-center no-underline">

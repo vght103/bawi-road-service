@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { CheckIcon, CalendarIcon } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -22,6 +22,9 @@ const STEPS = [
 ];
 
 export default function EnrollmentApplyPage() {
+  const [searchParams] = useSearchParams();
+  const source = searchParams.get("from");
+
   const { user } = useAuth();
   const { data: academies = [], isLoading: academiesLoading } = useQuery<Academy[]>({
     queryKey: ["academies"],
@@ -117,6 +120,7 @@ export default function EnrollmentApplyPage() {
         terms_agreed: termsAgreed,
         refund_policy_agreed: refundAgreed,
         student_note: studentNote || null,
+        source,
       };
 
       const { data, error } = await createEnrollment(payload);

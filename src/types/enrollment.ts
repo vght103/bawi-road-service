@@ -42,6 +42,7 @@ export interface EnrollmentInsert {
   terms_agreed: boolean;
   refund_policy_agreed: boolean;
   student_note?: string | null;
+  source?: string | null;
 }
 
 export interface EnrollmentDocument {
