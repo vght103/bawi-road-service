@@ -2,6 +2,27 @@ import { Link } from "react-router-dom";
 import { MessageCircle, ArrowRight } from "lucide-react";
 import type { ChatMessage } from "@/types/chat";
 
+/**
+ * AI 응답에 줄바꿈이 부족할 때 가독성을 위해 문장 부호 뒤에 줄바꿈 삽입.
+ * 이미 줄바꿈이 충분하면 (3개 이상 \n) 원본 그대로 반환.
+ */
+function ensureLineBreaks(text: string): string {
+  const newlineCount = (text.match(/\n/g) || []).length;
+  const sentenceCount = (text.match(/[.!?]\s/g) || []).length;
+
+  // 이미 줄바꿈이 충분하면 그대로 반환
+  if (newlineCount >= 3 || sentenceCount <= 1) return text;
+
+  // 줄바꿈이 거의 없는데 문장이 여러 개 → 문장 부호 뒤에 줄바꿈 삽입
+  if (newlineCount < sentenceCount / 2) {
+    return text
+      .replace(/([.!?])\s+(?![\n•※\-·])/g, "$1\n")
+      .replace(/\s*(※)/g, "\n\n$1");
+  }
+
+  return text;
+}
+
 interface MessageBubbleProps {
   message: ChatMessage;
 }
@@ -39,7 +60,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
         </span>
         <div className="bg-white text-brown-dark rounded-2xl rounded-tl-sm px-4 py-3.5 text-[0.88rem] leading-[1.75] border border-beige-dark">
           <div className="flex flex-col gap-3">
-            {message.content.split(/\n{2,}/).map((paragraph, paragraphIndex) => {
+            {ensureLineBreaks(message.content).split(/\n{2,}/).map((paragraph, paragraphIndex) => {
               const lines = paragraph.split("\n");
               const hasBullets = lines.some((line) => /^[•\-·]/.test(line.trim()));
 
