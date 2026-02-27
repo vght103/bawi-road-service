@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { CalendarIcon, CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -18,6 +18,9 @@ import type { QuoteLogInsert } from "@/types/quote";
 import type { Academy } from "@/data/academies";
 
 export default function QuotePage() {
+  const [searchParams] = useSearchParams();
+  const source = searchParams.get("from");
+
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [academyId, setAcademyId] = useState("");
@@ -88,9 +91,10 @@ export default function QuotePage() {
         dormitory_type: selectedDorm!.type,
         duration_weeks: weeksNum,
         start_date: startDate ? startDate.toISOString().split("T")[0] : null,
+        source,
       };
 
-      const { error } = await supabase.from("quote_logs").insert(payload);
+      const { error } = await supabase.from("quote_list").insert(payload);
       if (error) {
         setSubmitError("견적 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
         setSubmitting(false);

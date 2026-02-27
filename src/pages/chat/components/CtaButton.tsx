@@ -8,9 +8,13 @@ interface CtaButtonProps {
 }
 
 export default function CtaButton({ data, onClick }: CtaButtonProps) {
+  const linkWithSource = data.link.includes("?")
+    ? `${data.link}&from=chat-bubble`
+    : `${data.link}?from=chat-bubble`;
+
   return (
     <Link
-      to={data.link}
+      to={linkWithSource}
       onClick={onClick}
       className="flex items-center gap-1.5 bg-white border border-brown-light text-brown-dark rounded-full px-3.5 py-2 text-[0.8rem] font-medium no-underline hover:bg-beige-light transition-colors w-fit"
     >

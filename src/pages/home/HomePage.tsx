@@ -155,14 +155,14 @@ export default function HomePage() {
               </div>
 
               <Link
-                to="/quote"
+                to="/quote?from=home-hero"
                 className="flex items-center justify-center gap-2 w-full bg-terracotta text-white py-3.5 rounded-[10px] text-[0.95rem] font-bold no-underline shadow-[0_4px_14px_rgba(196,96,58,0.3)] hover:bg-terracotta-hover hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(196,96,58,0.35)] transition-all"
               >
                 무료 견적서 받기
                 <ArrowRight size={18} strokeWidth={2.5} />
               </Link>
               <Link
-                to="/inquiry"
+                to="/inquiry?from=home-hero"
                 className="flex items-center justify-center gap-2 w-full mt-2.5 bg-transparent text-brown border border-beige-dark py-3 rounded-[10px] text-[0.88rem] font-semibold no-underline hover:border-terracotta hover:text-terracotta hover:-translate-y-0.5 transition-all"
               >
                 1:1 상담 신청하기
@@ -402,7 +402,7 @@ export default function HomePage() {
               <ArrowRight size={18} strokeWidth={2.5} />
             </Link>
             <Link
-              to="/inquiry"
+              to="/inquiry?from=home-cta"
               className="bg-brown-dark text-cream px-8 py-4 rounded-[10px] text-base font-semibold no-underline inline-flex items-center gap-2 hover:bg-brown-dark/90 hover:-translate-y-0.5 transition-all"
             >
               1:1 상담 신청

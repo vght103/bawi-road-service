@@ -217,14 +217,14 @@ export default function WithBawiPage() {
           </p>
           <div className="mt-10 flex gap-3.5 justify-center flex-wrap">
             <Link
-              to="/inquiry"
+              to="/inquiry?from=with-bawi"
               className="bg-terracotta text-white px-8 py-3.5 rounded-[10px] text-base font-bold no-underline inline-flex items-center gap-2 shadow-[0_4px_14px_rgba(196,96,58,0.4)] hover:bg-terracotta-hover hover:-translate-y-0.5 transition-all"
             >
               무료 상담 신청
               <ArrowRight size={18} strokeWidth={2.5} />
             </Link>
             <Link
-              to="/quote"
+              to="/quote?from=with-bawi"
               className="bg-transparent text-cream px-8 py-3.5 rounded-[10px] text-base font-semibold border-2 border-white/30 no-underline inline-flex items-center gap-2 hover:bg-white/10 hover:border-white/50 hover:-translate-y-0.5 transition-all"
             >
               견적서 받기

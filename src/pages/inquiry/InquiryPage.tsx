@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { CheckIcon, MessageCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -10,6 +10,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { createInquiry } from "@/api/inquiry/inquiries";
 
 export default function InquiryPage() {
+  const [searchParams] = useSearchParams();
+  const source = searchParams.get("from");
+
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
@@ -48,7 +51,7 @@ export default function InquiryPage() {
 
     setSubmitting(true);
     try {
-      const { error } = await createInquiry({ name, phone, message });
+      const { error } = await createInquiry({ name, phone, message, source });
       if (error) {
         setSubmitError("상담 신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
         setSubmitting(false);

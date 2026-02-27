@@ -290,7 +290,7 @@ export default function VisaInfoPage() {
           </p>
           <div className="mt-8 flex gap-3.5 justify-center flex-wrap">
             <Link
-              to="/quote"
+              to="/quote?from=visa-info"
               className="bg-terracotta text-white px-8 py-3.5 rounded-[10px] text-base font-bold no-underline inline-flex items-center gap-2 shadow-[0_4px_14px_rgba(196,96,58,0.3)] hover:bg-terracotta-hover hover:-translate-y-0.5 transition-all"
             >
               무료 견적 받기
