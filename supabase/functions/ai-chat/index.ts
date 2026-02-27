@@ -294,12 +294,13 @@ function buildSystemPrompt(academySummary?: string): string {
 9. 시설/건물 질문: 설립연도 기준 최근 어학원 3개 추천
 10. 특정 어학원 상세 질문: DB 데이터 정확히 안내 (추측 금지)
 11. 일반 질문 200자 이내, 상세 질문은 충분히 상세하게
+12. 상담 신청 요청: 사용자가 "상담 신청", "상담하고 싶어", "상담 연결" 등 상담을 원하면, 연락처나 시간을 직접 받지 마세요. "1:1 상담 신청 페이지에서 신청해주시면 전문 상담사가 연락드립니다!"라고 안내하세요.
 
 ## 출력 형식
 - 한 문장 = 한 줄 (마침표/물음표/느낌표 뒤 줄바꿈)
 - 주제 변경 시 빈 줄로 문단 구분
 - 나열: "• " 불릿 + 항목당 줄바꿈
-- 면책 문구: 빈 줄로 분리된 별도 문단 ("※"로 시작)
+- 면책 문구: "※ 본 답변은 AI가 생성한 답변으로, 바위로드의 공식적인 의견이 아닙니다." 이 문구만 사용. 다른 면책 문구 금지
 - 마크다운/JSON 사용 금지. 순수 텍스트 + 줄바꿈만
 - 구조: 인사/공감 → 본문 → 안내/CTA → 면책 문구`;
 
@@ -500,15 +501,21 @@ Deno.serve(async (req) => {
             send({ type: "components", data: componentResults });
           }
 
-          // 가격 관련 키워드 → 견적 CTA 전송
-          const priceKeywords = ["가격", "비용", "얼마", "견적", "돈", "페소", "할인"];
-          const hasPriceKeyword = priceKeywords.some((keyword) => lastUserMessage?.content.includes(keyword));
+          // 가격 관련 키워드 → 견적 CTA 전송 (사용자 메시지 + AI 응답 모두 체크)
+          const priceKeywords = ["가격", "비용", "얼마", "견적", "돈", "페소", "할인", "수업료", "학비", "요금"];
+          const hasPriceKeyword =
+            priceKeywords.some((keyword) => lastUserMessage?.content.includes(keyword)) ||
+            priceKeywords.some((keyword) => fullContent.includes(keyword));
           if (hasPriceKeyword) {
             send({ type: "cta", data: { label: "무료 견적 받기", link: "/quote" } });
           }
 
-          // 특정 어학원 언급 → 1:1 상담 CTA 전송
-          if (mentionedAcademies.length > 0) {
+          // 1:1 상담 CTA 전송: 어학원 언급 또는 상담 키워드 감지 (사용자 메시지 + AI 응답 모두 체크)
+          const consultKeywords = ["상담", "문의", "연락", "전화", "카톡", "카카오톡", "톡"];
+          const hasConsultKeyword =
+            consultKeywords.some((keyword) => lastUserMessage?.content.includes(keyword)) ||
+            consultKeywords.some((keyword) => fullContent.includes(keyword));
+          if (mentionedAcademies.length > 0 || hasConsultKeyword) {
             send({ type: "cta", data: { label: "1:1 상담 신청", link: "/inquiry" } });
           }
 
@@ -517,7 +524,7 @@ Deno.serve(async (req) => {
           const savedComponents = [
             ...(componentResults.length > 0 ? [{ type: "academy_cards", data: componentResults }] : []),
             ...(hasPriceKeyword ? [{ type: "cta_button", data: { label: "무료 견적 받기", link: "/quote" } }] : []),
-            ...(mentionedAcademies.length > 0 ? [{ type: "cta_button", data: { label: "1:1 상담 신청", link: "/inquiry" } }] : []),
+            ...(mentionedAcademies.length > 0 || hasConsultKeyword ? [{ type: "cta_button", data: { label: "1:1 상담 신청", link: "/inquiry" } }] : []),
           ];
           const fullMessages = [
             ...messages.map((msg: { role: string; content: string; timestamp?: string }) => ({
