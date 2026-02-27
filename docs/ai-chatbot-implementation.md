@@ -29,7 +29,7 @@
 
 ### 목표
 
-홈 히어로 섹션의 AI 상담 input을 실제 GPT-4.1-mini 기반 AI 챗봇으로 전환하며, SSE 스트리밍을 통한 실시간 응답과 sessionStorage 기반 세션 복원을 구현한다.
+홈 히어로 섹션의 AI 상담 input을 실제 GPT-4.1-nano 기반 AI 챗봇으로 전환하며, SSE 스트리밍을 통한 실시간 응답과 sessionStorage 기반 세션 복원을 구현한다.
 
 ### 핵심 기능
 
@@ -47,7 +47,7 @@
 | 항목          | 결정                                | 이유                            |
 | ------------- | ----------------------------------- | ------------------------------- |
 | AI API        | Supabase Edge Function              | API 키 보안, 기존 패턴 재사용   |
-| AI 모델       | GPT-4.1-mini                       | 비용 효율적, 충분한 한국어 성능 |
+| AI 모델       | GPT-4.1-nano                       | 최저 비용, 단순 QA 챗봇에 충분한 성능 |
 | 어학원 데이터 | 키워드 기반 사전 검색               | Function calling 제거, 단순화   |
 | 스트리밍      | SSE (Server-Sent Events)            | 실시간 토큰 스트리밍            |
 | 세션 관리     | sessionStorage + DB history 복원    | 새로고침 후 대화 유지            |
@@ -236,8 +236,9 @@ CREATE POLICY "admin_full_access" ON chat_sessions
 
 ```typescript
 // ===== 상수 =====
-const OPENAI_MODEL = "gpt-4.1-mini";
+const OPENAI_MODEL = "gpt-4.1-nano";
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
+const MAX_HISTORY_MESSAGES = 10; // 최근 10개만 OpenAI에 전송 (비용 최적화)
 const ALLOWED_ORIGINS = [...];
 
 // ===== CORS & 응답 헬퍼 =====
@@ -257,7 +258,8 @@ async function handlePostChat(body: { session_id?, messages }): Promise<Readable
   1. extractSearchParams(messages 마지막 user message) → { region?, academy_system?, tags? }
   2. searchAcademies(params) → 필터링된 어학원 데이터
   3. buildSystemPrompt(academySummary)
-  4. callOpenAIStream(systemPrompt, messages) → ReadableStream
+  4. messages.slice(-MAX_HISTORY_MESSAGES) → 최근 10개만 추출
+  5. callOpenAIStream(systemPrompt, recentMessages) → ReadableStream (max_tokens: 300)
   5. ReadableStream 파싱 → SSE 이벤트로 변환
      - 텍스트 토큰 → "text" 이벤트
      - 가격 키워드 감지 → "cta" 이벤트
@@ -296,7 +298,7 @@ verify_jwt = false
 
 | 변수명                      | 설명             | 설정 방법                                    |
 | --------------------------- | ---------------- | -------------------------------------------- |
-| `OPENAI_API_KEY`            | GPT-4.1-mini API | `supabase secrets set OPENAI_API_KEY=sk-...` |
+| `OPENAI_API_KEY`            | GPT-4.1-nano API key | `supabase secrets set OPENAI_API_KEY=sk-...` |
 | `SUPABASE_URL`              | 자동 제공        | Edge Function 내 자동                        |
 | `SUPABASE_SERVICE_ROLE_KEY` | 자동 제공        | Edge Function 내 자동                        |
 
