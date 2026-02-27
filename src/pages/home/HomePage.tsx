@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -18,6 +18,12 @@ import { getAcademySystemChipClass } from "@/data/academy/chipColors";
 export default function HomePage() {
   const [aiKeyword, setAiKeyword] = useState("");
   const [academySwiper, setAcademySwiper] = useState<SwiperType | null>(null);
+  const navigate = useNavigate();
+
+  function handleAiSubmit() {
+    if (!aiKeyword.trim()) return;
+    navigate(`/chat?q=${encodeURIComponent(aiKeyword.trim())}`);
+  }
 
   const { data: academies = [] } = useQuery<Academy[]>({
     queryKey: ["academies"],
@@ -91,11 +97,14 @@ export default function HomePage() {
                   상담으로 물어보기
                 </span>
               </div>
-              <div className="flex items-center gap-2 bg-cream rounded-[10px] px-3.5 py-2.5 border border-beige-dark">
+              <div className="flex items-center gap-2  rounded-[10px] px-3.5 py-2.5 border border-beige-dark">
                 <Input
                   type="text"
                   value={aiKeyword}
                   onChange={(event) => setAiKeyword(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") handleAiSubmit();
+                  }}
                   placeholder="어학연수 궁금한 점을 물어보세요"
                   className="flex-1 bg-transparent text-brown-dark text-[0.82rem] placeholder:text-brown-light border-none shadow-none focus-visible:ring-0 h-auto p-0"
                 />
@@ -103,6 +112,7 @@ export default function HomePage() {
                   size="icon-sm"
                   className="rounded-full bg-terracotta hover:bg-terracotta-hover shrink-0"
                   disabled={!aiKeyword}
+                  onClick={handleAiSubmit}
                 >
                   <Send size={14} strokeWidth={2.5} className="text-white" />
                 </Button>
