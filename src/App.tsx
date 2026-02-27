@@ -17,6 +17,8 @@ import EnrollmentApplyPage from "@/pages/enrollment/EnrollmentApplyPage";
 import EnrollmentDetailPage from "@/pages/enrollment/EnrollmentDetailPage";
 import WithBawiPage from "@/pages/with-bawi/WithBawiPage";
 import ChatPage from "@/pages/chat/ChatPage";
+import PrivacyPolicyPage from "@/pages/legal/PrivacyPolicyPage";
+import TermsOfServicePage from "@/pages/legal/TermsOfServicePage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 function App() {
@@ -41,6 +43,8 @@ function App() {
       <Route path="/enrollment/apply" element={<ProtectedRoute><EnrollmentApplyPage /></ProtectedRoute>} />
       <Route path="/enrollment/:id" element={<ProtectedRoute><EnrollmentDetailPage /></ProtectedRoute>} />
       <Route path="/chat" element={<ChatPage />} />
+      <Route path="/privacy" element={<PrivacyPolicyPage />} />
+      <Route path="/terms" element={<TermsOfServicePage />} />
       {/* backward compat */}
       <Route path="/search" element={<AcademySearchPage />} />
     </Routes>
