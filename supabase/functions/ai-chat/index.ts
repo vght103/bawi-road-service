@@ -9,7 +9,8 @@ const ALLOWED_ORIGINS = [
 ];
 
 const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY")!;
-const OPENAI_MODEL = "gpt-4.1-mini";
+const OPENAI_MODEL = "gpt-4.1-nano";
+const MAX_HISTORY_MESSAGES = 10; // 최근 10개 메시지만 OpenAI에 전송 (왕복 5회)
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 
 // ===== CORS 헬퍼 (storage-presign과 동일) =====
@@ -191,6 +192,7 @@ async function callOpenAIStream(
       model: OPENAI_MODEL,
       messages: [{ role: "system", content: systemPrompt }, ...messages],
       stream: true,
+      max_tokens: 300,
     }),
   });
 
@@ -243,7 +245,10 @@ Deno.serve(async (req) => {
     const searchParams = lastUserMsg ? extractSearchParams(lastUserMsg.content) : null;
     const searchResults = searchParams ? await searchAcademies(searchParams) : [];
 
-    const openaiResponse = await callOpenAIStream(systemPrompt, messages);
+    // OpenAI에는 최근 N개 메시지만 전송 (토큰 절약), DB에는 전체 저장
+    const recentMessages = messages.slice(-MAX_HISTORY_MESSAGES);
+
+    const openaiResponse = await callOpenAIStream(systemPrompt, recentMessages);
 
     const stream = new ReadableStream({
       async start(controller) {

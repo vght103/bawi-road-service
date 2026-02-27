@@ -101,7 +101,7 @@ AI 응답 (텍스트 / 어학원 카드 / CTA 버튼)
 
 | 항목 | 선택 | 비고 |
 |------|------|------|
-| AI 모델 | **GPT-4.1-mini** | 비용 효율적, 충분한 성능 |
+| AI 모델 | **GPT-4.1-nano** | 비용 효율적, 충분한 성능 |
 | 데이터 | **Supabase (어학원 DB)** | 기존 DB 활용 |
 | API | **Supabase Edge Function** | 확정 및 구현 완료 |
 | 스트리밍 | **SSE (Server-Sent Events)** | 구현 완료 |
