@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { MessageCircle, ArrowRight } from "lucide-react";
 import type { ChatMessage } from "@/types/chat";
-import { getAcademySystemChipClass } from "@/data/academy/chipColors";
 
 interface MessageBubbleProps {
   message: ChatMessage;
@@ -39,43 +38,79 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
           AI 상담
         </span>
         <div className="bg-white text-brown-dark rounded-2xl rounded-tl-sm px-4 py-3.5 text-[0.88rem] leading-[1.75] border border-beige-dark">
-          <div className="flex flex-col gap-2.5">
-            {message.content.split(/\n{2,}/).map((paragraph, index) => (
-              <p key={index} className="whitespace-pre-wrap m-0">
-                {paragraph}
-              </p>
-            ))}
+          <div className="flex flex-col gap-3">
+            {message.content.split(/\n{2,}/).map((paragraph, paragraphIndex) => {
+              const lines = paragraph.split("\n");
+              const hasBullets = lines.some((line) => /^[•\-·]/.test(line.trim()));
+
+              if (hasBullets) {
+                const groups: Array<{ type: "text" | "bullets"; content: string[] }> = [];
+                for (const line of lines) {
+                  const isBullet = /^[•\-·]/.test(line.trim());
+                  const lastGroup = groups[groups.length - 1];
+                  if (isBullet) {
+                    if (lastGroup?.type === "bullets") {
+                      lastGroup.content.push(line.trim().replace(/^[•\-·]\s*/, ""));
+                    } else {
+                      groups.push({ type: "bullets", content: [line.trim().replace(/^[•\-·]\s*/, "")] });
+                    }
+                  } else if (line.trim()) {
+                    if (lastGroup?.type === "text") {
+                      lastGroup.content.push(line);
+                    } else {
+                      groups.push({ type: "text", content: [line] });
+                    }
+                  }
+                }
+
+                return (
+                  <div key={paragraphIndex} className="flex flex-col gap-2">
+                    {groups.map((group, groupIndex) =>
+                      group.type === "bullets" ? (
+                        <ul key={groupIndex} className="flex flex-col gap-1.5 list-none m-0 pl-1">
+                          {group.content.map((item, itemIndex) => (
+                            <li key={itemIndex} className="flex gap-2 m-0 p-0">
+                              <span className="text-brown-light shrink-0">•</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p key={groupIndex} className="whitespace-pre-wrap m-0">
+                          {group.content.join("\n")}
+                        </p>
+                      )
+                    )}
+                  </div>
+                );
+              }
+
+              return (
+                <p key={paragraphIndex} className="whitespace-pre-wrap m-0">
+                  {paragraph}
+                </p>
+              );
+            })}
           </div>
           {academies.length > 0 && (
-            <div className="mt-3 pt-1 border-t border-beige-dark flex flex-col divide-y divide-beige-dark">
+            <ul className="mt-3 pt-2 border-t border-beige-dark flex flex-col gap-1.5 list-none m-0 p-0">
               {academies.map((academy) => (
-                <Link
-                  key={academy.id}
-                  to={`/academy/${academy.id}`}
-                  className="flex items-center justify-between gap-2 py-3 no-underline group"
-                >
-                  <div className="min-w-0">
-                    <div className="text-[0.84rem] font-semibold text-brown-dark">
-                      {academy.name}
-                    </div>
-                    <div className="flex items-center gap-1.5 mt-1">
-                      <span className="text-[0.72rem] text-brown-light">
-                        {academy.region}
+                <li key={academy.id} className="m-0 p-0">
+                  <Link
+                    to={`/academy/${academy.id}`}
+                    className="flex items-baseline gap-2 py-0.5 no-underline text-brown-dark hover:text-terracotta transition-colors group"
+                  >
+                    <span className="text-brown-light shrink-0">•</span>
+                    <span className="text-[0.84rem]">
+                      <span className="font-semibold">{academy.name}</span>
+                      <span className="text-brown-light text-[0.78rem]">
+                        {" "}— {academy.region} · {academy.academy_system}
                       </span>
-                      <span className="text-[0.6rem] text-brown-light">·</span>
-                      <span className={`px-1.5 py-0.5 rounded text-[0.65rem] font-medium ${getAcademySystemChipClass(academy.academy_system)}`}>
-                        {academy.academy_system}
-                      </span>
-                    </div>
-                  </div>
-                  <ArrowRight
-                    size={14}
-                    strokeWidth={2.5}
-                    className="text-terracotta shrink-0 group-hover:translate-x-0.5 transition-transform"
-                  />
-                </Link>
+                    </span>
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
           {ctaButtons.length > 0 && (
             <div className={`flex flex-wrap gap-2 ${academies.length > 0 ? "mt-3 pt-3 border-t border-beige-dark" : "mt-3"}`}>
@@ -83,7 +118,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
                 <Link
                   key={index}
                   to={cta!.link}
-                  className="inline-flex items-center gap-1 px-3.5 py-2 rounded-full bg-terracotta text-white text-[0.78rem] font-medium no-underline hover:bg-terracotta-hover transition-colors"
+                  className="inline-flex items-center gap-1 px-3.5 py-2 rounded-full bg-white text-terracotta border border-terracotta text-[0.78rem] font-medium no-underline hover:bg-terracotta hover:text-white transition-colors"
                 >
                   {cta!.label}
                   <ArrowRight size={13} strokeWidth={2.5} />
