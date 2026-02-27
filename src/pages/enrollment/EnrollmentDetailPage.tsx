@@ -17,7 +17,6 @@ export default function EnrollmentDetailPage() {
   const deleteMutation = useDeleteDocument(id ?? "");
 
   const isProcessing = uploadMutation.isPending || deleteMutation.isPending;
-  const processingMessage = uploadMutation.isPending ? "업로드 중..." : "삭제 중...";
 
   const admissionDoc = documents.find((document) => document.document_type === "ADMISSION_LETTER");
   const invoiceDoc = documents.find((document) => document.document_type === "INVOICE");
@@ -49,17 +48,7 @@ export default function EnrollmentDetailPage() {
   }
 
   if (loading) {
-    return (
-      <div className="bg-cream min-h-screen">
-        <Navbar />
-        <div className="pt-[140px] pb-20 px-6">
-          <div className="max-w-[520px] mx-auto text-center">
-            <p className="text-brown text-[0.9rem]">수속 정보를 불러오는 중...</p>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
+    return <LoadingOverlay visible />;
   }
 
   if (error || !enrollment) {
@@ -93,7 +82,7 @@ export default function EnrollmentDetailPage() {
   return (
     <div className="bg-cream min-h-screen">
       <Navbar />
-      <LoadingOverlay visible={isProcessing} message={processingMessage} />
+      <LoadingOverlay visible={isProcessing} />
 
       {/* Breadcrumb */}
       <div className="pt-20 bg-white border-b border-beige-dark">

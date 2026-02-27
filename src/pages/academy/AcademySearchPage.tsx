@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { fetchAcademies } from "@/api/academy/academies";
 import type { Academy } from "@/data/academies";
 import { getAcademySystemChipClass, getTagChipClass } from "@/data/academy/chipColors";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 export default function AcademySearchPage() {
   const { data: academies = [], isLoading } = useQuery<Academy[]>({
@@ -48,6 +49,7 @@ export default function AcademySearchPage() {
 
   return (
     <div className="bg-cream min-h-screen">
+      <LoadingOverlay visible={isLoading} />
       <Navbar />
 
       {/* Page Header */}
@@ -131,9 +133,8 @@ export default function AcademySearchPage() {
           <h2 className="text-lg font-bold text-brown-dark">{isLoading ? "..." : filteredAcademies.length}개 어학원</h2>
         </div>
 
-        {isLoading ? (
-          <div className="text-center py-16 text-brown">불러오는 중...</div>
-        ) : filteredAcademies.length === 0 && academies.length > 0 ? (
+        {isLoading ? null
+        : filteredAcademies.length === 0 && academies.length > 0 ? (
           <div className="text-center py-16 text-brown">검색 결과가 없습니다.</div>
         ) : academies.length === 0 ? (
           <div className="text-center py-16 text-brown">등록된 어학원이 없습니다.</div>

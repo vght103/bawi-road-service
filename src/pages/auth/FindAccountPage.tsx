@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 type ActiveTab = "find-email" | "find-password";
 
@@ -92,6 +93,7 @@ export default function FindAccountPage() {
 
   return (
     <div className="min-h-dvh bg-cream">
+      <LoadingOverlay visible={findEmailSubmitting || resetSubmitting} />
       <Navbar />
       <div className="flex items-center justify-center px-4 py-12 pt-22">
         <div className="flex w-full max-w-[1000px] overflow-hidden rounded-2xl bg-white shadow-lg border border-beige-dark">

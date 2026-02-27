@@ -14,6 +14,7 @@ import EnrollmentStepper from "./components/EnrollmentStepper";
 import StepAcademySelect from "./components/StepAcademySelect";
 import StepCourseSelect from "./components/StepCourseSelect";
 import StepTermsAgreement from "./components/StepTermsAgreement";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 const STEPS = [
   { label: "어학원 선택", description: "관심 어학원" },
@@ -169,17 +170,7 @@ export default function EnrollmentApplyPage() {
   }
 
   if (academiesLoading) {
-    return (
-      <div className="bg-cream min-h-screen">
-        <Navbar />
-        <div className="pt-[140px] pb-20 px-6">
-          <div className="max-w-[520px] mx-auto text-center">
-            <p className="text-brown text-[0.9rem]">어학원 정보를 불러오는 중...</p>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
+    return <LoadingOverlay visible />;
   }
 
   if (submitted) {
@@ -223,6 +214,7 @@ export default function EnrollmentApplyPage() {
 
   return (
     <div className="bg-cream min-h-screen">
+      <LoadingOverlay visible={submitting} />
       <Navbar />
 
       {/* Breadcrumb */}

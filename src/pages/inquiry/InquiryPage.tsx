@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createInquiry } from "@/api/inquiry/inquiries";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 export default function InquiryPage() {
   const [searchParams] = useSearchParams();
@@ -92,6 +93,7 @@ export default function InquiryPage() {
 
   return (
     <div className="bg-cream min-h-screen">
+      <LoadingOverlay visible={submitting} />
       <Navbar />
 
       <div className="pt-[120px] pb-20 px-6">
