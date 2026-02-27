@@ -10,16 +10,24 @@ interface ChatInputProps {
   onSend: () => void;
   disabled: boolean;
   ctaButtons?: CtaButtonData[];
+  onCtaClick?: (ctaType: "quote" | "inquiry") => void;
 }
 
-export default function ChatInput({ value, onChange, onSend, disabled, ctaButtons }: ChatInputProps) {
+export default function ChatInput({ value, onChange, onSend, disabled, ctaButtons, onCtaClick }: ChatInputProps) {
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-beige-dark px-4 py-3">
       <div className="max-w-[720px] mx-auto">
         {ctaButtons && ctaButtons.length > 0 && (
           <div className="flex gap-2 overflow-x-auto pb-2.5 hide-scrollbar">
             {ctaButtons.map((button, index) => (
-              <CtaButton key={index} data={button} />
+              <CtaButton
+                key={index}
+                data={button}
+                onClick={() => {
+                  const ctaType = button.link.includes("quote") ? "quote" as const : "inquiry" as const;
+                  onCtaClick?.(ctaType);
+                }}
+              />
             ))}
           </div>
         )}

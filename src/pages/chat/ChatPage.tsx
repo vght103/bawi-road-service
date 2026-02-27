@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
 import type { ChatMessage, CtaButtonData, SSEEvent, AcademyCardData } from "@/types/chat";
-import { sendChatStream, loadChatSession } from "@/api/chat/chatApi";
+import { sendChatStream, loadChatSession, trackCtaClick } from "@/api/chat/chatApi";
 import ChatHeader from "./components/ChatHeader";
 import AiDisclaimer from "./components/AiDisclaimer";
 import MessageBubble from "./components/MessageBubble";
@@ -204,7 +204,13 @@ export default function ChatPage() {
             ) {
               return null;
             }
-            return <MessageBubble key={message.id} message={message} />;
+            return (
+              <MessageBubble
+                key={message.id}
+                message={message}
+                onCtaClick={(ctaType) => trackCtaClick(sessionId, ctaType, "bubble")}
+              />
+            );
           })}
 
           {isWaitingForFirstToken && (
@@ -244,6 +250,7 @@ export default function ChatPage() {
         onSend={handleSend}
         disabled={isLoading}
         ctaButtons={STATIC_CTA}
+        onCtaClick={(ctaType) => trackCtaClick(sessionId, ctaType, "static")}
       />
     </div>
   );

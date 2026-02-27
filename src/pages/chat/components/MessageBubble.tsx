@@ -25,9 +25,10 @@ function ensureLineBreaks(text: string): string {
 
 interface MessageBubbleProps {
   message: ChatMessage;
+  onCtaClick?: (ctaType: "quote" | "inquiry") => void;
 }
 
-export default function MessageBubble({ message }: MessageBubbleProps) {
+export default function MessageBubble({ message, onCtaClick }: MessageBubbleProps) {
   const isUser = message.role === "user";
 
   if (isUser) {
@@ -139,6 +140,10 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
                 <Link
                   key={index}
                   to={cta!.link}
+                  onClick={() => {
+                    const ctaType = cta!.link.includes("quote") ? "quote" as const : "inquiry" as const;
+                    onCtaClick?.(ctaType);
+                  }}
                   className="inline-flex items-center gap-1 px-3.5 py-2 rounded-full bg-white text-terracotta border border-terracotta text-[0.78rem] font-medium no-underline hover:bg-terracotta hover:text-white transition-colors"
                 >
                   {cta!.label}

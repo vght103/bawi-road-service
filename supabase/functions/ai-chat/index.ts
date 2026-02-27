@@ -25,7 +25,7 @@ function getCorsHeaders(request: Request): Record<string, string> {
   return {
     "Access-Control-Allow-Origin": origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0],
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS",
   };
 }
 
@@ -401,6 +401,25 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: "세션을 찾을 수 없습니다." }, 404, corsHeaders);
     }
     return jsonResponse({ messages: data.messages }, 200, corsHeaders);
+  }
+
+  // PUT: CTA 클릭 추적
+  if (req.method === "PUT") {
+    try {
+      const { session_id, cta_type, source } = await req.json();
+      if (!cta_type || !source) {
+        return jsonResponse({ error: "cta_type, source가 필요합니다." }, 400, corsHeaders);
+      }
+      const supabase = getServiceClient();
+      await supabase.from("cta_clicks").insert({
+        session_id: session_id ?? null,
+        cta_type,
+        source,
+      });
+      return jsonResponse({ ok: true }, 200, corsHeaders);
+    } catch {
+      return jsonResponse({ error: "추적 요청 처리 실패" }, 500, corsHeaders);
+    }
   }
 
   // POST: AI 채팅 (SSE 스트리밍)
