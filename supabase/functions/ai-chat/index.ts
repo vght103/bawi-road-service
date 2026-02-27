@@ -14,6 +14,11 @@ const OPENAI_MODEL = "gpt-4.1-mini";
 const MAX_HISTORY_MESSAGES = 10; // 최근 10개 메시지만 OpenAI에 전송 (왕복 5회)
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 
+// ===== Rate Limiting =====
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1분
+const RATE_LIMIT_MAX_REQUESTS = 10; // 분당 최대 10회
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
 // ===== CORS 헬퍼 (storage-presign과 동일) =====
 function getCorsHeaders(request: Request): Record<string, string> {
   const origin = request.headers.get("Origin");
@@ -29,6 +34,33 @@ function jsonResponse(body: Record<string, unknown>, status: number, corsHeaders
     status,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
+}
+
+// ===== Rate Limiting 헬퍼 =====
+function getClientIp(request: Request): string {
+  return (
+    request.headers.get("cf-connecting-ip") ??
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    request.headers.get("x-real-ip") ??
+    "unknown"
+  );
+}
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+
+  if (!entry || now > entry.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+    return true;
+  }
+
+  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return false;
+  }
+
+  entry.count++;
+  return true;
 }
 
 // ===== Supabase 클라이언트 (service_role) =====
@@ -232,63 +264,53 @@ async function searchNewestAcademies(limit = 3) {
   return data ?? [];
 }
 
+// ===== 어학원 관련 질문 감지 =====
+function isAcademyRelated(message: string): boolean {
+  const academyKeywords = [
+    "어학원", "학원", "추천", "학교", "코스", "기숙사", "연수",
+    "스파르타", "세미스파르타", "자율", "ESL", "IELTS", "TOEIC",
+    "세부", "바기오", "클락", "마닐라",
+    "시설", "신축", "깨끗", "캠퍼스",
+    "1:1", "맨투맨", "그룹수업",
+    "비용", "가격", "얼마", "견적", "페소",
+  ];
+  const lowerMsg = message.toLowerCase();
+  return academyKeywords.some((keyword) => lowerMsg.includes(keyword.toLowerCase()));
+}
+
 // ===== 시스템 프롬프트 =====
-function buildSystemPrompt(academySummary: string): string {
-  return `당신은 "바위로드 AI 상담 어시스턴트"입니다. 필리핀 어학연수 전문 상담사 역할을 합니다.
+function buildSystemPrompt(academySummary?: string): string {
+  const base = `당신은 "바위로드 AI 상담 어시스턴트"입니다. 필리핀 어학연수 전문 상담사입니다.
 
 ## 규칙
+1. 한국어로만 답변
+2. 바위로드(BAWI ROAD) = 필리핀 어학연수 중개 서비스
+3. 어학원/어학연수 관련 질문에만 답변. 무관한 질문은 "저는 필리핀 어학연수 전문 상담 AI입니다. 어학연수 관련 질문을 해주세요!"로 안내
+4. 비용/가격 질문: 구체적 숫자 제시 금지. 공감 후 무료 견적 서비스 안내
+5. 모호한 어학원 질문(조건 없이 "추천해줘"): 선호사항(지역/학습스타일) 먼저 질문
+6. 구체적 조건(지역+스타일 등) 있으면 바로 검색하여 안내
+7. 추천 결과 없으면 1:1 상담 안내
+8. 추천 시 DB 데이터 기반 어학원 특징 간단히 설명
+9. 시설/건물 질문: 설립연도 기준 최근 어학원 3개 추천
+10. 특정 어학원 상세 질문: DB 데이터 정확히 안내 (추측 금지)
+11. 일반 질문 200자 이내, 상세 질문은 충분히 상세하게
 
-1. 항상 한국어로 답변하세요.
-2. 바위로드(BAWI ROAD)는 필리핀 어학연수 중개 서비스입니다.
-3. 어학원/어학연수 관련 질문에만 답변하세요. DB에 있는 어학원 정보를 기반으로 답변합니다.
-4. **비용/가격 관련 질문**: 비용 질문은 어학연수 관련 질문이므로 반드시 친절하게 응대하세요. 단, 구체적인 가격을 직접 계산하거나 숫자로 안내하지 마세요. 공감하며 자연스럽게 안내하세요. 예시: "어학연수 비용이 궁금하시군요! \n 정확한 비용은 어학원, 연수기간, 코스, 기숙사 옵션에 따라 달라지는데요. 무료 견적 서비스에서 원하시는 조건을 설정하시면 바로 확인하실 수 있어요!"
-5. **모호한 어학원 질문 → 되물어보기**: "세부 어학원 궁금해", "어학원 추천해줘" 같이 구체적인 조건 없이 광범위하게 물어보면, 바로 검색하지 말고 선호사항을 먼저 질문하세요.
-   - 예시: "어떤 학습 스타일을 선호하세요? (스파르타/세미스파르타/IELTS 등)" 또는 "선호하는 지역이 있으신가요? (세부/바기오)"
-6. **구체적 조건이 있는 추천 요청**: "세부 스파르타 추천", "IELTS 준비할 수 있는 곳" 등 명확한 조건이 있으면 바로 검색하여 어학원 정보를 안내하세요.
-7. **어학연수와 무관한 질문**: 정중하게 "저는 필리핀 어학연수 전문 상담 AI입니다. 어학연수 관련 질문을 해주세요!"라고 안내하세요.
-8. **추천 결과가 없을 때**: "조건에 맞는 어학원을 찾지 못했습니다. 더 자세한 상담은 1:1 상담을 이용해주세요!"라고 안내하세요.
-9. 답변은 친근하고 전문적인 톤으로, **간결하게** 작성하세요. 일반 질문은 200자 이내, 특정 어학원 상세 정보 요청(코스, 기숙사 등)은 충분히 상세하게 답변하세요.
-10. 어학원 추천 관련한 질문을 받았을 때만 어학원 목록을 보여준다. ex) 스파르타 어학원 알려줘 / 스파르타 어학원 추천해줘 / 세부 어학원 추천해줘 / 바기오 세미스파르타 어학원 알려줘 등. 어학원 목록을 보여주면서 DB 데이터를 기반으로 어학원 특징을 간단히 알려줘.
-11. **시설/건물 관련 질문**: "시설 좋은 곳", "깨끗한 어학원", "신축" 등 시설 관련 질문에는 어학원 목록의 설립연도를 기반으로 최근에 지어지거나 리뉴얼한 어학원을 3개 정도 추천하세요. 답변 형식:
-   - 시설 좋은 어학원으로 ~, ~, ~ 어학원들이 있어요. (3개 추천 + 간략한 이유)
-   - "정확한 답변은 1:1 상담을 통해 확인하세요!"
-   - 마지막 줄: "※ 본 답변은 AI가 생성한 답변으로, 바위로드의 공식적인 의견이 아닙니다."
-12. **특정 어학원 상세 질문**: 사용자가 특정 어학원의 코스, 기숙사, 시설, 장단점 등을 물어보면, 아래 제공되는 [어학원 상세 정보]를 기반으로 DB 데이터를 정확하게 답변하세요. 추측이나 일반적인 설명이 아닌, 실제 데이터를 그대로 안내합니다.
-13. **배열 데이터 포맷**: 코스 목록, 기숙사 목록, 시설 목록 등 여러 항목을 나열할 때는 반드시 불릿(•) 또는 번호(1. 2. 3.) 리스트 형식으로 보여주세요. 한 줄에 쭉 이어쓰지 마세요.
-    - 예시 (코스): "• ESL General — 1:1 4시간, 그룹 2시간\n• IELTS — 1:1 4시간, 그룹 4시간"
-    - 예시 (기숙사): "• 1인실 — 식사 주3식\n• 2인실 — 식사 주3식\n• 3인실 — 식사 주3식"
+## 출력 형식
+- 한 문장 = 한 줄 (마침표/물음표/느낌표 뒤 줄바꿈)
+- 주제 변경 시 빈 줄로 문단 구분
+- 나열: "• " 불릿 + 항목당 줄바꿈
+- 면책 문구: 빈 줄로 분리된 별도 문단 ("※"로 시작)
+- 마크다운/JSON 사용 금지. 순수 텍스트 + 줄바꿈만
+- 구조: 인사/공감 → 본문 → 안내/CTA → 면책 문구`;
+
+  if (academySummary) {
+    return `${base}
 
 ## 사용 가능한 어학원 목록
+${academySummary}`;
+  }
 
-${academySummary}
-
-## 출력 형식 (매우 중요 — 반드시 준수)
-
-**핵심: 한 문장이 끝나면 반드시 줄바꿈(\\n)을 넣으세요. 절대로 문장을 이어붙이지 마세요.**
-
-1. **한 문장 = 한 줄**: 마침표(.), 물음표(?), 느낌표(!) 뒤에는 반드시 줄바꿈을 넣으세요.
-2. **문단 구분**: 주제가 바뀌는 곳에서는 빈 줄(줄바꿈 2번, \\n\\n)로 문단을 나누세요.
-3. **나열할 때**: "• " 불릿 기호를 사용하고, 각 항목마다 줄바꿈을 넣으세요.
-4. **면책 문구**: "※"로 시작하는 문구는 반드시 빈 줄로 분리된 별도 문단으로 작성하세요.
-5. JSON이나 마크다운(**볼드**, # 제목 등) 포맷은 사용하지 마세요. 순수 텍스트 + 줄바꿈만 사용합니다.
-6. **구조**: 인사/공감 → 본문 설명 → 안내/CTA → 면책 문구 순서로 작성하세요.
-
-### 좋은 답변 예시 (이 형식을 따르세요)
-
-세부에서 시설 좋은 어학원을 찾고 계시군요!
-
-시설이 최신인 어학원으로는 아래 3곳을 추천드려요.
-• I.BREEZE — 2018년 설립, 세부 시티 중심부 위치
-• Cebu Blue Ocean Academy — 2015년 설립, 막탄 해변가 리조트형 캠퍼스
-• QQ English IT Park — 2009년 설립, IT파크 내 현대식 건물
-
-더 자세한 상담은 1:1 상담을 이용해주세요!
-
-※ 본 답변은 AI가 생성한 답변으로, 바위로드의 공식적인 의견이 아닙니다.
-
-### 나쁜 답변 예시 (이렇게 하지 마세요)
-
-세부에서 시설 좋은 어학원으로는 I.BREEZE(2018년 설립), Cebu Blue Ocean Academy(2015년 설립), 그리고 QQ English IT Park(2009년 설립)가 있어요. 최신 시설과 쾌적한 환경을 원하신다면 참고해보세요! 정확한 답변은 1:1 상담을 통해 확인하세요! ※ 본 답변은 AI가 생성한 답변으로, 바위로드의 공식적인 의견이 아닙니다.`;
+  return base;
 }
 
 // ===== 대화 세션 관리 =====
@@ -344,6 +366,7 @@ async function callOpenAIStream(
       messages: [{ role: "system", content: systemPrompt }, ...messages],
       stream: true,
       max_tokens: maxTokens,
+      temperature: 0.4,
     }),
   });
 
@@ -380,6 +403,16 @@ Deno.serve(async (req) => {
   }
 
   // POST: AI 채팅 (SSE 스트리밍)
+  // Rate Limiting 체크
+  const clientIp = getClientIp(req);
+  if (!checkRateLimit(clientIp)) {
+    return jsonResponse(
+      { error: "요청이 너무 많습니다. 잠시 후 다시 시도해주세요." },
+      429,
+      corsHeaders,
+    );
+  }
+
   try {
     const body = await req.json();
     const { session_id, messages } = body;
@@ -388,20 +421,22 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: "messages 배열이 필요합니다." }, 400, corsHeaders);
     }
 
-    const academySummary = await getAcademySummary();
-    const systemPrompt = buildSystemPrompt(academySummary);
+    // 어학원 관련 질문일 때만 어학원 목록 포함 (토큰 절약)
+    const lastUserMessage = [...messages].reverse().find((msg: { role: string }) => msg.role === "user");
+    const needsAcademyData = lastUserMessage ? isAcademyRelated(lastUserMessage.content) : false;
+    const academySummary = needsAcademyData ? await getAcademySummary() : null;
+    const systemPrompt = buildSystemPrompt(academySummary ?? undefined);
 
     // 마지막 사용자 메시지에서 검색 파라미터 추출
-    const lastUserMsg = [...messages].reverse().find((msg: { role: string }) => msg.role === "user");
-    const searchParams = lastUserMsg ? extractSearchParams(lastUserMsg.content) : null;
+    const searchParams = lastUserMessage ? extractSearchParams(lastUserMessage.content) : null;
     const searchResults = searchParams ? await searchAcademies(searchParams) : [];
 
     // 특정 어학원 언급 감지 → 상세 정보 컨텍스트 주입
-    const mentionedAcademies = detectMentionedAcademies(lastUserMsg?.content ?? "");
+    const mentionedAcademies = detectMentionedAcademies(lastUserMessage?.content ?? "");
     const academyDetailContext = buildAcademyDetailContext(mentionedAcademies);
 
     // 시설 관련 질문 감지 → 설립연도 기준 검색
-    const isFacilityQuery = detectFacilityQuery(lastUserMsg?.content ?? "");
+    const isFacilityQuery = detectFacilityQuery(lastUserMessage?.content ?? "");
     const facilityResults = isFacilityQuery ? await searchNewestAcademies() : [];
     const componentResults = facilityResults.length > 0 ? facilityResults : searchResults;
 
@@ -467,7 +502,7 @@ Deno.serve(async (req) => {
 
           // 가격 관련 키워드 → 견적 CTA 전송
           const priceKeywords = ["가격", "비용", "얼마", "견적", "돈", "페소", "할인"];
-          const hasPriceKeyword = priceKeywords.some((keyword) => lastUserMsg?.content.includes(keyword));
+          const hasPriceKeyword = priceKeywords.some((keyword) => lastUserMessage?.content.includes(keyword));
           if (hasPriceKeyword) {
             send({ type: "cta", data: { label: "무료 견적 받기", link: "/quote" } });
           }
