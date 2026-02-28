@@ -1,0 +1,12 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SignupPage from "@/react-pages/auth/SignupPage";
+---
+
+<BaseLayout
+  title="회원가입"
+  description="바위로드 회원가입 - 필리핀 어학연수 정보와 맞춤 견적을 받아보세요."
+  path="/signup"
+>
+  <SignupPage client:only="react" />
+</BaseLayout>

@@ -1,0 +1,183 @@
+---
+import AuthStatus from "@/components/AuthStatus";
+
+const pathname = Astro.url.pathname;
+const isGuideActive = ["/why-philippines", "/process", "/visa-info"].includes(pathname);
+
+function getLinkClass(path: string): string {
+  const active = pathname === path || pathname.startsWith(path + "/");
+  return `text-[0.9rem] font-semibold no-underline transition-all rounded-md px-2.5 py-1 ${active ? "bg-white/15 text-white" : "text-white hover:bg-white/10"}`;
+}
+---
+
+<nav
+  id="navbar"
+  class="fixed top-0 left-0 right-0 z-50 bg-brown backdrop-blur-[16px] border-b border-brown-dark/20 transition-shadow"
+>
+  <div class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2.5 no-underline text-cream">
+      <div>
+        <div class="font-extrabold text-[1.2rem] tracking-tight leading-tight">바위로드</div>
+        <div class="text-[0.65rem] text-cream/60 font-medium tracking-wider">BAWI ROAD</div>
+      </div>
+    </a>
+
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex items-center gap-7">
+      <a href="/academies" class={getLinkClass("/academies")}>
+        어학원 비교
+      </a>
+
+      <!-- 연수 가이드 Dropdown -->
+      <div class="relative" id="guide-dropdown">
+        <button
+          class={`text-[0.9rem] font-semibold cursor-pointer border-none flex items-center gap-1 no-underline transition-all rounded-md px-2.5 py-1 ${isGuideActive ? "bg-white/15 text-white" : "bg-transparent text-white hover:bg-white/10"}`}
+          id="guide-trigger"
+        >
+          연수 가이드
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform" id="guide-chevron"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-3 hidden" id="guide-menu">
+          <div class="bg-white rounded-xl shadow-lg border border-beige-dark py-2 min-w-[180px]">
+            <a
+              href="/why-philippines"
+              class="block px-5 py-2.5 text-[0.85rem] text-brown hover:bg-beige hover:text-brown-dark transition-colors no-underline"
+            >
+              왜 필리핀?
+            </a>
+            <a
+              href="/process"
+              class="block px-5 py-2.5 text-[0.85rem] text-brown hover:bg-beige hover:text-brown-dark transition-colors no-underline"
+            >
+              연수 절차 · 준비물
+            </a>
+            <a
+              href="/visa-info"
+              class="block px-5 py-2.5 text-[0.85rem] text-brown hover:bg-beige hover:text-brown-dark transition-colors no-underline"
+            >
+              비자 · 현지비용
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <a href="/with-bawi" class={getLinkClass("/with-bawi")}>바위로드와 함께</a>
+      <a href="/enrollment/apply?from=navbar" class={getLinkClass("/enrollment")}>
+        수속 신청
+      </a>
+      <a
+        href="/quote?from=navbar"
+        class="bg-terracotta text-white! px-5 py-2 rounded-lg font-semibold text-[0.85rem] hover:bg-terracotta-hover hover:-translate-y-0.5 transition-all no-underline"
+      >
+        무료 견적 받기
+      </a>
+
+      <!-- Auth (React Island) -->
+      <AuthStatus client:load pathname={pathname} />
+    </div>
+
+    <!-- Mobile Toggle -->
+    <button
+      class="md:hidden p-1"
+      id="mobile-toggle"
+      aria-label="메뉴 열기"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="menu-icon"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="close-icon" class="hidden"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="md:hidden bg-white border-t border-beige-dark px-6 py-4 space-y-1 shadow-[0_8px_24px_rgba(0,0,0,0.12)] rounded-b-2xl hidden">
+    <a href="/academies" class="block text-brown-dark font-medium py-2 no-underline">어학원 비교</a>
+
+    <!-- Mobile 연수 가이드 Accordion -->
+    <div>
+      <button
+        class="w-full flex items-center justify-between text-brown-dark font-medium py-2 bg-transparent border-none cursor-pointer text-left text-base"
+        id="mobile-guide-trigger"
+      >
+        연수 가이드
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform" id="mobile-guide-chevron"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div id="mobile-guide-submenu" class="pl-4 space-y-0.5 pb-1 hidden">
+        <a href="/why-philippines" class="block text-brown py-2 text-[0.9rem] no-underline hover:text-brown-dark">왜 필리핀?</a>
+        <a href="/process" class="block text-brown py-2 text-[0.9rem] no-underline hover:text-brown-dark">연수 절차 · 준비물</a>
+        <a href="/visa-info" class="block text-brown py-2 text-[0.9rem] no-underline hover:text-brown-dark">비자 · 현지비용</a>
+      </div>
+    </div>
+
+    <a href="/with-bawi" class="block text-brown font-medium py-2 no-underline">바위로드와 함께</a>
+    <a href="/enrollment/apply?from=navbar" class="block text-brown font-medium py-2 no-underline">수속 신청</a>
+
+    <!-- Mobile Auth (React Island) -->
+    <div id="mobile-auth">
+      <AuthStatus client:load pathname={pathname} mobile />
+    </div>
+
+    <!-- CTA -->
+    <a
+      href="/quote?from=navbar"
+      class="block w-full text-center bg-terracotta text-white py-3 rounded-lg font-semibold no-underline mt-3"
+    >
+      무료 견적 받기
+    </a>
+  </div>
+</nav>
+
+<!-- Spacer for fixed navbar -->
+<div class="h-16"></div>
+
+<script>
+  // Scroll shadow
+  window.addEventListener("scroll", () => {
+    const nav = document.getElementById("navbar");
+    if (nav) {
+      nav.classList.toggle("shadow-md", window.scrollY > 20);
+    }
+  });
+
+  // Mobile menu toggle
+  const mobileToggle = document.getElementById("mobile-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const menuIcon = document.getElementById("menu-icon");
+  const closeIcon = document.getElementById("close-icon");
+
+  mobileToggle?.addEventListener("click", () => {
+    const isOpen = !mobileMenu?.classList.contains("hidden");
+    mobileMenu?.classList.toggle("hidden");
+    menuIcon?.classList.toggle("hidden");
+    closeIcon?.classList.toggle("hidden");
+    mobileToggle.setAttribute("aria-label", isOpen ? "메뉴 열기" : "메뉴 닫기");
+  });
+
+  // Desktop guide dropdown (hover)
+  const guideDropdown = document.getElementById("guide-dropdown");
+  const guideMenu = document.getElementById("guide-menu");
+  const guideChevron = document.getElementById("guide-chevron");
+  let guideTimeout: ReturnType<typeof setTimeout>;
+
+  guideDropdown?.addEventListener("mouseenter", () => {
+    clearTimeout(guideTimeout);
+    guideMenu?.classList.remove("hidden");
+    guideChevron?.classList.add("rotate-180");
+  });
+
+  guideDropdown?.addEventListener("mouseleave", () => {
+    guideTimeout = setTimeout(() => {
+      guideMenu?.classList.add("hidden");
+      guideChevron?.classList.remove("rotate-180");
+    }, 150);
+  });
+
+  // Mobile guide accordion
+  const mobileGuideTrigger = document.getElementById("mobile-guide-trigger");
+  const mobileGuideSubmenu = document.getElementById("mobile-guide-submenu");
+  const mobileGuideChevron = document.getElementById("mobile-guide-chevron");
+
+  mobileGuideTrigger?.addEventListener("click", () => {
+    mobileGuideSubmenu?.classList.toggle("hidden");
+    mobileGuideChevron?.classList.toggle("rotate-180");
+  });
+</script>

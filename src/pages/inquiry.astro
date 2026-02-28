@@ -1,0 +1,12 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import InquiryPage from "@/react-pages/inquiry/InquiryPage";
+---
+
+<BaseLayout
+  title="문의하기"
+  description="필리핀 어학연수에 대해 궁금한 점을 문의해주세요. 빠른 시간 안에 답변드리겠습니다."
+  path="/inquiry"
+>
+  <InquiryPage client:only="react" />
+</BaseLayout>

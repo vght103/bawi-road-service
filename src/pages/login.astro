@@ -1,0 +1,12 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import LoginPage from "@/react-pages/auth/LoginPage";
+---
+
+<BaseLayout
+  title="로그인"
+  description="바위로드에 로그인하세요."
+  path="/login"
+>
+  <LoginPage client:only="react" />
+</BaseLayout>

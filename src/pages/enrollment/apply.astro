@@ -1,0 +1,12 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import EnrollmentApplyPage from "@/react-pages/enrollment/EnrollmentApplyPage";
+---
+
+<BaseLayout
+  title="수속 신청"
+  description="필리핀 어학연수 수속을 신청하세요."
+  path="/enrollment/apply"
+>
+  <EnrollmentApplyPage client:only="react" />
+</BaseLayout>

@@ -1,0 +1,12 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import HomePage from "@/react-pages/home/HomePage";
+---
+
+<BaseLayout
+  title="바위로드 - 다 보여주는 필리핀 어학연수"
+  description="바위로드 - 필리핀 어학연수 가격 완전 공개. 학비, 기숙사비, 현지 비용까지 비교하고 직접 고르세요. 수수료 0원, 검증된 어학원만 추천합니다."
+  path="/"
+>
+  <HomePage client:only="react" />
+</BaseLayout>

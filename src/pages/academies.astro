@@ -1,0 +1,12 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import AcademySearchPage from "@/react-pages/academy/AcademySearchPage";
+---
+
+<BaseLayout
+  title="필리핀 어학원 비교·검색"
+  description="필리핀 어학원을 한눈에 비교하세요. 지역, 학비, 커리큘럼, 기숙사 등 조건별 검색과 실시간 비교가 가능합니다."
+  path="/academies"
+>
+  <AcademySearchPage client:only="react" />
+</BaseLayout>
