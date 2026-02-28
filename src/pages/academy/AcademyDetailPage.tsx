@@ -7,6 +7,7 @@ import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Seo from "@/components/Seo";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { fetchAcademy } from "@/api/academy/academies";
@@ -42,6 +43,7 @@ export default function AcademyDetailPage() {
 
   return (
     <div className="bg-cream min-h-screen">
+      <Seo title={academy.name} description={academy.shortDesc ?? academy.desc} path={`/academy/${id}`} />
       <Navbar />
 
       {/* Breadcrumb */}

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { CalendarIcon, CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+import Seo from "@/components/Seo";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { fetchAcademies } from "@/api/academy/academies";
@@ -175,6 +176,7 @@ export default function QuotePage() {
 
   return (
     <div className="bg-cream min-h-screen">
+      <Seo title="필리핀 어학연수 비용 확인 | 1개월~6개월 무료 견적" description="필리핀 어학연수 학비·기숙사비·현지 비용을 한눈에. 1개월·3개월·6개월 기간별 무료 맞춤 견적. 세부·바기오 어학원 비용 비교." path="/quote" />
       <LoadingOverlay visible={submitting} />
       <Navbar />
 

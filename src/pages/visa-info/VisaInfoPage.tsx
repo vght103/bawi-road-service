@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { ArrowRight } from "lucide-react";
+import Seo from "@/components/Seo";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -30,6 +31,7 @@ export default function VisaInfoPage() {
 
   return (
     <div className="bg-cream">
+      <Seo title="필리핀 어학연수 비자 총정리 | SSP·ACR I-Card·연장 방법" description="SSP 신청, ACR I-Card 발급, 비자 연장까지. 필리핀 어학연수 비자 종류·비용·준비서류를 한 번에 정리했습니다." path="/visa-info" />
       <Navbar />
 
       {/* HERO */}

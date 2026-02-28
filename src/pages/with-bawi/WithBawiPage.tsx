@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { CircleCheck, ArrowRight, Plug, Briefcase, BookOpen, Heart } from "lucide-react";
+import Seo from "@/components/Seo";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -67,6 +68,7 @@ export default function WithBawiPage() {
 
   return (
     <div className="bg-cream">
+      <Seo title="바위로드 서비스 소개 | 수수료 0원 필리핀 어학연수" description="수수료 0원, 출국 전부터 현지 생활까지. 바위로드만의 필리핀 어학연수 동행 서비스를 소개합니다." path="/with-bawi" />
       <Navbar />
 
       {/* HERO */}
