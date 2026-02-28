@@ -55,21 +55,19 @@ export default function HomePage() {
       <section className="bg-cream pt-[120px] pb-14 px-6">
         <div className="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-[60px] items-center">
           <div className="relative">
-            <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3.5 py-1.5 rounded-full text-[0.8rem] font-semibold mb-5 animate-fade-in-up">
+            <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3.5 py-1.5 rounded-full text-[0.8rem] font-semibold mb-5">
               <Star size={14} fill="currentColor" />
               수수료 0원, 가격 완전 공개
             </div>
             <h1
-              className="text-[2rem] md:text-[3.2rem] font-black leading-[1.25] tracking-tight text-brown-dark animate-fade-in-up"
-              style={{ animationDelay: "0.1s" }}
+              className="text-[2rem] md:text-[3.2rem] font-black leading-[1.25] tracking-tight text-brown-dark"
             >
               필리핀 어학연수
               <br />
               <span className="text-terracotta">다 보여주는</span> 유학원
             </h1>
             <p
-              className="mt-5 text-[0.95rem] md:text-[1.1rem] leading-[1.7] text-brown animate-fade-in-up"
-              style={{ animationDelay: "0.2s" }}
+              className="mt-5 text-[0.95rem] md:text-[1.1rem] leading-[1.7] text-brown"
             >
               어학원 가격, 시설, 장단점까지 전부 공개합니다.
               <br />
@@ -108,6 +106,7 @@ export default function HomePage() {
                   className="rounded-full bg-terracotta hover:bg-terracotta-hover shrink-0"
                   disabled={!aiKeyword}
                   onClick={handleAiSubmit}
+                  aria-label="AI 상담 전송"
                 >
                   <Send size={14} strokeWidth={2.5} className="text-white" />
                 </Button>

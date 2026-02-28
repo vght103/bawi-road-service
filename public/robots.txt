@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bawi-road-service.pages.dev/sitemap.xml

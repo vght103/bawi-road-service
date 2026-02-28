@@ -3,8 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import ScrollToTop from "@/components/ScrollToTop";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import HomePage from "@/pages/home/HomePage";
 
-const HomePage = lazy(() => import("@/pages/home/HomePage"));
 const AcademySearchPage = lazy(() => import("@/pages/academy/AcademySearchPage"));
 const AcademyDetailPage = lazy(() => import("@/pages/academy/AcademyDetailPage"));
 const WhyPhilippinesPage = lazy(() => import("@/pages/why-philippines/WhyPhilippinesPage"));
@@ -28,8 +28,9 @@ function App() {
   return (
     <>
       <ScrollToTop />
-      <Suspense fallback={<LoadingOverlay visible />}>
-        <Routes>
+      <main>
+        <Suspense fallback={<LoadingOverlay visible />}>
+          <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/academies" element={<AcademySearchPage />} />
           <Route path="/academy/:id" element={<AcademyDetailPage />} />
@@ -51,8 +52,9 @@ function App() {
           <Route path="/terms" element={<TermsOfServicePage />} />
           {/* backward compat */}
           <Route path="/search" element={<AcademySearchPage />} />
-        </Routes>
-      </Suspense>
+          </Routes>
+        </Suspense>
+      </main>
     </>
   );
 }

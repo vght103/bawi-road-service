@@ -162,7 +162,11 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Toggle */}
-        <button className="md:hidden p-1" onClick={() => setMobileOpen(!mobileOpen)}>
+        <button
+          className="md:hidden p-1"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label={mobileOpen ? "메뉴 닫기" : "메뉴 열기"}
+        >
           {mobileOpen ? <X size={24} strokeWidth={2} /> : <Menu size={24} strokeWidth={2} />}
         </button>
       </div>
