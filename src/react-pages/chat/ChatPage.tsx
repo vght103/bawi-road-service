@@ -22,6 +22,7 @@ function ChatPage() {
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const hasInitialized = useRef(false);
+  const prevMessageLenRef = useRef(0);
 
   // Restore session from DB or handle ?q= query
   useEffect(() => {
@@ -175,8 +176,11 @@ function ChatPage() {
   }
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isLoading]);
+    if (messages.length > 0 && messages.length !== prevMessageLenRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+    prevMessageLenRef.current = messages.length;
+  }, [messages]);
 
   const lastMessage = messages[messages.length - 1];
   const isWaitingForFirstToken =
