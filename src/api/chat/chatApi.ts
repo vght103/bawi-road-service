@@ -1,6 +1,6 @@
 import type { ChatApiRequest, SSEEvent, ChatHistoryResponse } from "@/types/chat";
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL ?? "";
+const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
 
 export async function sendChatStream(
   request: ChatApiRequest,

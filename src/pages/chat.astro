@@ -1,0 +1,12 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ChatPage from "@/react-pages/chat/ChatPage";
+---
+
+<BaseLayout
+  title="AI 상담"
+  description="바위로드 AI 상담원에게 필리핀 어학연수에 대해 물어보세요."
+  path="/chat"
+>
+  <ChatPage client:only="react" />
+</BaseLayout>

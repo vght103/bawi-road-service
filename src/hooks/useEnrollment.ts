@@ -8,7 +8,7 @@ import {
 import { getUploadPresignedUrl, deleteDocumentFromR2 } from "@/api/storage/presign";
 import { compressIfImage } from "@/lib/imageCompression";
 
-const R2_PUBLIC_URL = import.meta.env.VITE_R2_PUBLIC_URL as string;
+const R2_PUBLIC_URL = import.meta.env.PUBLIC_R2_PUBLIC_URL as string;
 
 export function useEnrollment(id: string | undefined) {
   const {

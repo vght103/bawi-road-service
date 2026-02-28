@@ -1,0 +1,12 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import MyPage from "@/react-pages/my/MyPage";
+---
+
+<BaseLayout
+  title="마이페이지"
+  description="내 정보와 수속 현황을 확인하세요."
+  path="/my"
+>
+  <MyPage client:only="react" />
+</BaseLayout>

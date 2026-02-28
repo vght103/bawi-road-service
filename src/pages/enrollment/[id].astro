@@ -1,0 +1,16 @@
+---
+export const prerender = false;
+
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import EnrollmentDetailPage from "@/react-pages/enrollment/EnrollmentDetailPage";
+
+const { id } = Astro.params;
+---
+
+<BaseLayout
+  title="수속 상세"
+  description="수속 진행 현황과 서류를 확인하세요."
+  path={`/enrollment/${id}`}
+>
+  <EnrollmentDetailPage id={id} client:only="react" />
+</BaseLayout>

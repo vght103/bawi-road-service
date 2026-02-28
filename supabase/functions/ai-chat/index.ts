@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 // ===== 상수 =====
 const ALLOWED_ORIGINS = [
   "http://localhost:3000",
-  "http://localhost:3001",
+  "http://localhost:4321",
   "https://bawiroad.com",
   "https://www.bawiroad.com",
   "https://bawi-road-service.pages.dev",

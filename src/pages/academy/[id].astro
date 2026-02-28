@@ -1,0 +1,16 @@
+---
+export const prerender = false;
+
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import AcademyDetailPage from "@/react-pages/academy/AcademyDetailPage";
+
+const { id } = Astro.params;
+---
+
+<BaseLayout
+  title="어학원 상세 정보"
+  description="어학원 상세 정보 - 커리큘럼, 기숙사, 비용, 후기 등을 확인하세요."
+  path={`/academy/${id}`}
+>
+  <AcademyDetailPage id={id} client:only="react" />
+</BaseLayout>

@@ -1,0 +1,12 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import QuotePage from "@/react-pages/quote/QuotePage";
+---
+
+<BaseLayout
+  title="무료 견적 받기"
+  description="필리핀 어학연수 맞춤 견적을 무료로 받아보세요. 학비, 기숙사, 현지 비용까지 한 번에 비교할 수 있습니다."
+  path="/quote"
+>
+  <QuotePage client:only="react" />
+</BaseLayout>
