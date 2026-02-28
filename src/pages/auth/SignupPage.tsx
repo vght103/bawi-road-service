@@ -305,7 +305,7 @@ export default function SignupPage() {
           <div className="hidden lg:flex w-1/2 items-center justify-center bg-beige">
             <div className="text-center px-8">
               <div className="mb-6">
-                <img src="/bawi.png" alt="바위로드 캐릭터" className="mx-auto w-52 object-contain" />
+                <img src="/bawi.webp" alt="바위로드 캐릭터" className="mx-auto w-52 object-contain" />
               </div>
               <h2 className="text-xl font-bold text-brown-text mb-2">다 보여주는 유학원</h2>
               <p className="text-brown text-sm leading-relaxed">
