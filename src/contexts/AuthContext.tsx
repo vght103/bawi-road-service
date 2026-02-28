@@ -36,7 +36,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const queryClient = useQueryClient();
-  console.log("user", user);
   useEffect(() => {
     if (!supabaseConfigured) {
       setLoading(false);
