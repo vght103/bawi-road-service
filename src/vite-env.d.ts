@@ -1,5 +1,7 @@
 /// <reference types="vite/client" />
 
+declare module "@fontsource-variable/noto-sans-kr";
+
 declare module "swiper/css" {
   const content: string;
   export default content;

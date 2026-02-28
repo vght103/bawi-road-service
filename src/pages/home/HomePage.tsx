@@ -1,23 +1,18 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/pagination";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import type { Swiper as SwiperType } from "swiper";
-import { Star, ArrowRight, ChevronLeft, ChevronRight, Check, MessageCircle, Send } from "lucide-react";
+import { Star, ArrowRight, Check, MessageCircle, Send } from "lucide-react";
 import { fetchAcademies } from "@/api/academy/academies";
 import type { Academy } from "@/data/academies";
-import { getAcademySystemChipClass } from "@/data/academy/chipColors";
+
+const AcademySwiper = lazy(() => import("./components/AcademySwiper"));
 
 export default function HomePage() {
   const [aiKeyword, setAiKeyword] = useState("");
-  const [academySwiper, setAcademySwiper] = useState<SwiperType | null>(null);
   const navigate = useNavigate();
 
   function handleAiSubmit() {
@@ -196,65 +191,10 @@ export default function HomePage() {
           <p className="mt-3 text-base leading-[1.7] text-brown max-w-[600px]">
             가격, 시설, 수업 스타일까지 한눈에 비교해보세요.
           </p>
-          <div className="mt-12 relative">
-            <Swiper
-              modules={[Pagination]}
-              pagination={{ clickable: true }}
-              spaceBetween={20}
-              slidesPerView={1}
-              slidesPerGroup={1}
-              loop
-              breakpoints={{
-                768: { slidesPerView: 2, slidesPerGroup: 2 },
-                1024: { slidesPerView: 3, slidesPerGroup: 3 },
-              }}
-              onSwiper={setAcademySwiper}
-              className="pb-12"
-            >
-              {academies.slice(0, 9).map((academy) => (
-                <SwiperSlide key={academy.id}>
-                  <Link
-                    to={`/academy/${academy.id}`}
-                    className="block bg-white rounded-[20px] overflow-hidden border border-beige-dark hover:-translate-y-1 hover:shadow-lg transition-all no-underline text-brown-text"
-                  >
-                    <div className="h-[180px] relative overflow-hidden">
-                      <img
-                        src={academy.images[0]}
-                        alt={academy.name}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                      <div className="absolute top-3 left-3 flex gap-1.5">
-                        <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-white/90 text-brown-dark">
-                          {academy.region}
-                        </span>
-                        <span
-                          className={`px-2.5 py-1 rounded-md text-[0.7rem] font-semibold ${getAcademySystemChipClass(academy.academy_system)}`}
-                        >
-                          {academy.academy_system}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="p-5">
-                      <div className="text-[1.1rem] font-bold text-brown-dark">{academy.name}</div>
-                      <p className="mt-1.5 text-[0.82rem] text-brown leading-[1.5] line-clamp-2">{academy.desc}</p>
-                    </div>
-                  </Link>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-            <button
-              onClick={() => academySwiper?.slidePrev()}
-              className="absolute -left-5 top-[calc(50%-24px)] z-10 w-10 h-10 rounded-full bg-white shadow-md border border-beige-dark items-center justify-center text-brown-dark hover:bg-beige hover:border-brown-light transition-all hidden md:flex"
-            >
-              <ChevronLeft size={18} strokeWidth={2.5} />
-            </button>
-            <button
-              onClick={() => academySwiper?.slideNext()}
-              className="absolute -right-5 top-[calc(50%-24px)] z-10 w-10 h-10 rounded-full bg-white shadow-md border border-beige-dark items-center justify-center text-brown-dark hover:bg-beige hover:border-brown-light transition-all hidden md:flex"
-            >
-              <ChevronRight size={18} strokeWidth={2.5} />
-            </button>
+          <div className="mt-12">
+            <Suspense fallback={<div className="h-[300px] flex items-center justify-center text-brown">로딩 중...</div>}>
+              <AcademySwiper academies={academies} />
+            </Suspense>
           </div>
           <div className="mt-10 text-center">
             <Link

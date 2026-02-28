@@ -1,4 +1,4 @@
-import bawiLoading from "@/assets/bawi-loading.png";
+import bawiLoading from "@/assets/bawi-loading.webp";
 
 interface LoadingOverlayProps {
   visible: boolean;
@@ -14,6 +14,8 @@ export default function LoadingOverlay({ visible }: LoadingOverlayProps) {
           src={bawiLoading}
           alt="로딩 중"
           className="w-28 h-28 object-contain"
+          width={112}
+          height={112}
         />
         <div className="flex items-center gap-1.5 mt-3">
           <span className="loading-dot w-2 h-2 bg-white rounded-full" />
