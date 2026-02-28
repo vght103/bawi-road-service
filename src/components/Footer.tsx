@@ -16,13 +16,13 @@ export default function Footer() {
           </p>
         </div>
         <div>
-          <h4 className="text-[0.8rem] font-bold text-cream mb-4 uppercase tracking-wider">서비스</h4>
+          <div className="text-[0.8rem] font-bold text-cream mb-4 uppercase tracking-wider">서비스</div>
           <Link to="/academies" className={linkClass}>어학원 비교</Link>
           <a href="/#cost" className={linkClass}>비용 가이드</a>
           <Link to="/quote?from=footer" className={linkClass}>무료 견적</Link>
         </div>
         <div>
-          <h4 className="text-[0.8rem] font-bold text-cream mb-4 uppercase tracking-wider">약관 및 정책</h4>
+          <div className="text-[0.8rem] font-bold text-cream mb-4 uppercase tracking-wider">약관 및 정책</div>
           <Link to="/terms" className={linkClass}>이용약관</Link>
           <Link to="/privacy" className={linkClass}>개인정보처리방침</Link>
         </div>
