@@ -11,6 +11,10 @@ export default defineConfig({
     sitemap(),
   ],
   adapter: cloudflare(),
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "hover",
+  },
   vite: {
     plugins: [tailwindcss()],
     resolve: {
