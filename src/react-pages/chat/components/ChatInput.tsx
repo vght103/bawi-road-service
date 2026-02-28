@@ -41,7 +41,7 @@ export default function ChatInput({ value, onChange, onSend, disabled, ctaButton
             }}
             placeholder="어학연수에 대해 물어보세요"
             disabled={disabled}
-            className="flex-1 bg-transparent text-brown-dark text-[0.82rem] placeholder:text-brown-light border-none shadow-none focus-visible:ring-0 h-auto p-0"
+            className="flex-1 bg-transparent text-brown-dark text-base placeholder:text-brown-light border-none shadow-none focus-visible:ring-0 h-auto p-0"
           />
           <Button
             size="icon-sm"

@@ -74,7 +74,7 @@ function getLinkClass(path: string): string {
       </a>
 
       <!-- Auth (React Island) -->
-      <AuthStatus client:load pathname={pathname} />
+      <AuthStatus client:only="react" pathname={pathname} />
     </div>
 
     <!-- Mobile Toggle -->
@@ -113,7 +113,7 @@ function getLinkClass(path: string): string {
 
     <!-- Mobile Auth (React Island) -->
     <div id="mobile-auth">
-      <AuthStatus client:load pathname={pathname} mobile />
+      <AuthStatus client:only="react" pathname={pathname} mobile />
     </div>
 
     <!-- CTA -->

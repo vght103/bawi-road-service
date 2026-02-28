@@ -9,9 +9,10 @@ interface Props {
   title: string;
   description: string;
   path?: string;
+  minimal?: boolean;
 }
 
-const { title, description, path = "/" } = Astro.props;
+const { title, description, path = "/", minimal = false } = Astro.props;
 
 const SITE_NAME = "바위로드";
 const BASE_URL = "https://bawi-road-service.pages.dev";
@@ -44,10 +45,10 @@ const ogImage = `${BASE_URL}/og-image.png`;
     <ViewTransitions />
   </head>
   <body>
-    <Navbar />
+    {!minimal && <Navbar />}
     <main>
       <slot />
     </main>
-    <Footer />
+    {!minimal && <Footer />}
   </body>
 </html>
