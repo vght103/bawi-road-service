@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { CheckIcon, MessageCircle } from "lucide-react";
+import Seo from "@/components/Seo";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -93,6 +94,7 @@ export default function InquiryPage() {
 
   return (
     <div className="bg-cream min-h-screen">
+      <Seo title="필리핀 어학연수 무료 상담" description="필리핀 어학연수 궁금한 점을 전문 컨설턴트에게 물어보세요. 어학원 추천·비용·준비까지 무료 상담." path="/inquiry" />
       <LoadingOverlay visible={submitting} />
       <Navbar />
 

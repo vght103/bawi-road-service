@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { CircleCheck, ArrowRight } from "lucide-react";
+import Seo from "@/components/Seo";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -30,6 +31,7 @@ export default function WhyPhilippinesPage() {
 
   return (
     <div className="bg-cream">
+      <Seo title="왜 필리핀 어학연수? 장점·비용·효과 비교" description="1:1 집중 수업, 호주·캐나다 대비 1/3 비용. 필리핀 어학연수가 선택받는 이유와 스파르타·세미스파르타 차이점까지 총정리." path="/why-philippines" />
       <Navbar />
 
       {/* HERO */}

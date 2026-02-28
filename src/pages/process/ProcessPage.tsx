@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { Info, CircleCheck, ArrowRight } from "lucide-react";
+import Seo from "@/components/Seo";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -30,6 +31,7 @@ export default function ProcessPage() {
 
   return (
     <div className="bg-cream">
+      <Seo title="필리핀 어학연수 준비 절차 | 신청~출국 완벽 가이드" description="어학원 선택부터 비자, 항공권, 준비물까지. 필리핀 어학연수 준비 체크리스트와 단계별 절차를 안내합니다." path="/process" />
       <Navbar />
 
       {/* HERO */}

@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import Seo from "@/components/Seo";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { fetchAcademies } from "@/api/academy/academies";
@@ -49,6 +50,7 @@ export default function AcademySearchPage() {
 
   return (
     <div className="bg-cream min-h-screen">
+      <Seo title="필리핀 어학원 비교·검색 | 스파르타·세미스파르타·지역별 필터" description="세부·바기오·마닐라 어학원을 스파르타·세미스파르타·코스·가격별로 비교하세요. ESL, IELTS, 토익 코스 정보와 실제 비용을 한눈에 확인." path="/academies" />
       <LoadingOverlay visible={isLoading} />
       <Navbar />
 

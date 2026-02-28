@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
+import Seo from "@/components/Seo";
 import type { ChatMessage, CtaButtonData, SSEEvent, AcademyCardData } from "@/types/chat";
 import { sendChatStream, loadChatSession, trackCtaClick } from "@/api/chat/chatApi";
 import ChatHeader from "./components/ChatHeader";
@@ -187,6 +188,7 @@ export default function ChatPage() {
 
   return (
     <div className="min-h-dvh bg-cream flex flex-col">
+      <Seo title="AI 어학원 추천 | 필리핀 어학연수 맞춤 상담" description="예산·기간·목적을 입력하면 AI가 나에게 맞는 필리핀 어학원을 추천합니다. 스파르타·세미스파르타·지역별 맞춤 추천." path="/chat" />
       <ChatHeader />
       <div className="pt-14">
         <AiDisclaimer />

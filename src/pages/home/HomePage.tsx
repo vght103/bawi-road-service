@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState, lazy, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
+import Seo from "@/components/Seo";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Input } from "@/components/ui/input";
@@ -49,6 +50,7 @@ export default function HomePage() {
 
   return (
     <div className="bg-cream">
+      <Seo title="필리핀 어학연수 추천 비교 | 바위로드 - 무료 견적·수수료 0원" description="세부·바기오·마닐라 어학원 비교. 스파르타·세미스파르타 코스별 가격 공개. 수수료 0원, 무료 맞춤 견적. 검증된 어학원만 추천합니다." path="/" />
       <Navbar />
 
       {/* HERO */}
