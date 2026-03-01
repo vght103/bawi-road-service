@@ -8,8 +8,8 @@ interface CtaButtonProps {
 
 export default function CtaButton({ data, onClick }: CtaButtonProps) {
   const linkWithSource = data.link.includes("?")
-    ? `${data.link}&from=chat-bubble`
-    : `${data.link}?from=chat-bubble`;
+    ? `${data.link}&from=chatbot-message`
+    : `${data.link}?from=chatbot-message`;
 
   return (
     <a
