@@ -11,8 +11,8 @@ import ChatInput from "./components/ChatInput";
 const SESSION_KEY = "bawi_chat_session_id";
 
 const STATIC_CTA: CtaButtonData[] = [
-  { label: "무료 견적 받기", link: "/quote?from=chat-static" },
-  { label: "1:1 상담 신청", link: "/inquiry?from=chat-static" },
+  { label: "무료 견적 받기", link: "/quote?from=chatbot-fixed" },
+  { label: "1:1 상담 신청", link: "/inquiry?from=chatbot-fixed" },
 ];
 
 function ChatPage() {
@@ -211,7 +211,7 @@ function ChatPage() {
               <MessageBubble
                 key={message.id}
                 message={message}
-                onCtaClick={(ctaType) => trackCtaClick(sessionId, ctaType, "bubble")}
+                onCtaClick={(ctaType) => trackCtaClick(sessionId, ctaType, "chatbot-message")}
               />
             );
           })}
@@ -253,7 +253,7 @@ function ChatPage() {
         onSend={handleSend}
         disabled={isLoading}
         ctaButtons={STATIC_CTA}
-        onCtaClick={(ctaType) => trackCtaClick(sessionId, ctaType, "static")}
+        onCtaClick={(ctaType) => trackCtaClick(sessionId, ctaType, "chatbot-fixed")}
       />
     </div>
   );

@@ -61,7 +61,7 @@ export async function sendChatStream(
 export function trackCtaClick(
   sessionId: string | null,
   ctaType: "quote" | "inquiry",
-  source: "bubble" | "static",
+  source: "chatbot-message" | "chatbot-fixed",
 ): void {
   if (!SUPABASE_URL) return;
 
