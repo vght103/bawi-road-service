@@ -138,7 +138,7 @@ export default function MessageBubble({ message, onCtaClick }: MessageBubbleProp
               {ctaButtons.map((cta, index) => (
                 <a
                   key={index}
-                  href={cta!.link}
+                  href={cta!.link.includes("?") ? `${cta!.link}&from=chatbot-message` : `${cta!.link}?from=chatbot-message`}
                   onClick={() => {
                     const ctaType = cta!.link.includes("quote") ? "quote" as const : "inquiry" as const;
                     onCtaClick?.(ctaType);

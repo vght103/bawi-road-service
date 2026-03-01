@@ -1,10 +1,9 @@
--- quote_logs 테이블
-CREATE TABLE quote_logs (
+-- quote_list 테이블
+CREATE TABLE quote_list (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   name TEXT NOT NULL,
   email TEXT NOT NULL,
-  preferred_date TEXT,
   academy_id TEXT NOT NULL,
   academy_name TEXT NOT NULL,
   course_name TEXT NOT NULL,
@@ -22,5 +21,5 @@ RETURNS INT
 LANGUAGE SQL
 SECURITY DEFINER
 AS $$
-  SELECT COALESCE(COUNT(*)::INT, 0) FROM quote_logs WHERE email = p_email;
+  SELECT COALESCE(COUNT(*)::INT, 0) FROM quote_list WHERE email = p_email;
 $$;

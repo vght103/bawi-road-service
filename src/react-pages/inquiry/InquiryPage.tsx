@@ -66,8 +66,8 @@ function InquiryPage() {
 
   if (submitted) {
     return (
-      <div className="bg-cream min-h-screen">
-        <div className="pt-[140px] pb-20 px-6">
+      <div className="bg-cream min-h-[calc(100vh-180px)] flex items-center justify-center">
+        <div className="px-6 py-12">
           <div className="max-w-[560px] mx-auto text-center">
             <div className="bg-white rounded-[20px] p-10 border border-beige-dark shadow-lg">
               <div className="w-16 h-16 bg-accent-green-light rounded-full flex items-center justify-center mx-auto mb-5">
