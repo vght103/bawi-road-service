@@ -28,7 +28,9 @@ function AcademyDetailPage({ id }: { id: string }) {
     return (
       <div className="pt-20 text-center py-16">
         <p className="text-brown text-lg">어학원을 찾을 수 없습니다.</p>
-        <a href="/academies" className="text-terracotta font-medium mt-4 inline-block no-underline">어학원 목록으로 돌아가기</a>
+        <a href="/academies" className="text-terracotta font-medium mt-4 inline-block no-underline">
+          어학원 목록으로 돌아가기
+        </a>
       </div>
     );
   }
@@ -67,11 +69,7 @@ function AcademyDetailPage({ id }: { id: string }) {
                 >
                   {academy.images.map((imageUrl, index) => (
                     <SwiperSlide key={imageUrl}>
-                      <img
-                        src={imageUrl}
-                        alt={`${academy.name} ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
+                      <img src={imageUrl} alt={`${academy.name} ${index + 1}`} className="w-full h-full object-cover" />
                     </SwiperSlide>
                   ))}
                 </Swiper>
@@ -90,11 +88,7 @@ function AcademyDetailPage({ id }: { id: string }) {
               </>
             ) : (
               <div className="h-[300px] md:h-[400px]">
-                <img
-                  src={academy.images[0]}
-                  alt={academy.name}
-                  className="w-full h-full object-cover"
-                />
+                <img src={academy.images[0]} alt={academy.name} className="w-full h-full object-cover" />
               </div>
             )}
           </div>
@@ -105,16 +99,23 @@ function AcademyDetailPage({ id }: { id: string }) {
               <span className="px-2.5 py-1 rounded-md text-[0.75rem] font-semibold bg-white text-brown-dark border border-beige-dark">
                 {academy.region}
               </span>
-              <span className={`px-2.5 py-1 rounded-md text-[0.75rem] font-semibold ${getAcademySystemChipClass(academy.academy_system)}`}>
+              <span
+                className={`px-2.5 py-1 rounded-md text-[0.75rem] font-semibold ${getAcademySystemChipClass(academy.academy_system)}`}
+              >
                 {academy.academy_system}
               </span>
               {academy.tags.map((tag) => (
-                <span key={tag} className={`px-2.5 py-1 rounded-md text-[0.75rem] font-semibold ${getTagChipClass(tag)}`}>
+                <span
+                  key={tag}
+                  className={`px-2.5 py-1 rounded-md text-[0.75rem] font-semibold ${getTagChipClass(tag)}`}
+                >
                   {tag}
                 </span>
               ))}
             </div>
-            <h1 className="text-[1.8rem] md:text-[2.2rem] font-extrabold text-brown-dark tracking-tight">{academy.name}</h1>
+            <h1 className="text-[1.8rem] md:text-[2.2rem] font-extrabold text-brown-dark tracking-tight">
+              {academy.name}
+            </h1>
             <p className="mt-2 text-brown text-base leading-relaxed">{academy.shortDesc ?? academy.desc}</p>
           </div>
 
@@ -210,7 +211,10 @@ function AcademyDetailPage({ id }: { id: string }) {
               <h3 className="font-bold text-brown-dark mb-3">🎯 이런 분에게 추천</h3>
               <div className="flex flex-wrap gap-2">
                 {academy.recommendedFor.map((item) => (
-                  <span key={item} className="px-3 py-1.5 bg-green-badge text-accent-green-dark rounded-full text-sm font-medium">
+                  <span
+                    key={item}
+                    className="px-3 py-1.5 bg-green-badge text-accent-green-dark rounded-full text-sm font-medium"
+                  >
                     {item}
                   </span>
                 ))}
@@ -245,20 +249,27 @@ function AcademyDetailPage({ id }: { id: string }) {
             <h3 className="font-bold text-brown-dark mb-4">코스 안내</h3>
             <div className="space-y-3">
               {academy.courses.map((course) => (
-                <div
-                  key={course.name}
-                  className="p-4 rounded-[12px] border border-beige-dark bg-beige/30"
-                >
+                <div key={course.name} className="p-4 rounded-[12px] border border-beige-dark bg-beige/30">
                   <div className="mb-2">
                     <h4 className="font-bold text-brown-dark">{course.name}</h4>
-                    <span className={`text-[0.72rem] px-2 py-0.5 rounded font-medium ${getTagChipClass(course.category)}`}>{course.category}</span>
+                    <span
+                      className={`text-[0.72rem] px-2 py-0.5 rounded font-medium ${getTagChipClass(course.category)}`}
+                    >
+                      {course.category}
+                    </span>
                   </div>
                   <p className="text-sm text-brown mb-2">{course.desc}</p>
                   <div className="flex gap-2 text-[0.75rem]">
-                    <span className="px-2 py-0.5 bg-white border border-beige-dark rounded">1:1 {course.manToMan}시간</span>
-                    <span className="px-2 py-0.5 bg-white border border-beige-dark rounded">그룹 {course.group}시간</span>
+                    <span className="px-2 py-0.5 bg-white border border-beige-dark rounded">
+                      1:1 {course.manToMan}시간
+                    </span>
+                    <span className="px-2 py-0.5 bg-white border border-beige-dark rounded">
+                      그룹 {course.group}시간
+                    </span>
                     {course.optional > 0 && (
-                      <span className="px-2 py-0.5 bg-white border border-beige-dark rounded">선택 {course.optional}시간</span>
+                      <span className="px-2 py-0.5 bg-white border border-beige-dark rounded">
+                        선택 {course.optional}시간
+                      </span>
                     )}
                   </div>
                 </div>
@@ -276,7 +287,10 @@ function AcademyDetailPage({ id }: { id: string }) {
                   className="p-4 rounded-[12px] border border-beige-dark bg-beige/30 text-center"
                 >
                   <div className="font-bold text-brown-dark mb-1">{dormitory.type}</div>
-                  <div className="text-sm font-bold text-terracotta">{(dormitory.pricePerWeek / 10000).toFixed(0)}만원<span className="text-[0.7rem] font-normal text-brown-light">/주</span></div>
+                  <div className="text-sm font-bold text-terracotta">
+                    {(dormitory.pricePerWeek / 10000).toFixed(0)}만원
+                    <span className="text-[0.7rem] font-normal text-brown-light">/주</span>
+                  </div>
                   <div className="text-[0.75rem] text-brown mt-1">{dormitory.meals}</div>
                   <div className="text-[0.72rem] text-brown-light mt-1">{dormitory.desc}</div>
                 </div>
@@ -286,22 +300,24 @@ function AcademyDetailPage({ id }: { id: string }) {
 
           {/* CTA */}
           <div className="bg-white rounded-[16px] p-6 border border-beige-dark text-center space-y-3">
-            <a href="/quote?from=academy-detail" className="block w-full py-3.5 bg-terracotta text-white rounded-[10px] font-bold hover:bg-terracotta-hover transition-colors text-center no-underline">
+            <a
+              href="/quote?from=academy-detail"
+              className="block w-full py-3.5 bg-terracotta text-white rounded-[10px] font-bold hover:bg-terracotta-hover transition-colors text-center no-underline"
+            >
               무료 견적 받기
             </a>
-            <a href="/process" className="block w-full py-3.5 bg-brown-dark text-white rounded-[10px] font-bold hover:bg-brown-text transition-colors text-center no-underline">
+            <a
+              href="/process"
+              className="block w-full py-3.5 bg-brown-dark text-white rounded-[10px] font-bold hover:bg-brown-text transition-colors text-center no-underline"
+            >
               이 어학원으로 수속 신청
             </a>
-            <a
-              href="#"
-              className="block text-center text-sm text-brown hover:text-brown-dark no-underline font-medium"
-            >
+            <a href="#" className="block text-center text-sm text-brown hover:text-brown-dark no-underline font-medium">
               💬 카카오톡으로 상담하기
             </a>
           </div>
         </div>
       </main>
-
     </>
   );
 }
