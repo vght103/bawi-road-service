@@ -130,54 +130,56 @@ function getLinkClass(path: string): string {
 <div class="h-16"></div>
 
 <script>
-  // Scroll shadow
-  window.addEventListener("scroll", () => {
-    const nav = document.getElementById("navbar");
-    if (nav) {
-      nav.classList.toggle("shadow-md", window.scrollY > 20);
-    }
-  });
+  document.addEventListener("astro:page-load", () => {
+    // Scroll shadow
+    window.addEventListener("scroll", () => {
+      const nav = document.getElementById("navbar");
+      if (nav) {
+        nav.classList.toggle("shadow-md", window.scrollY > 20);
+      }
+    });
 
-  // Mobile menu toggle
-  const mobileToggle = document.getElementById("mobile-toggle");
-  const mobileMenu = document.getElementById("mobile-menu");
-  const menuIcon = document.getElementById("menu-icon");
-  const closeIcon = document.getElementById("close-icon");
+    // Mobile menu toggle
+    const mobileToggle = document.getElementById("mobile-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const menuIcon = document.getElementById("menu-icon");
+    const closeIcon = document.getElementById("close-icon");
 
-  mobileToggle?.addEventListener("click", () => {
-    const isOpen = !mobileMenu?.classList.contains("hidden");
-    mobileMenu?.classList.toggle("hidden");
-    menuIcon?.classList.toggle("hidden");
-    closeIcon?.classList.toggle("hidden");
-    mobileToggle.setAttribute("aria-label", isOpen ? "메뉴 열기" : "메뉴 닫기");
-  });
+    mobileToggle?.addEventListener("click", () => {
+      const isOpen = !mobileMenu?.classList.contains("hidden");
+      mobileMenu?.classList.toggle("hidden");
+      menuIcon?.classList.toggle("hidden");
+      closeIcon?.classList.toggle("hidden");
+      mobileToggle.setAttribute("aria-label", isOpen ? "메뉴 열기" : "메뉴 닫기");
+    });
 
-  // Desktop guide dropdown (hover)
-  const guideDropdown = document.getElementById("guide-dropdown");
-  const guideMenu = document.getElementById("guide-menu");
-  const guideChevron = document.getElementById("guide-chevron");
-  let guideTimeout: ReturnType<typeof setTimeout>;
+    // Desktop guide dropdown (hover)
+    const guideDropdown = document.getElementById("guide-dropdown");
+    const guideMenu = document.getElementById("guide-menu");
+    const guideChevron = document.getElementById("guide-chevron");
+    let guideTimeout: ReturnType<typeof setTimeout>;
 
-  guideDropdown?.addEventListener("mouseenter", () => {
-    clearTimeout(guideTimeout);
-    guideMenu?.classList.remove("hidden");
-    guideChevron?.classList.add("rotate-180");
-  });
+    guideDropdown?.addEventListener("mouseenter", () => {
+      clearTimeout(guideTimeout);
+      guideMenu?.classList.remove("hidden");
+      guideChevron?.classList.add("rotate-180");
+    });
 
-  guideDropdown?.addEventListener("mouseleave", () => {
-    guideTimeout = setTimeout(() => {
-      guideMenu?.classList.add("hidden");
-      guideChevron?.classList.remove("rotate-180");
-    }, 150);
-  });
+    guideDropdown?.addEventListener("mouseleave", () => {
+      guideTimeout = setTimeout(() => {
+        guideMenu?.classList.add("hidden");
+        guideChevron?.classList.remove("rotate-180");
+      }, 150);
+    });
 
-  // Mobile guide accordion
-  const mobileGuideTrigger = document.getElementById("mobile-guide-trigger");
-  const mobileGuideSubmenu = document.getElementById("mobile-guide-submenu");
-  const mobileGuideChevron = document.getElementById("mobile-guide-chevron");
+    // Mobile guide accordion
+    const mobileGuideTrigger = document.getElementById("mobile-guide-trigger");
+    const mobileGuideSubmenu = document.getElementById("mobile-guide-submenu");
+    const mobileGuideChevron = document.getElementById("mobile-guide-chevron");
 
-  mobileGuideTrigger?.addEventListener("click", () => {
-    mobileGuideSubmenu?.classList.toggle("hidden");
-    mobileGuideChevron?.classList.toggle("rotate-180");
+    mobileGuideTrigger?.addEventListener("click", () => {
+      mobileGuideSubmenu?.classList.toggle("hidden");
+      mobileGuideChevron?.classList.toggle("rotate-180");
+    });
   });
 </script>
