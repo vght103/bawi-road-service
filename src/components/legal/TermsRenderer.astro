@@ -1,0 +1,86 @@
+---
+import type { TermsArticle, ContentBlock, ListItem } from "@/data/legal/types";
+
+interface Props {
+  articles: TermsArticle[];
+}
+
+const { articles } = Astro.props;
+
+function isStringItem(item: ListItem): item is string {
+  return typeof item === "string";
+}
+---
+
+{
+  articles.map((article) => (
+    <section class="mt-10">
+      <h2 class="text-lg font-bold text-brown-dark mb-3">{article.title}</h2>
+      <div class="text-[0.9rem] text-brown-dark/85 space-y-2">
+        {article.blocks.map((block: ContentBlock) => {
+          if (block.type === "paragraph") {
+            return <p>{block.text}</p>;
+          }
+
+          if (block.type === "ol") {
+            return (
+              <ol class="list-decimal pl-5 space-y-2">
+                {block.items.map((item: ListItem) => {
+                  if (isStringItem(item)) {
+                    return <li>{item}</li>;
+                  }
+                  if (item.bold) {
+                    return (
+                      <li>
+                        <strong>{item.text}</strong>
+                      </li>
+                    );
+                  }
+                  if (item.subItems) {
+                    return (
+                      <li>
+                        {item.text}
+                        <ul class="list-disc pl-5 mt-1 space-y-1">
+                          {item.subItems.map((subItem: string) => (
+                            <li>{subItem}</li>
+                          ))}
+                        </ul>
+                      </li>
+                    );
+                  }
+                  return <li>{item.text}</li>;
+                })}
+              </ol>
+            );
+          }
+
+          if (block.type === "ul") {
+            return (
+              <ul class="list-disc pl-5 space-y-1">
+                {block.items.map((item: string) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            );
+          }
+
+          if (block.type === "info-box") {
+            return (
+              <div class="bg-brown-dark/5 rounded-lg p-4">
+                <ul class="space-y-1">
+                  {block.entries.map((entry) => (
+                    <li>
+                      <strong>{entry.label}</strong>: {entry.value}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          }
+
+          return null;
+        })}
+      </div>
+    </section>
+  ))
+}

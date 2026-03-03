@@ -154,8 +154,7 @@ function MyPage() {
             )}
           </div>
 
-          {enrollmentsLoading ? null
-          : enrollments.length === 0 ? (
+          {enrollmentsLoading ? null : enrollments.length === 0 ? (
             <div className="text-center py-6">
               <p className="text-sm text-muted-foreground mb-3">아직 수속 신청 내역이 없습니다.</p>
               <Button asChild size="sm">
