@@ -8,7 +8,7 @@
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "strictNullChecks": true,
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
     "erasableSyntaxOnly": true
   },
   "include": ["src", ".astro"]
