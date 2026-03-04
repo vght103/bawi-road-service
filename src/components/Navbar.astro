@@ -3,6 +3,7 @@ import AuthStatus from "@/components/AuthStatus";
 
 const pathname = Astro.url.pathname;
 const isGuideActive = ["/why-philippines", "/process", "/visa-info"].includes(pathname);
+const isWithBawiActive = ["/about", "/with-bawi"].includes(pathname);
 
 function getLinkClass(path: string): string {
   const active = pathname === path || pathname.startsWith(path + "/");
@@ -25,6 +26,33 @@ function getLinkClass(path: string): string {
 
     <!-- Desktop Menu -->
     <div class="hidden md:flex items-center gap-7">
+      <!-- 바위로드와 함께 Dropdown -->
+      <div class="relative" id="bawi-dropdown">
+        <button
+          class={`text-[0.9rem] font-semibold cursor-pointer border-none flex items-center gap-1 no-underline transition-all rounded-md px-2.5 py-1 ${isWithBawiActive ? "bg-white/15 text-white" : "bg-transparent text-white hover:bg-white/10"}`}
+          id="bawi-trigger"
+        >
+          바위로드와 함께
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform" id="bawi-chevron"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-3 hidden" id="bawi-menu">
+          <div class="bg-white rounded-xl shadow-lg border border-beige-dark py-2 min-w-[180px]">
+            <a
+              href="/about"
+              class="block px-5 py-2.5 text-[0.85rem] text-brown hover:bg-beige hover:text-brown-dark transition-colors no-underline"
+            >
+              바위로드 소개
+            </a>
+            <a
+              href="/with-bawi"
+              class="block px-5 py-2.5 text-[0.85rem] text-brown hover:bg-beige hover:text-brown-dark transition-colors no-underline"
+            >
+              함께하는 서비스
+            </a>
+          </div>
+        </div>
+      </div>
+
       <a href="/academies" class={getLinkClass("/academies")}>
         어학원 비교
       </a>
@@ -62,7 +90,6 @@ function getLinkClass(path: string): string {
         </div>
       </div>
 
-      <a href="/with-bawi" class={getLinkClass("/with-bawi")}>바위로드와 함께</a>
       <a href="/enrollment/apply?from=navbar" class={getLinkClass("/enrollment")}>
         수속 신청
       </a>
@@ -90,6 +117,21 @@ function getLinkClass(path: string): string {
 
   <!-- Mobile Menu -->
   <div id="mobile-menu" class="md:hidden bg-white border-t border-beige-dark px-6 py-4 space-y-1 shadow-[0_8px_24px_rgba(0,0,0,0.12)] rounded-b-2xl hidden">
+    <!-- Mobile 바위로드와 함께 Accordion -->
+    <div>
+      <button
+        class="w-full flex items-center justify-between text-brown-dark font-medium py-2 bg-transparent border-none cursor-pointer text-left text-base"
+        id="mobile-bawi-trigger"
+      >
+        바위로드와 함께
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform" id="mobile-bawi-chevron"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div id="mobile-bawi-submenu" class="pl-4 space-y-0.5 pb-1 hidden">
+        <a href="/about" class="block text-brown py-2 text-[0.9rem] no-underline hover:text-brown-dark">바위로드 소개</a>
+        <a href="/with-bawi" class="block text-brown py-2 text-[0.9rem] no-underline hover:text-brown-dark">함께하는 서비스</a>
+      </div>
+    </div>
+
     <a href="/academies" class="block text-brown-dark font-medium py-2 no-underline">어학원 비교</a>
 
     <!-- Mobile 연수 가이드 Accordion -->
@@ -108,7 +150,6 @@ function getLinkClass(path: string): string {
       </div>
     </div>
 
-    <a href="/with-bawi" class="block text-brown font-medium py-2 no-underline">바위로드와 함께</a>
     <a href="/enrollment/apply?from=navbar" class="block text-brown font-medium py-2 no-underline">수속 신청</a>
 
     <!-- Mobile Auth (React Island) -->
@@ -153,6 +194,25 @@ function getLinkClass(path: string): string {
       mobileToggle.setAttribute("aria-label", isOpen ? "메뉴 열기" : "메뉴 닫기");
     });
 
+    // Desktop bawi dropdown (hover)
+    const bawiDropdown = document.getElementById("bawi-dropdown");
+    const bawiMenu = document.getElementById("bawi-menu");
+    const bawiChevron = document.getElementById("bawi-chevron");
+    let bawiTimeout: ReturnType<typeof setTimeout>;
+
+    bawiDropdown?.addEventListener("mouseenter", () => {
+      clearTimeout(bawiTimeout);
+      bawiMenu?.classList.remove("hidden");
+      bawiChevron?.classList.add("rotate-180");
+    });
+
+    bawiDropdown?.addEventListener("mouseleave", () => {
+      bawiTimeout = setTimeout(() => {
+        bawiMenu?.classList.add("hidden");
+        bawiChevron?.classList.remove("rotate-180");
+      }, 150);
+    });
+
     // Desktop guide dropdown (hover)
     const guideDropdown = document.getElementById("guide-dropdown");
     const guideMenu = document.getElementById("guide-menu");
@@ -170,6 +230,16 @@ function getLinkClass(path: string): string {
         guideMenu?.classList.add("hidden");
         guideChevron?.classList.remove("rotate-180");
       }, 150);
+    });
+
+    // Mobile bawi accordion
+    const mobileBawiTrigger = document.getElementById("mobile-bawi-trigger");
+    const mobileBawiSubmenu = document.getElementById("mobile-bawi-submenu");
+    const mobileBawiChevron = document.getElementById("mobile-bawi-chevron");
+
+    mobileBawiTrigger?.addEventListener("click", () => {
+      mobileBawiSubmenu?.classList.toggle("hidden");
+      mobileBawiChevron?.classList.toggle("rotate-180");
     });
 
     // Mobile guide accordion

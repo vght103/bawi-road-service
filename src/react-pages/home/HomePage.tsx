@@ -57,16 +57,14 @@ function HomePage() {
             <h1
               className="text-[2rem] md:text-[3.2rem] font-black leading-[1.25] tracking-tight text-brown-dark"
             >
-              필리핀 어학연수
-              <br />
-              <span className="text-terracotta">다 보여주는</span> 유학원
+              <span className="text-terracotta">단단한</span> 어학연수 로드맵
             </h1>
             <p
               className="mt-5 text-[0.95rem] md:text-[1.1rem] leading-[1.7] text-brown"
             >
-              어학원 가격, 시설, 장단점까지 전부 공개합니다.
+              비용, 어학원, 출국까지 — 흔들리지 않는 기준으로 안내합니다.
               <br />
-              숨기는 거 없이, 비교하고 직접 고르세요.
+              비교하고, 직접 고르세요.
             </p>
             {/* AI 상담 */}
             <div
@@ -164,7 +162,7 @@ function HomePage() {
       {/* TRUST BAR */}
       <div className="bg-white py-10 px-6 border-y border-beige-dark">
         <div className="max-w-[1200px] mx-auto flex justify-center gap-6 md:gap-12 flex-wrap">
-          {["학생 수수료 0원", "가격 100% 공개", "검증된 어학원만", "솔직한 장단점 비교"].map((text) => (
+          {["수수료 0원", "가격 100% 공개", "검증된 어학원만", "장단점 솔직 비교"].map((text) => (
             <div key={text} className="flex items-center gap-2.5 text-[0.95rem] font-semibold text-brown">
               <div className="w-1.5 h-1.5 rounded-full bg-terracotta shrink-0" />
               {text}
@@ -209,7 +207,7 @@ function HomePage() {
             🌱 Why 바위로드
           </div>
           <h2 className="text-[1.6rem] md:text-[2.2rem] font-extrabold tracking-tight text-brown-dark leading-[1.3]">
-            왜 바위로드와 함께해야 할까요?
+            바위로드는 이렇게 다릅니다
           </h2>
           <p className="mt-3 text-base leading-[1.7] text-brown max-w-[600px]">
             어학원 선택부터 출국까지, 필요한 정보를 한곳에 모았습니다.
@@ -259,7 +257,7 @@ function HomePage() {
             📋 수속 절차
           </div>
           <h2 className="text-[1.6rem] md:text-[2.2rem] font-extrabold tracking-tight text-brown-dark leading-[1.3]">
-            상담부터 출국까지, 4단계로 끝
+            출국까지, 4단계면 충분합니다
           </h2>
           <p className="mt-3 text-base leading-[1.7] text-brown max-w-[600px]">
             복잡할 거 없어요. 바위로드가 전부 안내해드려요.
