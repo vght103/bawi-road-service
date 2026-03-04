@@ -22,6 +22,9 @@ export default defineConfig({
         "@": "/src",
       },
     },
+    optimizeDeps: {
+      exclude: ["astro:transitions"],
+    },
   },
   output: "static",
 });
