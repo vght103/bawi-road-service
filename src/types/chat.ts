@@ -30,6 +30,7 @@ export interface CtaButtonData {
 export interface ChatApiRequest {
   session_id?: string;
   messages: Array<{ role: MessageRole; content: string }>;
+  turnstile_token: string;
 }
 
 export type SSEEvent =

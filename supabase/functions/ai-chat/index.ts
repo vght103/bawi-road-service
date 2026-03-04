@@ -14,10 +14,8 @@ const OPENAI_MODEL = "gpt-4.1-mini";
 const MAX_HISTORY_MESSAGES = 10; // 최근 10개 메시지만 OpenAI에 전송 (왕복 5회)
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 
-// ===== Rate Limiting =====
-const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1분
-const RATE_LIMIT_MAX_REQUESTS = 10; // 분당 최대 10회
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+// ===== Turnstile 검증 =====
+const TURNSTILE_SECRET_KEY = Deno.env.get("TURNSTILE_SECRET_KEY");
 
 // ===== CORS 헬퍼 (storage-presign과 동일) =====
 function getCorsHeaders(request: Request): Record<string, string> {
@@ -46,21 +44,55 @@ function getClientIp(request: Request): string {
   );
 }
 
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-
-  if (!entry || now > entry.resetTime) {
-    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+async function verifyTurnstileToken(token: string | undefined, ip: string): Promise<boolean> {
+  // 시크릿 미설정 시 skip (개발환경)
+  if (!TURNSTILE_SECRET_KEY) {
+    console.warn("TURNSTILE_SECRET_KEY not set, skipping verification");
     return true;
   }
 
-  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) {
-    return false;
-  }
+  if (!token) return false;
 
-  entry.count++;
-  return true;
+  try {
+    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        secret: TURNSTILE_SECRET_KEY,
+        response: token,
+        remoteip: ip,
+      }),
+    });
+
+    const result = await response.json();
+    return result.success === true;
+  } catch (error) {
+    // Cloudflare 장애 시 fail-open
+    console.error("Turnstile verification error:", error);
+    return true;
+  }
+}
+
+async function checkRateLimit(ip: string): Promise<boolean> {
+  try {
+    const supabase = getServiceClient();
+    const { data, error } = await supabase.rpc("check_rate_limit", {
+      p_ip: ip,
+      p_max_requests: 10,
+      p_window_seconds: 60,
+    });
+
+    if (error) {
+      // DB 에러 시 fail-open
+      console.error("Rate limit check error:", error);
+      return true;
+    }
+
+    return data === true;
+  } catch (error) {
+    console.error("Rate limit error:", error);
+    return true;
+  }
 }
 
 // ===== Supabase 클라이언트 (service_role) =====
@@ -424,20 +456,28 @@ Deno.serve(async (req) => {
   }
 
   // POST: AI 채팅 (SSE 스트리밍)
-  // Rate Limiting 체크
-  const clientIp = getClientIp(req);
-  if (!checkRateLimit(clientIp)) {
-    return jsonResponse(
-      { error: "요청이 너무 많습니다. 잠시 후 다시 시도해주세요." },
-      429,
-      corsHeaders,
-    );
-  }
-
   try {
     const body = await req.json();
-    const { session_id, messages } = body;
+    const { session_id, messages, turnstile_token } = body;
 
+    // 1. Turnstile 검증 (봇 차단 — 레이트 리밋보다 먼저, 봇 요청이 카운트에 포함되지 않도록)
+    const clientIp = getClientIp(req);
+    const turnstileOk = await verifyTurnstileToken(turnstile_token, clientIp);
+    if (!turnstileOk) {
+      return jsonResponse({ error: "봇 요청이 감지되었습니다." }, 403, corsHeaders);
+    }
+
+    // 2. DB 레이트 리밋
+    const rateLimitOk = await checkRateLimit(clientIp);
+    if (!rateLimitOk) {
+      return jsonResponse(
+        { error: "요청이 너무 많습니다. 잠시 후 다시 시도해주세요." },
+        429,
+        corsHeaders,
+      );
+    }
+
+    // 3. 메시지 검증
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return jsonResponse({ error: "messages 배열이 필요합니다." }, 400, corsHeaders);
     }
