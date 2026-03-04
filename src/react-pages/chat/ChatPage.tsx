@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { MessageCircle } from "lucide-react";
 import { createIsland } from "@/lib/createIsland";
 import type { ChatMessage, CtaButtonData, SSEEvent, AcademyCardData } from "@/types/chat";
@@ -15,6 +16,8 @@ const STATIC_CTA: CtaButtonData[] = [
   { label: "1:1 상담 신청", link: "/inquiry?from=chatbot-fixed" },
 ];
 
+const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? "";
+
 function ChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -23,6 +26,9 @@ function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const hasInitialized = useRef(false);
   const prevMessageLenRef = useRef(0);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
+  const pendingInitialQuery = useRef<string | null>(null);
 
   // Restore session from DB or handle ?q= query
   useEffect(() => {
@@ -37,8 +43,8 @@ function ChatPage() {
       sessionStorage.removeItem(SESSION_KEY);
       // Remove ?q= from URL without adding a history entry
       window.history.replaceState(null, "", "/chat");
-      // Kick off the first message after the current render cycle
-      setTimeout(() => handleSendWithValue(initialQuery), 0);
+      // Turnstile 토큰이 준비되면 자동 전송 (pendingInitialQuery 패턴)
+      pendingInitialQuery.current = initialQuery;
       return;
     }
 
@@ -71,6 +77,7 @@ function ChatPage() {
   const handleSendWithValue = useCallback(
     async (value: string) => {
       if (!value.trim() || isLoading) return;
+      if (TURNSTILE_SITE_KEY && !turnstileToken) return;
 
       const userMessage: ChatMessage = {
         id: crypto.randomUUID(),
@@ -102,6 +109,7 @@ function ChatPage() {
         {
           session_id: sessionId ?? undefined,
           messages: apiMessages,
+          turnstile_token: turnstileToken ?? "",
         },
         (event: SSEEvent) => {
           switch (event.type) {
@@ -167,9 +175,21 @@ function ChatPage() {
       }
 
       setIsLoading(false);
+      // Turnstile 토큰은 1회용 — 전송 후 리셋
+      turnstileRef.current?.reset();
+      setTurnstileToken(null);
     },
-    [isLoading, messages, sessionId]
+    [isLoading, messages, sessionId, turnstileToken]
   );
+
+  // Turnstile 토큰 준비 시 대기 중인 초기 쿼리 자동 전송
+  useEffect(() => {
+    if (turnstileToken && pendingInitialQuery.current) {
+      const query = pendingInitialQuery.current;
+      pendingInitialQuery.current = null;
+      handleSendWithValue(query);
+    }
+  }, [turnstileToken, handleSendWithValue]);
 
   function handleSend() {
     handleSendWithValue(inputValue);
@@ -251,10 +271,18 @@ function ChatPage() {
         value={inputValue}
         onChange={setInputValue}
         onSend={handleSend}
-        disabled={isLoading}
+        disabled={isLoading || (!!TURNSTILE_SITE_KEY && !turnstileToken)}
         ctaButtons={STATIC_CTA}
         onCtaClick={(ctaType) => trackCtaClick(sessionId, ctaType, "chatbot-fixed")}
       />
+      {TURNSTILE_SITE_KEY && (
+        <Turnstile
+          ref={turnstileRef}
+          siteKey={TURNSTILE_SITE_KEY}
+          options={{ size: "invisible" }}
+          onSuccess={setTurnstileToken}
+        />
+      )}
     </div>
   );
 }
