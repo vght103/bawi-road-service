@@ -57,7 +57,8 @@ function HomePage() {
             <h1
               className="text-[2rem] md:text-[3.2rem] font-black leading-[1.25] tracking-tight text-brown-dark"
             >
-              <span className="text-terracotta">단단한</span> 어학연수 로드맵
+              바위처럼 <span className="text-terracotta">든든한</span> 어학연수
+              로드맵
             </h1>
             <p
               className="mt-5 text-[0.95rem] md:text-[1.1rem] leading-[1.7] text-brown"
