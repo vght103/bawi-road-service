@@ -28,3 +28,7 @@ dist-ssr
 .omc/
 supabase/.env.local
 supabase/.temp/
+.agents/
+.claude/skills/
+.kiro/
+skills-lock.json
