@@ -5,7 +5,7 @@ import sitemap from "@astrojs/sitemap";
 import cloudflare from "@astrojs/cloudflare";
 
 export default defineConfig({
-  site: "https://bawi-road-service.pages.dev",
+  site: "https://bawiroad.com",
   integrations: [
     react(),
     sitemap(),
