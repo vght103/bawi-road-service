@@ -1,5 +1,18 @@
 # Project Rules
 
+## 관련 프로젝트
+
+| 프로젝트          | 경로                                                   | 설명                 |
+| ----------------- | ------------------------------------------------------ | -------------------- |
+| **서비스 (현재)** | `/Users/ochunghyeon/Desktop/project/bawi-road-service` | 고객용 서비스 페이지 |
+| **어드민**        | `/Users/ochunghyeon/Desktop/project/bawi-abroad-admin` | 관리자 백오피스      |
+
+- "어드민에도 적용해", "admin 프로젝트에도 같이 해" → `bawi-abroad-admin` 프로젝트를 의미
+- "서비스 작업해" → 현재 이 프로젝트(`bawi-road-service`)를 의미
+- 두 프로젝트는 같은 Supabase 백엔드를 공유하므로, DB 스키마/Edge Function 변경 시 양쪽 영향 고려
+
+---
+
 ## Package Manager
 
 - **pnpm만 사용**. npm, yarn 사용 금지
@@ -66,6 +79,22 @@
 - `src/data/{page}/` 폴더에 페이지별 상수 데이터 관리
 - 폴더명은 `src/pages/` 구조와 동일하게 미러링
 - **전역 공통 상수**: `src/constants/` 에 생성
+
+## Skills 참조 규칙
+
+- `.claude/skills/` 폴더에 React 코딩 스킬 규칙 존재
+- `vercel-react-best-practices/rules/` 중 React 관련 규칙(rerender-_, rendering-_, js-_, client-_, bundle-\*)만 참조
+- Next.js/Vercel 전용 규칙(server-\*, async-api-routes, async-dependencies 등)은 무시 — 이 프로젝트는 Astro + React 클라이언트 컴포넌트 구조
+- `frontend-design/` 스킬은 UI 작업 시 참조
+
+## Notion 연동 규칙
+
+> **프로젝트 진행상황 & TODO 페이지**: `31b51e2c-a7b2-813a-913c-f7149c0dd6c0`
+
+- **구현 완료 시**: Notion 페이지의 해당 TODO 항목을 `[x]`로 변경하고, 구현 내용 설명을 간략히 추가
+- **새 기능 추가 시**: "구현 완료" 섹션에 `[x]` 항목으로 추가
+- **새 TODO 발견 시**: 적절한 섹션에 `[ ]` 항목으로 추가
+- 업데이트 시 `notion-fetch`로 현재 내용을 먼저 확인한 뒤 `notion-update-page`로 수정
 
 ## Pages Folder Structure
 
