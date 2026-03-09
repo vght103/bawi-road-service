@@ -35,7 +35,7 @@ export default function AcademySwiper({ academies }: AcademySwiperProps) {
           <SwiperSlide key={academy.id}>
             <a
               href={`/academy/${academy.id}`}
-              className="block bg-white rounded-[20px] overflow-hidden border border-beige-dark hover:-translate-y-1 hover:shadow-lg transition-all no-underline text-brown-text"
+              className="block bg-dark-card rounded-[20px] overflow-hidden border border-dark-border hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(196,96,58,0.12)] transition-all no-underline text-dark-text"
             >
               <div className="h-[180px] relative overflow-hidden">
                 <img
@@ -47,7 +47,7 @@ export default function AcademySwiper({ academies }: AcademySwiperProps) {
                   height={180}
                 />
                 <div className="absolute top-3 left-3 flex gap-1.5">
-                  <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-white/90 text-brown-dark">
+                  <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-dark-base/80 backdrop-blur-sm text-dark-text">
                     {academy.region}
                   </span>
                   <span
@@ -58,8 +58,8 @@ export default function AcademySwiper({ academies }: AcademySwiperProps) {
                 </div>
               </div>
               <div className="p-5">
-                <div className="text-[1.1rem] font-bold text-brown-dark">{academy.name}</div>
-                <p className="mt-1.5 text-[0.82rem] text-brown leading-[1.5] line-clamp-2">{academy.desc}</p>
+                <div className="text-[1.1rem] font-bold text-dark-text">{academy.name}</div>
+                <p className="mt-1.5 text-[0.82rem] text-dark-text-secondary leading-[1.5] line-clamp-2">{academy.desc}</p>
               </div>
             </a>
           </SwiperSlide>
@@ -68,14 +68,14 @@ export default function AcademySwiper({ academies }: AcademySwiperProps) {
       <button
         onClick={() => swiperInstance?.slidePrev()}
         aria-label="이전 어학원 보기"
-        className="absolute -left-5 top-[calc(50%-24px)] z-10 w-10 h-10 rounded-full bg-white shadow-md border border-beige-dark items-center justify-center text-brown-dark hover:bg-beige hover:border-brown-light transition-all hidden md:flex"
+        className="absolute -left-5 top-[calc(50%-24px)] z-10 w-10 h-10 rounded-full bg-dark-surface shadow-md border border-dark-border items-center justify-center text-dark-text hover:bg-dark-card hover:border-dark-accent-orange transition-all hidden md:flex"
       >
         <ChevronLeft size={18} strokeWidth={2.5} />
       </button>
       <button
         onClick={() => swiperInstance?.slideNext()}
         aria-label="다음 어학원 보기"
-        className="absolute -right-5 top-[calc(50%-24px)] z-10 w-10 h-10 rounded-full bg-white shadow-md border border-beige-dark items-center justify-center text-brown-dark hover:bg-beige hover:border-brown-light transition-all hidden md:flex"
+        className="absolute -right-5 top-[calc(50%-24px)] z-10 w-10 h-10 rounded-full bg-dark-surface shadow-md border border-dark-border items-center justify-center text-dark-text hover:bg-dark-card hover:border-dark-accent-orange transition-all hidden md:flex"
       >
         <ChevronRight size={18} strokeWidth={2.5} />
       </button>
