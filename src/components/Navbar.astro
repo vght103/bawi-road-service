@@ -1,5 +1,6 @@
 ---
 import AuthStatus from "@/components/AuthStatus";
+import titleLogo from "@/assets/title-logo.png";
 
 const pathname = Astro.url.pathname;
 const isGuideActive = ["/why-philippines", "/process", "/visa-info"].includes(pathname);
@@ -17,11 +18,8 @@ function getLinkClass(path: string): string {
 >
   <div class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
     <!-- Logo -->
-    <a href="/" class="flex items-center gap-2.5 no-underline text-cream">
-      <div>
-        <div class="font-extrabold text-[1.2rem] tracking-tight leading-tight">바위로드</div>
-        <div class="text-[0.65rem] text-cream/60 font-medium tracking-wider">BAWI ROAD</div>
-      </div>
+    <a href="/" class="no-underline">
+      <img src={titleLogo.src} alt="바위로드" class="h-10 w-auto object-contain" />
     </a>
 
     <!-- Desktop Menu -->
