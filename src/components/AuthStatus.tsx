@@ -16,11 +16,11 @@ export default function AuthStatus({ pathname, mobile }: AuthStatusProps) {
   if (mobile) {
     if (user) {
       return (
-        <div className="border-t border-dark-border mt-3 pt-3 space-y-1">
-          <div className="text-xs text-dark-text-secondary px-1 pb-1">
+        <div className="border-t border-beige-dark mt-3 pt-3 space-y-1">
+          <div className="text-xs text-brown px-1 pb-1">
             {member?.name ?? user.email}
           </div>
-          <a href="/my" className="block text-dark-text-secondary font-medium py-2 no-underline">
+          <a href="/my" className="block text-brown font-medium py-2 no-underline">
             마이페이지
           </a>
           <button
@@ -28,7 +28,7 @@ export default function AuthStatus({ pathname, mobile }: AuthStatusProps) {
               await signOut();
               window.location.href = "/";
             }}
-            className="w-full text-left text-dark-text-secondary font-medium py-2 bg-transparent border-none cursor-pointer text-base"
+            className="w-full text-left text-brown font-medium py-2 bg-transparent border-none cursor-pointer text-base"
           >
             로그아웃
           </button>
@@ -37,16 +37,16 @@ export default function AuthStatus({ pathname, mobile }: AuthStatusProps) {
     }
 
     return (
-      <div className="border-t border-dark-border mt-3 pt-3 flex gap-3">
+      <div className="border-t border-beige-dark mt-3 pt-3 flex gap-3">
         <a
           href={`/login?from=${encodeURIComponent(pathname)}`}
-          className="flex-1 text-center text-dark-text font-medium py-2.5 rounded-lg border border-dark-border no-underline"
+          className="flex-1 text-center text-brown-dark font-medium py-2.5 rounded-lg border border-beige-dark no-underline"
         >
           로그인
         </a>
         <a
           href="/signup"
-          className="flex-1 text-center text-dark-text font-medium py-2.5 rounded-lg bg-dark-card no-underline"
+          className="flex-1 text-center text-brown-dark font-medium py-2.5 rounded-lg bg-beige no-underline"
         >
           회원가입
         </a>
@@ -64,13 +64,13 @@ export default function AuthStatus({ pathname, mobile }: AuthStatusProps) {
           </div>
         </button>
         <div className="absolute top-full right-0 pt-3 hidden group-hover:block">
-          <div className="bg-dark-card rounded-xl shadow-lg border border-dark-border py-2 min-w-[160px]">
-            <div className="px-4 py-2 border-b border-dark-border-subtle text-xs text-dark-text-secondary">
+          <div className="bg-white rounded-xl shadow-lg border border-beige-dark py-2 min-w-[160px]">
+            <div className="px-4 py-2 border-b border-beige text-xs text-brown">
               {member?.name ?? user.email}
             </div>
             <a
               href="/my"
-              className="block px-4 py-2.5 text-[0.85rem] text-dark-text-secondary hover:bg-dark-surface hover:text-dark-text transition-colors no-underline"
+              className="block px-4 py-2.5 text-[0.85rem] text-brown hover:bg-beige hover:text-brown-dark transition-colors no-underline"
             >
               마이페이지
             </a>
@@ -79,7 +79,7 @@ export default function AuthStatus({ pathname, mobile }: AuthStatusProps) {
                 await signOut();
                 window.location.href = "/";
               }}
-              className="w-full text-left px-4 py-2.5 text-[0.85rem] text-dark-text-secondary hover:bg-dark-surface hover:text-dark-text transition-colors bg-transparent border-none cursor-pointer"
+              className="w-full text-left px-4 py-2.5 text-[0.85rem] text-brown hover:bg-beige hover:text-brown-dark transition-colors bg-transparent border-none cursor-pointer"
             >
               로그아웃
             </button>
