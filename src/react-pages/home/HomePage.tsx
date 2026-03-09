@@ -47,21 +47,21 @@ function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section className="bg-cream pt-[120px] pb-14 px-6">
+      <section className="bg-dark-base aurora-bg pt-[120px] pb-14 px-6">
         <div className="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-[60px] items-center">
-          <div className="relative">
-            <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3.5 py-1.5 rounded-full text-[0.8rem] font-semibold mb-5">
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-1.5 glass-light text-dark-accent-orange px-3.5 py-1.5 rounded-full text-[0.8rem] font-semibold mb-5">
               <Star size={14} fill="currentColor" />
               수수료 0원, 가격 완전 공개
             </div>
             <h1
-              className="text-[2rem] md:text-[3.2rem] font-black leading-[1.25] tracking-tight text-brown-dark"
+              className="text-[2rem] md:text-[3.2rem] font-black leading-[1.25] tracking-tight text-dark-text"
             >
-              바위처럼 <span className="text-terracotta">든든한</span> 어학연수
+              바위처럼 <span className="text-gradient-accent">든든한</span> 어학연수
               로드맵
             </h1>
             <p
-              className="mt-5 text-[0.95rem] md:text-[1.1rem] leading-[1.7] text-brown"
+              className="mt-5 text-[0.95rem] md:text-[1.1rem] leading-[1.7] text-dark-text-secondary"
             >
               비용, 어학원, 출국까지 — 흔들리지 않는 기준으로 안내합니다.
               <br />
@@ -69,7 +69,7 @@ function HomePage() {
             </p>
             {/* AI 상담 */}
             <div
-              className="mt-9 animate-fade-in-up max-w-[440px] bg-white rounded-[16px] p-5 border border-beige-dark shadow-sm relative overflow-hidden"
+              className="mt-9 animate-fade-in-up max-w-[440px] glass-warm rounded-[16px] p-5 shadow-sm relative overflow-hidden z-10"
               style={{ animationDelay: "0.3s" }}
             >
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-terracotta to-accent-green" />
@@ -77,14 +77,14 @@ function HomePage() {
                 <div className="w-6 h-6 rounded-full bg-gradient-to-br from-terracotta to-amber-400 flex items-center justify-center shrink-0">
                   <MessageCircle size={12} strokeWidth={2.5} className="text-white" />
                 </div>
-                <span className="text-[0.8rem] font-semibold text-brown">
+                <span className="text-[0.88rem] font-bold text-dark-text">
                   <span className="bg-gradient-to-r from-terracotta to-amber-500 bg-clip-text text-transparent font-extrabold">
                     AI
                   </span>{" "}
                   상담으로 물어보기
                 </span>
               </div>
-              <div className="flex items-center gap-2  rounded-[10px] px-3.5 py-2.5 border border-beige-dark">
+              <div className="flex items-center gap-2 bg-white rounded-[10px] px-3.5 py-2.5 border border-white/50">
                 <Input
                   type="text"
                   value={aiKeyword}
@@ -110,30 +110,30 @@ function HomePage() {
 
           {/* Hero Visual - Quote CTA Card */}
           <div
-            className="relative flex justify-center items-center animate-fade-in-up"
+            className="relative z-10 flex justify-center items-center animate-fade-in-up"
             style={{ animationDelay: "0.2s" }}
           >
-            <div className="bg-white rounded-[20px] p-7 md:p-9 shadow-lg w-full max-w-[440px] border border-beige-dark relative overflow-hidden">
+            <div className="glass-warm rounded-[20px] p-7 md:p-9 w-full max-w-[440px] relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-terracotta to-accent-green" />
 
-              <div className="inline-flex items-center gap-1.5 bg-terracotta-light text-terracotta px-3 py-1 rounded-full text-[0.75rem] font-bold mb-4">
+              <div className="inline-flex items-center gap-1.5 bg-dark-accent-orange/15 text-dark-accent-orange px-3 py-1 rounded-full text-[0.75rem] font-bold mb-4">
                 무료 견적 서비스
               </div>
 
-              <h3 className="text-[1.3rem] md:text-[1.5rem] font-extrabold text-brown-dark leading-[1.3] mb-2">
+              <h3 className="text-[1.3rem] md:text-[1.5rem] font-extrabold text-dark-text leading-[1.3] mb-2">
                 내 연수 비용,
                 <br />
-                <span className="text-terracotta">무료로 확인</span>하세요
+                <span className="text-gradient-accent">무료로 확인</span>하세요
               </h3>
-              <p className="text-[0.85rem] text-brown leading-[1.6] mb-5">
+              <p className="text-[0.85rem] text-dark-text-secondary leading-[1.6] mb-5">
                 어학원, 기간, 기숙사를 선택하면 예상 비용이 바로 나와요.
               </p>
 
               <div className="flex flex-col gap-2.5 mb-6">
                 {["수수료 0원 — 학생 부담 제로", "가격 100% 공개 — 숨김 비용 없음", "상담 없이 바로 확인 가능"].map(
                   (point) => (
-                    <div key={point} className="flex items-center gap-2.5 text-[0.82rem] text-brown-dark">
-                      <div className="w-5 h-5 rounded-full bg-accent-green-light flex items-center justify-center shrink-0">
+                    <div key={point} className="flex items-center gap-2.5 text-[0.82rem] text-dark-text">
+                      <div className="w-5 h-5 rounded-full bg-accent-green/15 flex items-center justify-center shrink-0">
                         <Check size={12} strokeWidth={3} className="text-accent-green-dark" />
                       </div>
                       <span className="font-medium">{point}</span>
@@ -144,14 +144,14 @@ function HomePage() {
 
               <a
                 href="/quote?from=home-hero"
-                className="flex items-center justify-center gap-2 w-full bg-terracotta text-white py-3.5 rounded-[10px] text-[0.95rem] font-bold no-underline shadow-[0_4px_14px_rgba(196,96,58,0.3)] hover:bg-terracotta-hover hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(196,96,58,0.35)] transition-all"
+                className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-terracotta to-dark-accent-orange text-white py-3.5 rounded-[10px] text-[0.95rem] font-bold no-underline glow-cta transition-all"
               >
                 무료 견적서 받기
                 <ArrowRight size={18} strokeWidth={2.5} />
               </a>
               <a
                 href="/inquiry?from=home-hero"
-                className="flex items-center justify-center gap-2 w-full mt-2.5 bg-transparent text-brown border border-beige-dark py-3 rounded-[10px] text-[0.88rem] font-semibold no-underline hover:border-terracotta hover:text-terracotta hover:-translate-y-0.5 transition-all"
+                className="flex items-center justify-center gap-2 w-full mt-2.5 bg-white/90 text-brown-dark border border-white/40 py-3 rounded-[10px] text-[0.88rem] font-semibold no-underline hover:bg-white hover:border-terracotta hover:text-terracotta hover:-translate-y-0.5 transition-all"
               >
                 1:1 상담 신청하기
               </a>
@@ -161,11 +161,11 @@ function HomePage() {
       </section>
 
       {/* TRUST BAR */}
-      <div className="bg-white py-10 px-6 border-y border-beige-dark">
+      <div className="bg-dark-surface py-10 px-6 border-y border-dark-border-subtle">
         <div className="max-w-[1200px] mx-auto flex justify-center gap-6 md:gap-12 flex-wrap">
           {["수수료 0원", "가격 100% 공개", "검증된 어학원만", "장단점 솔직 비교"].map((text) => (
-            <div key={text} className="flex items-center gap-2.5 text-[0.95rem] font-semibold text-brown">
-              <div className="w-1.5 h-1.5 rounded-full bg-terracotta shrink-0" />
+            <div key={text} className="flex items-center gap-2.5 text-[0.95rem] font-semibold text-dark-text-secondary">
+              <div className="w-1.5 h-1.5 rounded-full bg-dark-accent-orange shrink-0" />
               {text}
             </div>
           ))}
@@ -173,19 +173,19 @@ function HomePage() {
       </div>
 
       {/* ACADEMIES SECTION */}
-      <section className="py-20 px-6 bg-cream">
+      <section className="py-20 px-6 bg-dark-base">
         <div className="max-w-[1200px] mx-auto md:px-7">
-          <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-1.5 glass-light text-dark-accent-orange px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
             인기 어학원
           </div>
-          <h2 className="text-[1.6rem] md:text-[2.2rem] font-extrabold tracking-tight text-brown-dark leading-[1.3]">
+          <h2 className="text-[1.6rem] md:text-[2.2rem] font-extrabold tracking-tight text-dark-text leading-[1.3]">
             학생들이 많이 찾는 어학원
           </h2>
-          <p className="mt-3 text-base leading-[1.7] text-brown max-w-[600px]">
+          <p className="mt-3 text-base leading-[1.7] text-dark-text-secondary max-w-[600px]">
             가격, 시설, 수업 스타일까지 한눈에 비교해보세요.
           </p>
           <div className="mt-12">
-            <Suspense fallback={<div className="h-[300px] flex items-center justify-center text-brown">로딩 중...</div>}>
+            <Suspense fallback={<div className="h-[300px] flex items-center justify-center text-dark-text-muted">로딩 중...</div>}>
               <AcademySwiper academies={academies} />
             </Suspense>
           </div>
@@ -202,15 +202,15 @@ function HomePage() {
       </section>
 
       {/* WHY SECTION */}
-      <section className="py-20 px-6 bg-white">
+      <section className="py-20 px-6 bg-dark-surface">
         <div className="max-w-[1200px] mx-auto">
-          <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-1.5 glass-light text-dark-accent-orange px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
             🌱 Why 바위로드
           </div>
-          <h2 className="text-[1.6rem] md:text-[2.2rem] font-extrabold tracking-tight text-brown-dark leading-[1.3]">
+          <h2 className="text-[1.6rem] md:text-[2.2rem] font-extrabold tracking-tight text-dark-text leading-[1.3]">
             바위로드는 이렇게 다릅니다
           </h2>
-          <p className="mt-3 text-base leading-[1.7] text-brown max-w-[600px]">
+          <p className="mt-3 text-base leading-[1.7] text-dark-text-secondary max-w-[600px]">
             어학원 선택부터 출국까지, 필요한 정보를 한곳에 모았습니다.
           </p>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -236,7 +236,7 @@ function HomePage() {
             ].map((card) => (
               <div
                 key={card.title}
-                className="reveal bg-cream rounded-[20px] p-8 border border-beige-dark hover:-translate-y-1 hover:shadow-md hover:border-brown-light transition-all"
+                className="reveal bg-cream rounded-[20px] p-8 glow-border hover:-translate-y-1 hover:shadow-md transition-all"
               >
                 <div
                   className={`w-[52px] h-[52px] rounded-[14px] mb-5 flex items-center justify-center text-2xl ${card.color}`}
@@ -252,15 +252,15 @@ function HomePage() {
       </section>
 
       {/* PROCESS SECTION */}
-      <section className="py-20 px-6 bg-cream">
+      <section className="py-20 px-6 bg-dark-base">
         <div className="max-w-[1200px] mx-auto">
-          <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-1.5 glass-light text-dark-accent-orange px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
             📋 수속 절차
           </div>
-          <h2 className="text-[1.6rem] md:text-[2.2rem] font-extrabold tracking-tight text-brown-dark leading-[1.3]">
+          <h2 className="text-[1.6rem] md:text-[2.2rem] font-extrabold tracking-tight text-dark-text leading-[1.3]">
             출국까지, 4단계면 충분합니다
           </h2>
-          <p className="mt-3 text-base leading-[1.7] text-brown max-w-[600px]">
+          <p className="mt-3 text-base leading-[1.7] text-dark-text-secondary max-w-[600px]">
             복잡할 거 없어요. 바위로드가 전부 안내해드려요.
           </p>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-5">
@@ -288,7 +288,7 @@ function HomePage() {
             ].map((stepItem) => (
               <div
                 key={stepItem.step}
-                className="reveal bg-white rounded-[20px] p-6 border border-beige-dark text-center hover:-translate-y-1 hover:shadow-md transition-all"
+                className="reveal bg-cream rounded-[20px] p-6 text-center glow-border hover:-translate-y-1 hover:shadow-md transition-all"
               >
                 <div className="w-11 h-11 rounded-full bg-terracotta-light flex items-center justify-center mx-auto mb-4">
                   <span className="text-[0.75rem] font-extrabold text-terracotta">{stepItem.step}</span>
@@ -301,7 +301,7 @@ function HomePage() {
           <div className="mt-8">
             <a
               href="/process"
-              className="inline-flex items-center gap-1.5 text-[0.9rem] font-semibold text-terracotta hover:text-terracotta-hover no-underline transition-colors"
+              className="inline-flex items-center gap-1.5 text-[0.9rem] font-semibold text-dark-accent-orange hover:text-dark-accent-orange/80 no-underline transition-colors"
             >
               자세한 절차 보기
               <ArrowRight size={16} strokeWidth={2.5} />
@@ -311,17 +311,20 @@ function HomePage() {
       </section>
 
       {/* 바위로드와 함께 CTA */}
-      <section className="py-24 px-6 bg-white text-center">
-        <div className="max-w-[720px] mx-auto">
-          <div className="reveal inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3.5 py-1.5 rounded-full text-[0.78rem] font-semibold mb-6">
+      <section className="py-24 px-6 bg-dark-surface text-center relative overflow-hidden">
+        <div className="max-w-[720px] mx-auto relative z-10">
+          {/* Decorative orbs */}
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-dark-accent-orange/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-accent-green/5 rounded-full blur-3xl" />
+          <div className="reveal inline-flex items-center gap-1.5 glass-light text-dark-accent-orange px-3.5 py-1.5 rounded-full text-[0.78rem] font-semibold mb-6">
             바위로드 서포트
           </div>
-          <h2 className="reveal text-[2rem] md:text-[2.8rem] font-extrabold tracking-tight text-brown-dark leading-[1.2]">
+          <h2 className="reveal text-[2rem] md:text-[2.8rem] font-extrabold tracking-tight text-dark-text leading-[1.2]">
             출국 준비부터 현지 도착까지,
             <br />
-            <span className="text-terracotta">바위로드가 함께합니다</span>
+            <span className="text-gradient-accent">바위로드가 함께합니다</span>
           </h2>
-          <p className="reveal mt-5 text-[0.95rem] md:text-[1.05rem] leading-[1.75] text-brown max-w-[500px] mx-auto">
+          <p className="reveal mt-5 text-[0.95rem] md:text-[1.05rem] leading-[1.75] text-dark-text-secondary max-w-[500px] mx-auto">
             오리엔테이션, 웰컴 키트, 공항 픽업까지
             <br />
             바위로드만의 특별한 케어를 경험하세요.
@@ -329,14 +332,14 @@ function HomePage() {
           <div className="reveal mt-10 flex gap-3.5 justify-center flex-wrap">
             <a
               href="/with-bawi"
-              className="bg-terracotta text-white px-10 py-4 rounded-[10px] text-base font-bold no-underline inline-flex items-center gap-2.5 shadow-[0_6px_24px_rgba(196,96,58,0.4)] hover:bg-terracotta-hover hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(196,96,58,0.45)] transition-all"
+              className="bg-gradient-to-r from-terracotta to-dark-accent-orange text-white px-10 py-4 rounded-[10px] text-base font-bold no-underline inline-flex items-center gap-2.5 glow-cta transition-all"
             >
               자세히 알아보기
               <ArrowRight size={18} strokeWidth={2.5} />
             </a>
             <a
               href="/inquiry?from=home-cta"
-              className="bg-brown-dark text-cream px-8 py-4 rounded-[10px] text-base font-semibold no-underline inline-flex items-center gap-2 hover:bg-brown-dark/90 hover:-translate-y-0.5 transition-all"
+              className="bg-white text-brown-dark border border-beige-dark px-8 py-4 rounded-[10px] text-base font-semibold no-underline inline-flex items-center gap-2 hover:border-terracotta hover:text-terracotta hover:-translate-y-0.5 transition-all"
             >
               1:1 상담 신청
             </a>

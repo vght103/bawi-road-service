@@ -14,7 +14,7 @@ function getLinkClass(path: string): string {
 
 <nav
   id="navbar"
-  class="fixed top-0 left-0 right-0 z-50 bg-brown backdrop-blur-[16px] border-b border-brown-dark/20 transition-shadow"
+  class="fixed top-0 left-0 right-0 z-50 bg-dark-base/95 backdrop-blur-[16px] border-b border-dark-border-subtle transition-shadow"
 >
   <div class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
     <!-- Logo -->
@@ -34,16 +34,16 @@ function getLinkClass(path: string): string {
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform" id="bawi-chevron"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div class="absolute top-full left-1/2 -translate-x-1/2 pt-3 hidden" id="bawi-menu">
-          <div class="bg-white rounded-xl shadow-lg border border-beige-dark py-2 min-w-[180px]">
+          <div class="bg-dark-card rounded-xl shadow-lg border border-dark-border py-2 min-w-[180px]">
             <a
               href="/about"
-              class="block px-5 py-2.5 text-[0.85rem] text-brown hover:bg-beige hover:text-brown-dark transition-colors no-underline"
+              class="block px-5 py-2.5 text-[0.85rem] text-dark-text-secondary hover:bg-dark-surface hover:text-dark-text transition-colors no-underline"
             >
               바위로드 소개
             </a>
             <a
               href="/with-bawi"
-              class="block px-5 py-2.5 text-[0.85rem] text-brown hover:bg-beige hover:text-brown-dark transition-colors no-underline"
+              class="block px-5 py-2.5 text-[0.85rem] text-dark-text-secondary hover:bg-dark-surface hover:text-dark-text transition-colors no-underline"
             >
               함께하는 서비스
             </a>
@@ -65,22 +65,22 @@ function getLinkClass(path: string): string {
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform" id="guide-chevron"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div class="absolute top-full left-1/2 -translate-x-1/2 pt-3 hidden" id="guide-menu">
-          <div class="bg-white rounded-xl shadow-lg border border-beige-dark py-2 min-w-[180px]">
+          <div class="bg-dark-card rounded-xl shadow-lg border border-dark-border py-2 min-w-[180px]">
             <a
               href="/why-philippines"
-              class="block px-5 py-2.5 text-[0.85rem] text-brown hover:bg-beige hover:text-brown-dark transition-colors no-underline"
+              class="block px-5 py-2.5 text-[0.85rem] text-dark-text-secondary hover:bg-dark-surface hover:text-dark-text transition-colors no-underline"
             >
               왜 필리핀?
             </a>
             <a
               href="/process"
-              class="block px-5 py-2.5 text-[0.85rem] text-brown hover:bg-beige hover:text-brown-dark transition-colors no-underline"
+              class="block px-5 py-2.5 text-[0.85rem] text-dark-text-secondary hover:bg-dark-surface hover:text-dark-text transition-colors no-underline"
             >
               연수 절차 · 준비물
             </a>
             <a
               href="/visa-info"
-              class="block px-5 py-2.5 text-[0.85rem] text-brown hover:bg-beige hover:text-brown-dark transition-colors no-underline"
+              class="block px-5 py-2.5 text-[0.85rem] text-dark-text-secondary hover:bg-dark-surface hover:text-dark-text transition-colors no-underline"
             >
               비자 · 현지비용
             </a>
@@ -93,7 +93,8 @@ function getLinkClass(path: string): string {
       </a>
       <a
         href="/quote?from=navbar"
-        class="bg-terracotta text-white! px-5 py-2 rounded-lg font-semibold text-[0.85rem] hover:bg-terracotta-hover hover:-translate-y-0.5 transition-all no-underline"
+        class="text-white! px-5 py-2 rounded-lg font-semibold text-[0.85rem] hover:-translate-y-0.5 transition-all no-underline glow-cta"
+        style="background: linear-gradient(135deg, #C4603A, #E8723A)"
       >
         무료 견적 받기
       </a>
@@ -114,41 +115,41 @@ function getLinkClass(path: string): string {
   </div>
 
   <!-- Mobile Menu -->
-  <div id="mobile-menu" class="md:hidden bg-white border-t border-beige-dark px-6 py-4 space-y-1 shadow-[0_8px_24px_rgba(0,0,0,0.12)] rounded-b-2xl hidden">
+  <div id="mobile-menu" class="md:hidden bg-dark-card border-t border-dark-border px-6 py-4 space-y-1 shadow-[0_8px_24px_rgba(0,0,0,0.12)] rounded-b-2xl hidden">
     <!-- Mobile 바위로드와 함께 Accordion -->
     <div>
       <button
-        class="w-full flex items-center justify-between text-brown-dark font-medium py-2 bg-transparent border-none cursor-pointer text-left text-base"
+        class="w-full flex items-center justify-between text-dark-text font-medium py-2 bg-transparent border-none cursor-pointer text-left text-base"
         id="mobile-bawi-trigger"
       >
         바위로드와 함께
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform" id="mobile-bawi-chevron"><path d="m6 9 6 6 6-6"/></svg>
       </button>
       <div id="mobile-bawi-submenu" class="pl-4 space-y-0.5 pb-1 hidden">
-        <a href="/about" class="block text-brown py-2 text-[0.9rem] no-underline hover:text-brown-dark">바위로드 소개</a>
-        <a href="/with-bawi" class="block text-brown py-2 text-[0.9rem] no-underline hover:text-brown-dark">함께하는 서비스</a>
+        <a href="/about" class="block text-dark-text-secondary py-2 text-[0.9rem] no-underline hover:text-dark-text">바위로드 소개</a>
+        <a href="/with-bawi" class="block text-dark-text-secondary py-2 text-[0.9rem] no-underline hover:text-dark-text">함께하는 서비스</a>
       </div>
     </div>
 
-    <a href="/academies" class="block text-brown-dark font-medium py-2 no-underline">어학원 비교</a>
+    <a href="/academies" class="block text-dark-text font-medium py-2 no-underline">어학원 비교</a>
 
     <!-- Mobile 연수 가이드 Accordion -->
     <div>
       <button
-        class="w-full flex items-center justify-between text-brown-dark font-medium py-2 bg-transparent border-none cursor-pointer text-left text-base"
+        class="w-full flex items-center justify-between text-dark-text font-medium py-2 bg-transparent border-none cursor-pointer text-left text-base"
         id="mobile-guide-trigger"
       >
         연수 가이드
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform" id="mobile-guide-chevron"><path d="m6 9 6 6 6-6"/></svg>
       </button>
       <div id="mobile-guide-submenu" class="pl-4 space-y-0.5 pb-1 hidden">
-        <a href="/why-philippines" class="block text-brown py-2 text-[0.9rem] no-underline hover:text-brown-dark">왜 필리핀?</a>
-        <a href="/process" class="block text-brown py-2 text-[0.9rem] no-underline hover:text-brown-dark">연수 절차 · 준비물</a>
-        <a href="/visa-info" class="block text-brown py-2 text-[0.9rem] no-underline hover:text-brown-dark">비자 · 현지비용</a>
+        <a href="/why-philippines" class="block text-dark-text-secondary py-2 text-[0.9rem] no-underline hover:text-dark-text">왜 필리핀?</a>
+        <a href="/process" class="block text-dark-text-secondary py-2 text-[0.9rem] no-underline hover:text-dark-text">연수 절차 · 준비물</a>
+        <a href="/visa-info" class="block text-dark-text-secondary py-2 text-[0.9rem] no-underline hover:text-dark-text">비자 · 현지비용</a>
       </div>
     </div>
 
-    <a href="/enrollment/apply?from=navbar" class="block text-brown font-medium py-2 no-underline">수속 신청</a>
+    <a href="/enrollment/apply?from=navbar" class="block text-dark-text-secondary font-medium py-2 no-underline">수속 신청</a>
 
     <!-- Mobile Auth (React Island) -->
     <div id="mobile-auth">
@@ -158,7 +159,7 @@ function getLinkClass(path: string): string {
     <!-- CTA -->
     <a
       href="/quote?from=navbar"
-      class="block w-full text-center bg-terracotta text-white py-3 rounded-lg font-semibold no-underline mt-3"
+      class="block w-full text-center bg-gradient-to-r from-terracotta to-[#E8723A] text-white py-3 rounded-lg font-semibold no-underline mt-3"
     >
       무료 견적 받기
     </a>
