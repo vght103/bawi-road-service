@@ -1,5 +1,6 @@
 import { Info } from "lucide-react";
 
+// 채팅 페이지 상단에 표시되는 AI 답변 면책 안내 배너
 export default function AiDisclaimer() {
   return (
     <div className="bg-beige px-4 py-2.5 flex items-start gap-2">

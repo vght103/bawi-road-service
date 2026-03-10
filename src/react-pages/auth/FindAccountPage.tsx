@@ -6,41 +6,46 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
 import LoadingOverlay from "@/components/LoadingOverlay";
 
-type ActiveTab = "find-email" | "find-password";
+type ActiveTab = "find-email" | "find-password"; // 활성 탭 타입
 
+// ?tab=find-password이면 비밀번호 찾기 탭으로, 그 외에는 이메일 찾기 탭으로 초기화
 function getInitialTab(searchParams: URLSearchParams): ActiveTab {
   const tab = searchParams.get("tab");
   return tab === "find-password" ? "find-password" : "find-email";
 }
 
+// 계정 찾기 페이지 — 이메일 찾기(이름+핸드폰) / 비밀번호 찾기(이름+이메일) 탭 구분
 function FindAccountPage() {
   const { findEmail, sendPasswordResetEmail } = useAuth();
+
   const [activeTab, setActiveTab] = useState<ActiveTab>(() => getInitialTab(new URLSearchParams(window.location.search)));
 
-  // 이메일 찾기 state
+  // 이메일 찾기 상태
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [findEmailSubmitting, setFindEmailSubmitting] = useState(false);
-  const [findEmailResult, setFindEmailResult] = useState<{ maskedEmail: string | null; error: string | null } | null>(null);
+  const [findEmailResult, setFindEmailResult] = useState<{ maskedEmail: string | null; error: string | null } | null>(null); // maskedEmail: null이면 못 찾은 것
 
-  // 비밀번호 찾기 state
+  // 비밀번호 찾기 상태
   const [resetName, setResetName] = useState("");
   const [resetEmail, setResetEmail] = useState("");
   const [resetSubmitting, setResetSubmitting] = useState(false);
   const [resetResult, setResetResult] = useState<{ success: boolean; error: string | null } | null>(null);
 
+  // 탭 전환 시 이전 결과/에러 초기화
   function handleTabChange(tab: ActiveTab) {
     setActiveTab(tab);
     setFindEmailResult(null);
     setResetResult(null);
   }
 
+  // 숫자와 하이픈만 허용
   function handlePhoneChange(value: string) {
-    // 숫자와 하이픈만 허용
     const filtered = value.replace(/[^\d-]/g, "");
     setPhone(filtered);
   }
 
+  // 이메일 찾기 — 이름 + 핸드폰 번호로 조회
   async function handleFindEmail(e: React.FormEvent) {
     e.preventDefault();
     setFindEmailResult(null);
@@ -60,6 +65,7 @@ function FindAccountPage() {
     setFindEmailResult(result);
   }
 
+  // 비밀번호 재설정 이메일 발송 — 이름 + 이메일로 재설정 링크 전송
   async function handleSendPasswordReset(e: React.FormEvent) {
     e.preventDefault();
     setResetResult(null);
@@ -84,6 +90,7 @@ function FindAccountPage() {
     }
   }
 
+  // 활성 탭에 따라 하단 선(border-b)과 강조 색상 적용
   const tabButtonClass = (tab: ActiveTab) =>
     activeTab === tab
       ? "border-b-2 border-terracotta text-terracotta font-semibold pb-2 text-sm transition-colors"
@@ -94,10 +101,9 @@ function FindAccountPage() {
       <LoadingOverlay visible={findEmailSubmitting || resetSubmitting} />
       <div className="flex items-center justify-center px-4 py-12 pt-22">
         <div className="flex w-full max-w-[1000px] overflow-hidden rounded-2xl bg-white shadow-lg border border-beige-dark">
-          {/* Left: Form */}
+          {/* 왼쪽: 계정 찾기 폼 */}
           <div className="flex w-full lg:w-1/2 items-center justify-center px-6 sm:px-10 py-12">
             <div className="w-full max-w-sm">
-              {/* Header */}
               <div className="mb-8">
                 <a href="/login" className="mb-6 inline-block text-sm text-brown hover:text-terracotta">
                   ← 로그인으로
@@ -106,7 +112,7 @@ function FindAccountPage() {
                 <p className="mt-1 text-sm text-brown">이메일 또는 비밀번호를 찾으세요</p>
               </div>
 
-              {/* Tabs */}
+              {/* 탭 버튼 */}
               <div className="flex gap-6 border-b border-beige-dark mb-6">
                 <button
                   type="button"
@@ -124,7 +130,7 @@ function FindAccountPage() {
                 </button>
               </div>
 
-              {/* 이메일 찾기 */}
+              {/* 이메일 찾기 탭 */}
               {activeTab === "find-email" && (
                 <form onSubmit={handleFindEmail} className="space-y-5">
                   {findEmailResult?.error && (
@@ -132,6 +138,7 @@ function FindAccountPage() {
                       {findEmailResult.error}
                     </div>
                   )}
+                  {/* 성공: 마스킹된 이메일 표시 */}
                   {findEmailResult?.maskedEmail && (
                     <div className="rounded-lg bg-green-50 p-4 text-sm text-green-700 space-y-2">
                       <p className="font-medium">이메일을 찾았습니다.</p>
@@ -142,6 +149,7 @@ function FindAccountPage() {
                     </div>
                   )}
 
+                  {/* 이름 */}
                   <div className="space-y-1.5">
                     <Label htmlFor="name" className="text-brown-text font-medium">
                       이름
@@ -155,6 +163,7 @@ function FindAccountPage() {
                     />
                   </div>
 
+                  {/* 핸드폰 번호 — 숫자와 하이픈만 허용 */}
                   <div className="space-y-1.5">
                     <Label htmlFor="phone" className="text-brown-text font-medium">
                       핸드폰 번호
@@ -178,7 +187,7 @@ function FindAccountPage() {
                 </form>
               )}
 
-              {/* 비밀번호 찾기 */}
+              {/* 비밀번호 찾기 탭 */}
               {activeTab === "find-password" && (
                 <form onSubmit={handleSendPasswordReset} className="space-y-5">
                   {resetResult?.error && (
@@ -186,12 +195,14 @@ function FindAccountPage() {
                       {resetResult.error}
                     </div>
                   )}
+                  {/* 성공: 이메일 발송 안내 */}
                   {resetResult?.success && (
                     <div className="rounded-lg bg-green-50 p-4 text-sm text-green-700">
                       비밀번호 재설정 링크가 이메일로 발송되었습니다.
                     </div>
                   )}
 
+                  {/* 이름 */}
                   <div className="space-y-1.5">
                     <Label htmlFor="reset-name" className="text-brown-text font-medium">
                       이름
@@ -205,6 +216,7 @@ function FindAccountPage() {
                     />
                   </div>
 
+                  {/* 이메일 (재설정 링크 수신용) */}
                   <div className="space-y-1.5">
                     <Label htmlFor="reset-email" className="text-brown-text font-medium">
                       이메일
@@ -228,7 +240,6 @@ function FindAccountPage() {
                 </form>
               )}
 
-              {/* Bottom text */}
               <p className="mt-6 text-center text-sm text-brown">
                 계정이 없으신가요?{" "}
                 <a href="/signup" className="font-medium text-terracotta hover:underline">
@@ -238,7 +249,7 @@ function FindAccountPage() {
             </div>
           </div>
 
-          {/* Right: Mascot illustration */}
+          {/* 오른쪽: 마스코트 일러스트 (데스크탑 전용) */}
           <div className="hidden lg:flex w-1/2 items-center justify-center bg-beige">
             <div className="text-center px-8">
               <div className="mb-6">

@@ -5,19 +5,20 @@ import FileUpload from "@/components/FileUpload";
 import type { DocumentType, EnrollmentDocument } from "@/types/enrollment";
 import ImagePreviewModal from "./ImagePreviewModal";
 
-const IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"]; // 이미지로 간주할 MIME 타입
 
 interface DocumentUploadCardProps {
-  title: string;
-  description: string;
-  enrollmentId: string;
-  documentType: DocumentType;
-  existingDocument?: EnrollmentDocument;
-  accept?: string;
+  title: string; // 카드 제목 (예: "항공권")
+  description: string; // 카드 설명
+  enrollmentId: string; // 이 서류가 속한 수속 신청 ID
+  documentType: DocumentType; // 서류 종류 코드
+  existingDocument?: EnrollmentDocument; // 이미 업로드된 서류 (없으면 undefined)
+  accept?: string; // 허용 파일 확장자
   uploadMutation: UseMutationResult<EnrollmentDocument, Error, { file: File; enrollmentId: string; documentType: DocumentType; existingDocumentId?: string }>;
   deleteMutation: UseMutationResult<void, Error, { documentId: string }>;
 }
 
+// 수속 서류 업로드 카드 — 서류 없으면 업로드 영역, 있으면 완료 상태 + 재업로드 영역 표시
 export default function DocumentUploadCard({
   title,
   description,
@@ -28,8 +29,9 @@ export default function DocumentUploadCard({
   uploadMutation,
   deleteMutation,
 }: DocumentUploadCardProps) {
-  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false); // 이미지 미리보기 모달 상태
 
+  // 파일 선택 시 즉시 업로드 (기존 서류가 있으면 덮어쓰기)
   function handleFileSelect(file: File) {
     uploadMutation.mutate({
       file,
@@ -39,8 +41,9 @@ export default function DocumentUploadCard({
     });
   }
 
-  const isImage = existingDocument && IMAGE_MIME_TYPES.includes(existingDocument.mime_type);
+  const isImage = existingDocument && IMAGE_MIME_TYPES.includes(existingDocument.mime_type); // 미리보기 버튼 표시 여부
 
+  // 삭제 확인 후 서버에서 제거
   function handleDelete() {
     if (!existingDocument) return;
     if (!window.confirm("업로드된 파일을 삭제하시겠습니까?")) return;
@@ -50,11 +53,13 @@ export default function DocumentUploadCard({
     });
   }
 
+  // 서류가 있는 경우: 완료 상태 UI
   if (existingDocument) {
     return (
       <div className="rounded-[10px] border border-beige-dark bg-white p-5">
         <h4 className="font-semibold text-brown-dark text-sm mb-1">{title}</h4>
         <p className="text-xs text-muted-foreground mb-3">{description}</p>
+
         <div className="flex items-center gap-2 p-3 rounded-[10px] border border-green-200 bg-green-50">
           <div
             className={`flex items-center gap-2 flex-1 min-w-0 ${
@@ -70,6 +75,8 @@ export default function DocumentUploadCard({
               <p className="text-xs text-green-600">업로드 완료</p>
             </div>
           </div>
+
+          {/* 미리보기(이미지만) / 삭제 버튼 */}
           <div className="flex items-center gap-1 shrink-0">
             {isImage && (
               <button
@@ -99,6 +106,7 @@ export default function DocumentUploadCard({
           />
         )}
 
+        {/* 서류가 있어도 재업로드(교체) 가능 */}
         <div className="mt-3">
           <FileUpload
             label="파일 업로드"
@@ -113,6 +121,7 @@ export default function DocumentUploadCard({
     );
   }
 
+  // 서류가 없는 경우: 기본 업로드 영역
   return (
     <div className="rounded-[10px] border border-beige-dark bg-white p-5">
       <h4 className="font-semibold text-brown-dark text-sm mb-1">{title}</h4>

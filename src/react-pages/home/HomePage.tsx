@@ -7,11 +7,14 @@ import { Star, ArrowRight, Check, MessageCircle, Send } from "lucide-react";
 import { fetchAcademies } from "@/api/academy/academies";
 import type { Academy } from "@/data/academies";
 
+// AcademySwiper 지연 로딩 — 첫 로딩 속도 개선
 const AcademySwiper = lazy(() => import("./components/AcademySwiper"));
 
+// 홈페이지 메인 컴포넌트
 function HomePage() {
-  const [aiKeyword, setAiKeyword] = useState("");
+  const [aiKeyword, setAiKeyword] = useState(""); // AI 상담 입력값
 
+  // 키워드를 URL 파라미터로 인코딩하여 채팅 페이지로 이동
   function handleAiSubmit() {
     if (!aiKeyword.trim()) return;
     window.location.href = `/chat?q=${encodeURIComponent(aiKeyword.trim())}`;
@@ -22,6 +25,7 @@ function HomePage() {
     queryFn: fetchAcademies,
   });
 
+  // .reveal 요소가 화면에 진입하면 페이드인 애니메이션 실행
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -46,10 +50,13 @@ function HomePage() {
 
   return (
     <>
-      {/* HERO */}
+      {/* ───────────────────────────────────────────
+          히어로 섹션: 메인 문구 + AI 상담 입력 + 견적 카드
+      ─────────────────────────────────────────── */}
       <section className="bg-cream pt-[120px] pb-14 px-6">
         <div className="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-[60px] items-center">
           <div className="relative">
+            {/* 수수료 0원 뱃지 */}
             <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3.5 py-1.5 rounded-full text-[0.8rem] font-semibold mb-5">
               <Star size={14} fill="currentColor" />
               수수료 0원, 가격 완전 공개
@@ -67,11 +74,12 @@ function HomePage() {
               <br />
               비교하고, 직접 고르세요.
             </p>
-            {/* AI 상담 */}
+            {/* AI 상담 입력 카드 */}
             <div
               className="mt-9 animate-fade-in-up max-w-[440px] bg-white rounded-[16px] p-5 border border-beige-dark shadow-sm relative overflow-hidden"
               style={{ animationDelay: "0.3s" }}
             >
+              {/* 카드 상단 컬러 바 */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-terracotta to-accent-green" />
               <div className="flex items-center gap-2.5 mb-3">
                 <div className="w-6 h-6 rounded-full bg-gradient-to-br from-terracotta to-amber-400 flex items-center justify-center shrink-0">
@@ -108,7 +116,7 @@ function HomePage() {
             </div>
           </div>
 
-          {/* Hero Visual - Quote CTA Card */}
+          {/* 히어로 오른쪽: 무료 견적 안내 카드 */}
           <div
             className="relative flex justify-center items-center animate-fade-in-up"
             style={{ animationDelay: "0.2s" }}
@@ -129,6 +137,7 @@ function HomePage() {
                 어학원, 기간, 기숙사를 선택하면 예상 비용이 바로 나와요.
               </p>
 
+              {/* 핵심 포인트 3가지 */}
               <div className="flex flex-col gap-2.5 mb-6">
                 {["수수료 0원 — 학생 부담 제로", "가격 100% 공개 — 숨김 비용 없음", "상담 없이 바로 확인 가능"].map(
                   (point) => (
@@ -160,7 +169,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* TRUST BAR */}
+      {/* 신뢰 지표 바: 수수료 0원, 가격 공개 등 핵심 가치 */}
       <div className="bg-white py-10 px-6 border-y border-beige-dark">
         <div className="max-w-[1200px] mx-auto flex justify-center gap-6 md:gap-12 flex-wrap">
           {["수수료 0원", "가격 100% 공개", "검증된 어학원만", "장단점 솔직 비교"].map((text) => (
@@ -172,7 +181,7 @@ function HomePage() {
         </div>
       </div>
 
-      {/* ACADEMIES SECTION */}
+      {/* 인기 어학원 섹션: 최대 9개 슬라이더 */}
       <section className="py-20 px-6 bg-cream">
         <div className="max-w-[1200px] mx-auto md:px-7">
           <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
@@ -201,7 +210,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* WHY SECTION */}
+      {/* 바위로드 차별점 섹션 */}
       <section className="py-20 px-6 bg-white">
         <div className="max-w-[1200px] mx-auto">
           <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
@@ -213,6 +222,7 @@ function HomePage() {
           <p className="mt-3 text-base leading-[1.7] text-brown max-w-[600px]">
             어학원 선택부터 출국까지, 필요한 정보를 한곳에 모았습니다.
           </p>
+          {/* 가격 공개 / 솔직 비교 / 수수료 제로 카드 */}
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
@@ -251,7 +261,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* PROCESS SECTION */}
+      {/* 수속 절차 섹션: 4단계 */}
       <section className="py-20 px-6 bg-cream">
         <div className="max-w-[1200px] mx-auto">
           <div className="inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3 py-1.5 rounded-2xl text-[0.75rem] font-semibold uppercase tracking-wider mb-3">
@@ -310,7 +320,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 바위로드와 함께 CTA */}
+      {/* CTA 섹션: 바위로드 서포트 소개 */}
       <section className="py-24 px-6 bg-white text-center">
         <div className="max-w-[720px] mx-auto">
           <div className="reveal inline-flex items-center gap-1.5 bg-green-badge text-accent-green-dark px-3.5 py-1.5 rounded-full text-[0.78rem] font-semibold mb-6">

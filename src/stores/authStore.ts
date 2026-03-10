@@ -4,18 +4,21 @@ import { supabase, supabaseConfigured } from "@/lib/supabase";
 
 export type UserRole = "ADMIN" | "STUDENT";
 
+// DB members 테이블 회원 프로필 (Supabase Auth 유저와 별도 관리)
 export interface Member {
-  id: string;
+  id: string; // Supabase Auth user.id와 동일
   name: string | null;
   phone: string | null;
   role: UserRole;
 }
 
+// 전역 인증 상태 (nanostores atom)
 export const $user = atom<User | null>(null);
 export const $session = atom<Session | null>(null);
-export const $loading = atom(true);
+export const $loading = atom(true); // 초기 인증 확인 중 true
 export const $member = atom<Member | null>(null);
 
+// members 테이블에서 회원 프로필 조회 후 $member에 저장
 async function fetchMember(userId: string) {
   if (!supabaseConfigured) return;
   const { data } = await supabase
@@ -28,7 +31,7 @@ async function fetchMember(userId: string) {
   }
 }
 
-// Initialize auth state
+// 앱 최초 로드 시 인증 상태 초기화
 if (supabaseConfigured) {
   supabase.auth.getSession().then(({ data: { session } }) => {
     $session.set(session);
@@ -49,9 +52,11 @@ if (supabaseConfigured) {
     }
   });
 } else {
+  // 환경변수 미설정 시에도 UI 블로킹 방지
   $loading.set(false);
 }
 
+// 회원가입
 export async function signUp(
   email: string,
   password: string,
@@ -67,6 +72,7 @@ export async function signUp(
   return { error: error?.message ?? null };
 }
 
+// 로그인. STUDENT 역할만 허용하며 ADMIN 계정은 즉시 로그아웃 처리
 export async function signIn(
   email: string,
   password: string,
@@ -90,11 +96,13 @@ export async function signIn(
   return { error: null };
 }
 
+// 로그아웃 후 회원 프로필 상태 초기화
 export async function signOut(): Promise<void> {
   await supabase.auth.signOut();
   $member.set(null);
 }
 
+// 비밀번호 변경
 export async function changePassword(
   newPassword: string,
 ): Promise<{ error: string | null }> {
@@ -104,6 +112,7 @@ export async function changePassword(
   return { error: error?.message ?? null };
 }
 
+// delete_own_account RPC로 회원 데이터 삭제 후 자동 로그아웃
 export async function deleteAccount(): Promise<{ error: string | null }> {
   if (!supabaseConfigured)
     return { error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
@@ -114,6 +123,7 @@ export async function deleteAccount(): Promise<{ error: string | null }> {
   return { error: null };
 }
 
+// 이름+전화번호로 이메일 찾기. 마스킹된 형태로 반환 (예: ab***@gmail.com)
 export async function findEmail(
   name: string,
   phone: string,
@@ -130,6 +140,7 @@ export async function findEmail(
   return { maskedEmail: data[0].masked_email, error: null };
 }
 
+// 이름+이메일로 회원 검증 후 비밀번호 재설정 이메일 발송
 export async function sendPasswordResetEmail(
   name: string,
   email: string,

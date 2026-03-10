@@ -1,11 +1,13 @@
 import { supabase, supabaseConfigured } from "@/lib/supabase";
 import type { EnrollmentDocument } from "@/types/enrollment";
 
+// Presigned URL로 파일을 Cloudflare R2에 직접 업로드
 export async function uploadDocumentToR2(
   file: File,
   uploadUrl: string
 ): Promise<{ error: string | null }> {
   try {
+    // Presigned URL은 PUT 메서드로 파일을 직접 전송해야 함
     const response = await fetch(uploadUrl, {
       method: "PUT",
       headers: { "Content-Type": file.type },
@@ -22,16 +24,18 @@ export async function uploadDocumentToR2(
   }
 }
 
+// enrollment_documents 테이블 저장 파라미터
 interface SaveDocumentParams {
   enrollment_id: string;
   document_type: string;
-  uploaded_by: string;
+  uploaded_by: string; // "STUDENT" | "ADMIN"
   file_name: string;
   file_url: string;
-  file_size: number;
+  file_size: number; // 단위: 바이트
   mime_type: string;
 }
 
+// 파일 업로드 완료 후 DB에 문서 메타데이터 기록 (실제 파일은 R2에 저장)
 export async function saveDocumentRecord(
   params: SaveDocumentParams
 ): Promise<{ data: EnrollmentDocument | null; error: string | null }> {

@@ -3,20 +3,23 @@ import { FileTextIcon, DownloadIcon, EyeIcon } from "lucide-react";
 import type { EnrollmentDocument } from "@/types/enrollment";
 import ImagePreviewModal from "./ImagePreviewModal";
 
-const IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"]; // 이미지로 간주할 MIME 타입
 
 interface DocumentViewCardProps {
-  title: string;
-  description: string;
-  document: EnrollmentDocument | undefined;
+  title: string; // 카드 제목 (예: "입학허가서")
+  description: string; // 카드 설명
+  document: EnrollmentDocument | undefined; // 담당자가 아직 업로드하지 않았으면 undefined
 }
 
+// 파일 크기를 B / KB / MB 형식으로 변환
 function formatFileSize(bytes: number) {
   if (bytes < 1024) return `${bytes}B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
 }
 
+// 담당자가 업로드한 서류를 학생이 열람하는 카드
+// 이미지: 모달 미리보기, PDF 등: 새 탭에서 열기
 export default function DocumentViewCard({
   title,
   description,
@@ -24,8 +27,9 @@ export default function DocumentViewCard({
 }: DocumentViewCardProps) {
   const [previewOpen, setPreviewOpen] = useState(false);
 
-  const isImage = document && IMAGE_MIME_TYPES.includes(document.mime_type);
+  const isImage = document && IMAGE_MIME_TYPES.includes(document.mime_type); // 눈 아이콘 vs 다운로드 아이콘 결정
 
+  // 이미지: 모달 열기, 그 외: 새 탭에서 열기
   function handleView() {
     if (!document) return;
 
@@ -43,6 +47,7 @@ export default function DocumentViewCard({
 
       {document ? (
         <div className="space-y-2">
+          {/* 이미지면 행 전체 클릭 가능 */}
           <div
             className={`flex items-center gap-3 p-3 rounded-[10px] border border-beige-dark bg-beige/30 ${
               isImage ? "cursor-pointer hover:bg-beige/50 transition-colors" : ""
@@ -56,10 +61,11 @@ export default function DocumentViewCard({
                 {formatFileSize(document.file_size)} · {new Date(document.created_at).toLocaleDateString("ko-KR")}
               </p>
             </div>
+            {/* 이미지: 눈 아이콘, 그 외: 다운로드 아이콘 */}
             <button
               type="button"
               onClick={(event) => {
-                event.stopPropagation();
+                event.stopPropagation(); // 부모 div 클릭 이벤트 중복 방지
                 handleView();
               }}
               className="p-2 rounded-full hover:bg-beige transition-colors"
