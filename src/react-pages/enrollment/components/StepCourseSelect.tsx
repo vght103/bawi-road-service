@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { CalendarIcon, CheckIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,34 +11,24 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import type { Academy } from "@/data/academies";
+import type { EnrollmentFormValues } from "../enrollmentSchema";
 
 interface StepCourseSelectProps {
-  academy: Academy | undefined;
-  courseIndex: number | "";
-  onCourseSelect: (index: number) => void;
-  dormIndex: number | "";
-  onDormSelect: (index: number) => void;
-  weeks: string;
-  onWeeksChange: (weeks: string) => void;
-  startDate: Date | undefined;
-  onStartDateChange: (date: Date | undefined) => void;
-  errors: Record<string, string>;
+  academy: Academy | undefined; // 1단계에서 선택된 어학원
 }
 
-export default function StepCourseSelect({
-  academy,
-  courseIndex,
-  onCourseSelect,
-  dormIndex,
-  onDormSelect,
-  weeks,
-  onWeeksChange,
-  startDate,
-  onStartDateChange,
-  errors,
-}: StepCourseSelectProps) {
-  const [calendarOpen, setCalendarOpen] = useState(false);
+// 수속 신청 2단계: 코스·기숙사·일정 선택
+// 어학원 미선택 시 코스·기숙사 영역 비활성화 안내 표시
+export default function StepCourseSelect({ academy }: StepCourseSelectProps) {
+  const { watch, setValue, formState: { errors } } = useFormContext<EnrollmentFormValues>();
+  const [calendarOpen, setCalendarOpen] = useState(false); // 날짜 선택 달력 열림/닫힘
 
+  const courseIndex = watch("courseIndex");
+  const dormIndex = watch("dormIndex");
+  const weeks = watch("weeks");
+  const startDate = watch("startDate");
+
+  // 수업 시작 가능한 최소 날짜: 오늘로부터 7일 후
   const minDate = new Date();
   minDate.setDate(minDate.getDate() + 7);
 
@@ -52,12 +43,12 @@ export default function StepCourseSelect({
               <button
                 type="button"
                 key={course.name}
-                onClick={() => onCourseSelect(index)}
+                onClick={() => setValue("courseIndex", index, { shouldValidate: true })}
                 className={cn(
                   "w-full text-left p-3.5 rounded-[10px] border transition-all",
                   courseIndex === index
-                    ? "border-primary bg-primary/5 ring-1 ring-primary/20"
-                    : "border-input bg-white hover:border-muted-foreground/30"
+                    ? "border-primary bg-primary/5 ring-1 ring-primary/20"   // 선택됨
+                    : "border-input bg-white hover:border-muted-foreground/30" // 미선택
                 )}
               >
                 <div className="flex items-center gap-2 mb-1">
@@ -70,6 +61,7 @@ export default function StepCourseSelect({
                   )}
                 </div>
                 <p className="text-[0.78rem] text-muted-foreground">{course.desc}</p>
+                {/* 수업 구성: 1:1, 그룹, 선택 수업 시간 */}
                 <div className="flex gap-1.5 mt-1.5 text-[0.7rem]">
                   <span className="px-1.5 py-0.5 bg-cream border border-input rounded">
                     1:1 {course.manToMan}시간
@@ -91,10 +83,10 @@ export default function StepCourseSelect({
             어학원을 먼저 선택해주세요
           </div>
         )}
-        {errors.course && <p className="text-terracotta text-[0.75rem]">{errors.course}</p>}
+        {errors.courseIndex && <p className="text-terracotta text-[0.75rem]">{errors.courseIndex.message}</p>}
       </div>
 
-      {/* 기숙사 선택 */}
+      {/* 기숙사 타입 선택 */}
       <div className="space-y-1.5">
         <label className="text-brown-dark font-semibold text-sm required">기숙사 타입</label>
         {academy ? (
@@ -103,12 +95,12 @@ export default function StepCourseSelect({
               <button
                 type="button"
                 key={dorm.type}
-                onClick={() => onDormSelect(index)}
+                onClick={() => setValue("dormIndex", index, { shouldValidate: true })}
                 className={cn(
                   "p-3.5 rounded-[10px] border transition-all text-center",
                   dormIndex === index
-                    ? "border-primary bg-primary/5 ring-1 ring-primary/20"
-                    : "border-input bg-white hover:border-muted-foreground/30"
+                    ? "border-primary bg-primary/5 ring-1 ring-primary/20"   // 선택됨
+                    : "border-input bg-white hover:border-muted-foreground/30" // 미선택
                 )}
               >
                 <div className="font-bold text-brown-dark text-sm">{dorm.type}</div>
@@ -122,10 +114,10 @@ export default function StepCourseSelect({
             어학원을 먼저 선택해주세요
           </div>
         )}
-        {errors.dorm && <p className="text-terracotta text-[0.75rem]">{errors.dorm}</p>}
+        {errors.dormIndex && <p className="text-terracotta text-[0.75rem]">{errors.dormIndex.message}</p>}
       </div>
 
-      {/* 수업 시작일 */}
+      {/* 수업 시작 희망일 선택 */}
       <div className="space-y-1.5">
         <label className="text-brown-dark font-semibold text-sm required">수업 시작 희망일</label>
         <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
@@ -143,7 +135,7 @@ export default function StepCourseSelect({
                     year: "numeric",
                     month: "long",
                     day: "numeric",
-                    weekday: "short",
+                    weekday: "short", // 요일 포함 (예: "2024년 3월 4일 (월)")
                   })
                 : "날짜를 선택해주세요"}
             </Button>
@@ -153,30 +145,30 @@ export default function StepCourseSelect({
               mode="single"
               selected={startDate}
               onSelect={(date) => {
-                onStartDateChange(date);
-                setCalendarOpen(false);
+                setValue("startDate", date as Date, { shouldValidate: true });
+                setCalendarOpen(false); // 날짜 선택 후 달력 닫기
               }}
-              disabled={(date) => date < minDate}
+              disabled={(date) => date < minDate} // 7일 이내 선택 불가
             />
           </PopoverContent>
         </Popover>
-        {errors.startDate && <p className="text-terracotta text-[0.75rem]">{errors.startDate}</p>}
+        {errors.startDate && <p className="text-terracotta text-[0.75rem]">{errors.startDate.message}</p>}
         <p className="text-[0.72rem] text-muted-foreground">
           대부분의 어학원은 매주 월요일 입학이 가능합니다.
         </p>
       </div>
 
-      {/* 연수 기간 */}
+      {/* 연수 기간 입력 */}
       <div className="space-y-1.5">
         <label className="text-brown-dark font-semibold text-sm required">연수 기간 (주)</label>
         <div className="relative">
           <Input
             type="text"
-            inputMode="numeric"
+            inputMode="numeric" // 모바일에서 숫자 키패드
             value={weeks}
             onChange={(event) => {
-              const value = event.target.value.replace(/[^0-9]/g, "");
-              onWeeksChange(value);
+              const value = event.target.value.replace(/[^0-9]/g, ""); // 숫자만 허용
+              setValue("weeks", value);
             }}
             placeholder="예: 8"
             aria-invalid={!!errors.weeks}
@@ -186,16 +178,18 @@ export default function StepCourseSelect({
             주
           </span>
         </div>
-        {errors.weeks && <p className="text-terracotta text-[0.75rem]">{errors.weeks}</p>}
+        {errors.weeks && <p className="text-terracotta text-[0.75rem]">{errors.weeks.message}</p>}
+
+        {/* 자주 선택하는 기간 퀵 버튼 */}
         <div className="flex gap-2 mt-2">
           {[4, 8, 12, 16, 24].map((weekOption) => (
             <Button
               type="button"
               key={weekOption}
-              variant={weeks === String(weekOption) ? "default" : "secondary"}
+              variant={weeks === String(weekOption) ? "default" : "secondary"} // 현재 입력값과 동일하면 강조
               size="sm"
               className="rounded-full"
-              onClick={() => onWeeksChange(String(weekOption))}
+              onClick={() => setValue("weeks", String(weekOption))}
             >
               {weekOption}주
             </Button>
