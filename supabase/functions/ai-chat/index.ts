@@ -7,6 +7,7 @@ const ALLOWED_ORIGINS = [
   "https://bawiroad.com",
   "https://www.bawiroad.com",
   "https://bawi-road-service.pages.dev",
+  "https://dev.bawi-road-service.pages.dev",
 ];
 
 const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY")!;
@@ -137,23 +138,25 @@ async function getAcademySummary(): Promise<string> {
   const supabase = getServiceClient();
   const { data } = await supabase
     .from("academies")
-    .select("id, name, region, academy_system, tags, established_year, desc, courses, dormitories, facilities, pros, cons, recommended_for, korean_ratio, capacity, location_detail, description")
+    .select(
+      "id, name, region, academy_system, tags, established_year, desc, courses, dormitories, facilities, pros, cons, recommended_for, korean_ratio, capacity, location_detail, description",
+    )
     .order("id");
 
   if (!data || data.length === 0) return "어학원 데이터 없음";
 
-  cachedAcademyData = data.map((academy) => ({ id: academy.id, name: academy.name }));
+  cachedAcademyData = data.map((academy: CachedAcademy) => ({ id: academy.id, name: academy.name }));
   cachedFullAcademies = data as CachedAcademy[];
 
   cachedSummary = data
     .map(
-      (academy) =>
+      (academy: CachedAcademy) =>
         `- ${academy.name} (ID: ${academy.id}) | ${academy.region} | ${academy.academy_system} | 설립: ${academy.established_year ?? "정보없음"} | Tags: ${(academy.tags ?? []).join(", ")}`,
     )
     .join("\n");
   cacheTime = now;
 
-  return cachedSummary;
+  return cachedSummary ?? "어학원 데이터 없음";
 }
 
 // ===== 어학원 검색 (키워드 기반) =====
@@ -238,7 +241,9 @@ function buildAcademyDetailContext(mentioned: Array<{ id: string; name: string }
     lines.push("");
     lines.push("수업 코스:");
     for (const course of target.courses) {
-      lines.push(`• ${course.name} (${course.category}) — 1:1 ${course.manToMan}시간, 그룹 ${course.group}시간, 선택 ${course.optional}시간 | ${course.desc}`);
+      lines.push(
+        `• ${course.name} (${course.category}) — 1:1 ${course.manToMan}시간, 그룹 ${course.group}시간, 선택 ${course.optional}시간 | ${course.desc}`,
+      );
     }
   }
 
@@ -299,12 +304,35 @@ async function searchNewestAcademies(limit = 3) {
 // ===== 어학원 관련 질문 감지 =====
 function isAcademyRelated(message: string): boolean {
   const academyKeywords = [
-    "어학원", "학원", "추천", "학교", "코스", "기숙사", "연수",
-    "스파르타", "세미스파르타", "자율", "ESL", "IELTS", "TOEIC",
-    "세부", "바기오", "클락", "마닐라",
-    "시설", "신축", "깨끗", "캠퍼스",
-    "1:1", "맨투맨", "그룹수업",
-    "비용", "가격", "얼마", "견적", "페소",
+    "어학원",
+    "학원",
+    "추천",
+    "학교",
+    "코스",
+    "기숙사",
+    "연수",
+    "스파르타",
+    "세미스파르타",
+    "자율",
+    "ESL",
+    "IELTS",
+    "TOEIC",
+    "세부",
+    "바기오",
+    "클락",
+    "마닐라",
+    "시설",
+    "신축",
+    "깨끗",
+    "캠퍼스",
+    "1:1",
+    "맨투맨",
+    "그룹수업",
+    "비용",
+    "가격",
+    "얼마",
+    "견적",
+    "페소",
   ];
   const lowerMsg = message.toLowerCase();
   return academyKeywords.some((keyword) => lowerMsg.includes(keyword.toLowerCase()));
@@ -333,8 +361,9 @@ function buildSystemPrompt(academySummary?: string): string {
 - 주제 변경 시 빈 줄로 문단 구분
 - 나열: "• " 불릿 + 항목당 줄바꿈
 - 면책 문구: "※ 본 답변은 AI가 생성한 답변으로, 바위로드의 공식적인 의견이 아닙니다." 이 문구만 사용. 다른 면책 문구 금지
+- 면책 문구는 매번 붙이지 않는다. DB 데이터 기반으로 확실히 답변할 수 있는 경우(어학원 정보, 코스, 기숙사, 시설 등)에는 면책 문구를 생략한다. DB에 없는 정보이거나 AI가 추론/일반론으로 답변하는 경우에만 면책 문구를 붙인다.
 - 마크다운/JSON 사용 금지. 순수 텍스트 + 줄바꿈만
-- 구조: 본문(핵심 정보) → 안내/CTA → 면책 문구
+- 구조: 본문(핵심 정보) → 안내/CTA → (불확실한 답변일 때만) 면책 문구
 - 금지: "~궁금하시군요", "~공감합니다", "~에 대해 알려드릴게요" 같은 인사/공감/도입부 문장. 첫 문장부터 바로 핵심 정보를 전달`;
 
   if (academySummary) {
@@ -470,11 +499,7 @@ Deno.serve(async (req) => {
     // 2. DB 레이트 리밋
     const rateLimitOk = await checkRateLimit(clientIp);
     if (!rateLimitOk) {
-      return jsonResponse(
-        { error: "요청이 너무 많습니다. 잠시 후 다시 시도해주세요." },
-        429,
-        corsHeaders,
-      );
+      return jsonResponse({ error: "요청이 너무 많습니다. 잠시 후 다시 시도해주세요." }, 429, corsHeaders);
     }
 
     // 3. 메시지 검증
@@ -507,7 +532,10 @@ Deno.serve(async (req) => {
     // 어학원 상세 컨텍스트가 있으면 시스템 메시지로 주입
     const messagesForOpenAI = academyDetailContext
       ? [
-          { role: "system" as const, content: `아래는 사용자가 언급한 어학원의 상세 DB 데이터입니다. 이 데이터를 기반으로 정확하게 답변하세요.\n\n${academyDetailContext}` },
+          {
+            role: "system" as const,
+            content: `아래는 사용자가 언급한 어학원의 상세 DB 데이터입니다. 이 데이터를 기반으로 정확하게 답변하세요.\n\n${academyDetailContext}`,
+          },
           ...recentMessages,
         ]
       : recentMessages;
@@ -584,7 +612,9 @@ Deno.serve(async (req) => {
           const savedComponents = [
             ...(componentResults.length > 0 ? [{ type: "academy_cards", data: componentResults }] : []),
             ...(hasPriceKeyword ? [{ type: "cta_button", data: { label: "무료 견적 받기", link: "/quote" } }] : []),
-            ...(mentionedAcademies.length > 0 || hasConsultKeyword ? [{ type: "cta_button", data: { label: "1:1 상담 신청", link: "/inquiry" } }] : []),
+            ...(mentionedAcademies.length > 0 || hasConsultKeyword
+              ? [{ type: "cta_button", data: { label: "1:1 상담 신청", link: "/inquiry" } }]
+              : []),
           ];
           const fullMessages = [
             ...messages.map((msg: { role: string; content: string; timestamp?: string }) => ({
