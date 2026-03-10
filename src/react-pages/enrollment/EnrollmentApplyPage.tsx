@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useForm, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, CalendarIcon } from "lucide-react";
 import { fetchAcademies } from "@/api/academy/academies";
 import { createIsland } from "@/lib/createIsland";
@@ -8,85 +10,79 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { createEnrollment } from "@/api/enrollment/enrollments";
 import type { EnrollmentInsert } from "@/types/enrollment";
+import { enrollmentSchema, STEP_FIELDS } from "./enrollmentSchema";
+import type { EnrollmentFormValues } from "./enrollmentSchema";
 import EnrollmentStepper from "./components/EnrollmentStepper";
 import StepAcademySelect from "./components/StepAcademySelect";
 import StepCourseSelect from "./components/StepCourseSelect";
 import StepTermsAgreement from "./components/StepTermsAgreement";
 import LoadingOverlay from "@/components/LoadingOverlay";
 
+// 어학원 선택 → 상세 선택(코스·기숙사·일정) → 약관 동의 순서로 진행
 const STEPS = [
   { label: "어학원 선택", description: "관심 어학원" },
   { label: "상세 선택", description: "코스·기숙사·일정" },
   { label: "약관 동의", description: "이용약관·환불규정" },
 ];
 
+// 3단계 폼(어학원 선택 → 상세 선택 → 약관 동의)을 통해 수속을 신청하는 페이지
 function EnrollmentApplyPage() {
-  const source = new URLSearchParams(window.location.search).get("from");
-
+  const source = new URLSearchParams(window.location.search).get("from"); // 유입 경로 추적
   const { user } = useAuth();
+
   const { data: academies = [], isLoading: academiesLoading } = useQuery<Academy[]>({
     queryKey: ["academies"],
     queryFn: fetchAcademies,
   });
 
-  const [currentStep, setCurrentStep] = useState(0);
+  const form = useForm<EnrollmentFormValues>({
+    resolver: zodResolver(enrollmentSchema),
+    defaultValues: {
+      academyId: "",
+      weeks: "",
+      termsAgreed: false as never, // 초기값은 false, 스키마는 literal(true)
+      refundAgreed: false as never,
+      studentNote: "",
+    },
+  });
 
-  // Step 1
-  const [academyId, setAcademyId] = useState("");
-  // Step 2
-  const [courseIndex, setCourseIndex] = useState<number | "">("");
-  const [dormIndex, setDormIndex] = useState<number | "">("");
-  const [weeks, setWeeks] = useState("");
-  const [startDate, setStartDate] = useState<Date | undefined>();
-  // Step 3
-  const [termsAgreed, setTermsAgreed] = useState(false);
-  const [refundAgreed, setRefundAgreed] = useState(false);
-  const [studentNote, setStudentNote] = useState("");
+  const { watch, trigger, resetField, getValues, handleSubmit: rhfHandleSubmit } = form;
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [currentStep, setCurrentStep] = useState(0); // 0: 어학원 선택, 1: 상세 선택, 2: 약관 동의
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
-  const [createdId, setCreatedId] = useState<string | null>(null);
+  const [createdId, setCreatedId] = useState<string | null>(null); // 생성된 수속 ID
+
+  const academyId = watch("academyId");
+  const courseIndex = watch("courseIndex");
+  const dormIndex = watch("dormIndex");
+  const weeks = watch("weeks");
+  const startDate = watch("startDate");
+  const termsAgreed = watch("termsAgreed");
+  const refundAgreed = watch("refundAgreed");
 
   const selectedAcademy = academies.find((academy) => academy.id === academyId);
-  const selectedCourse = selectedAcademy && courseIndex !== "" ? selectedAcademy.courses[courseIndex] : null;
-  const selectedDorm = selectedAcademy && dormIndex !== "" ? selectedAcademy.dormitories[dormIndex] : null;
+  const selectedCourse = selectedAcademy && courseIndex !== undefined ? selectedAcademy.courses[courseIndex] : null;
+  const selectedDorm = selectedAcademy && dormIndex !== undefined ? selectedAcademy.dormitories[dormIndex] : null;
   const weeksNum = Number(weeks) || 0;
 
+  // 수업 종료 예상일 (시작일 + 연수 주 수 × 7일)
   const endDate =
     startDate && weeksNum > 0
       ? new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + weeksNum * 7)
       : null;
 
+  // 어학원이 바뀌면 코스·기숙사 선택 초기화
   useEffect(() => {
-    setCourseIndex("");
-    setDormIndex("");
-  }, [academyId]);
+    resetField("courseIndex");
+    resetField("dormIndex");
+  }, [academyId, resetField]);
 
-  function validateStep(step: number) {
-    const errs: Record<string, string> = {};
-
-    if (step === 0) {
-      if (!academyId) errs.academy = "어학원을 선택해주세요.";
-    } else if (step === 1) {
-      if (courseIndex === "") errs.course = "코스를 선택해주세요.";
-      if (dormIndex === "") errs.dorm = "기숙사 타입을 선택해주세요.";
-      if (!startDate) errs.startDate = "수업 시작 희망일을 선택해주세요.";
-      if (!weeks.trim()) errs.weeks = "연수 기간을 입력해주세요.";
-      else if (Number(weeks) < 1 || Number(weeks) > 52) errs.weeks = "1~52주 사이로 입력해주세요.";
-    } else if (step === 2) {
-      if (!termsAgreed) errs.terms = "이용약관에 동의해주세요.";
-      if (!refundAgreed) errs.refund = "환불 규정에 동의해주세요.";
-    }
-
-    return errs;
-  }
-
-  function handleNext() {
-    const errs = validateStep(currentStep);
-    setErrors(errs);
-    if (Object.keys(errs).length > 0) return;
+  // 유효성 검사 통과 시 다음 단계로 이동
+  async function handleNext() {
+    const valid = await trigger(STEP_FIELDS[currentStep]);
+    if (!valid) return;
     setCurrentStep((prev) => Math.min(prev + 1, STEPS.length - 1));
   }
 
@@ -94,30 +90,32 @@ function EnrollmentApplyPage() {
     setCurrentStep((prev) => Math.max(prev - 1, 0));
   }
 
-  async function handleSubmit() {
-    const errs = validateStep(2);
-    setErrors(errs);
+  // 최종 제출: 유효성 검사 → 서버 전송 → 완료 화면 전환
+  async function onSubmit(values: EnrollmentFormValues) {
     setSubmitError(null);
-    if (Object.keys(errs).length > 0) return;
 
     if (!user) {
       setSubmitError("로그인이 필요합니다.");
       return;
     }
 
+    const academy = academies.find((academy) => academy.id === values.academyId);
+    const course = academy?.courses[values.courseIndex];
+    const dorm = academy?.dormitories[values.dormIndex];
+
     setSubmitting(true);
     try {
       const payload: EnrollmentInsert = {
         user_id: user.id,
-        academy_id: academyId,
-        academy_name: selectedAcademy!.name,
-        course_name: selectedCourse!.name,
-        dormitory_type: selectedDorm!.type,
-        duration_weeks: weeksNum,
-        start_date: startDate!.toISOString().split("T")[0],
-        terms_agreed: termsAgreed,
-        refund_policy_agreed: refundAgreed,
-        student_note: studentNote || null,
+        academy_id: values.academyId,
+        academy_name: academy!.name,
+        course_name: course!.name,
+        dormitory_type: dorm!.type,
+        duration_weeks: Number(values.weeks),
+        start_date: values.startDate.toISOString().split("T")[0], // "YYYY-MM-DD" 형식
+        terms_agreed: values.termsAgreed,
+        refund_policy_agreed: values.refundAgreed,
+        student_note: values.studentNote || null,
         source,
       };
 
@@ -137,6 +135,14 @@ function EnrollmentApplyPage() {
     }
   }
 
+  // handleSubmit 래퍼: 마지막 단계 검증 후 onSubmit 호출
+  async function handleFormSubmit() {
+    const valid = await trigger(STEP_FIELDS[2]);
+    if (!valid) return;
+    await rhfHandleSubmit(onSubmit)();
+  }
+
+  // 로그인하지 않은 경우
   if (!user) {
     return (
       <div className="bg-cream min-h-[calc(100vh-180px)] flex items-center justify-center">
@@ -152,6 +158,7 @@ function EnrollmentApplyPage() {
                   </a>
                 </Button>
                 <Button asChild>
+                  {/* 로그인 후 수속 신청 페이지로 돌아올 수 있도록 from 파라미터 포함 */}
                   <a href={"/login?from=" + encodeURIComponent("/enrollment/apply")} className="no-underline">
                     로그인
                   </a>
@@ -168,7 +175,10 @@ function EnrollmentApplyPage() {
     return <LoadingOverlay visible />;
   }
 
+  // 신청 완료 후 완료 안내 화면
   if (submitted) {
+    const submittedAcademy = academies.find((academy) => academy.id === getValues("academyId"));
+
     return (
       <div className="bg-cream min-h-[calc(100vh-180px)] flex items-center justify-center">
         <div className="px-6 py-12">
@@ -179,7 +189,7 @@ function EnrollmentApplyPage() {
               </div>
               <h2 className="text-[1.5rem] font-extrabold text-brown-dark mb-3">수속 신청이 완료되었습니다</h2>
               <p className="text-brown text-[0.9rem] leading-relaxed mb-2">
-                <span className="font-bold text-brown-dark">{selectedAcademy?.name}</span>
+                <span className="font-bold text-brown-dark">{submittedAcademy?.name}</span>
                 <br />
                 수속 신청이 정상적으로 접수되었습니다.
               </p>
@@ -209,7 +219,7 @@ function EnrollmentApplyPage() {
     <div className="bg-cream min-h-screen">
       <LoadingOverlay visible={submitting} />
 
-      {/* Breadcrumb */}
+      {/* 브레드크럼 (홈 > 수속 신청) */}
       <div className="pt-20 bg-white border-b border-beige-dark">
         <div className="max-w-[1200px] mx-auto px-6 py-3">
           <div className="flex items-center gap-2 text-sm text-brown">
@@ -223,8 +233,8 @@ function EnrollmentApplyPage() {
       </div>
 
       <main className="max-w-[1200px] mx-auto px-6 py-8">
+        {/* 좌측: 신청 폼 (3/5), 우측: 신청 요약 (2/5) */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Left: Form */}
           <div className="lg:col-span-3">
             <div className="bg-white rounded-[20px] p-6 md:p-8 border border-beige-dark">
               <h1 className="text-[1.5rem] md:text-[1.8rem] font-extrabold text-brown-dark tracking-tight mb-1">
@@ -234,44 +244,14 @@ function EnrollmentApplyPage() {
 
               <EnrollmentStepper currentStep={currentStep} steps={STEPS} />
 
-              {/* Step Content */}
-              {currentStep === 0 && (
-                <StepAcademySelect
-                  academies={academies}
-                  academyId={academyId}
-                  onSelect={setAcademyId}
-                  error={errors.academy}
-                />
-              )}
+              <FormProvider {...form}>
+                {currentStep === 0 && <StepAcademySelect academies={academies} />}
 
-              {currentStep === 1 && (
-                <StepCourseSelect
-                  academy={selectedAcademy}
-                  courseIndex={courseIndex}
-                  onCourseSelect={setCourseIndex}
-                  dormIndex={dormIndex}
-                  onDormSelect={setDormIndex}
-                  weeks={weeks}
-                  onWeeksChange={setWeeks}
-                  startDate={startDate}
-                  onStartDateChange={setStartDate}
-                  errors={errors}
-                />
-              )}
+                {currentStep === 1 && <StepCourseSelect academy={selectedAcademy} />}
 
-              {currentStep === 2 && (
-                <StepTermsAgreement
-                  termsAgreed={termsAgreed}
-                  onTermsChange={setTermsAgreed}
-                  refundAgreed={refundAgreed}
-                  onRefundChange={setRefundAgreed}
-                  studentNote={studentNote}
-                  onNoteChange={setStudentNote}
-                  errors={errors}
-                />
-              )}
+                {currentStep === 2 && <StepTermsAgreement />}
+              </FormProvider>
 
-              {/* Navigation */}
               <div className="flex justify-between mt-8">
                 <Button
                   type="button"
@@ -283,12 +263,13 @@ function EnrollmentApplyPage() {
                   이전
                 </Button>
 
+                {/* 마지막 단계가 아니면 "다음", 마지막이면 "수속 신청하기" */}
                 {currentStep < STEPS.length - 1 ? (
                   <Button type="button" onClick={handleNext} className="rounded-[10px]">
                     다음
                   </Button>
                 ) : (
-                  <Button type="button" onClick={handleSubmit} disabled={submitting} className="rounded-[10px]">
+                  <Button type="button" onClick={handleFormSubmit} disabled={submitting} className="rounded-[10px]">
                     {submitting ? "신청 중..." : "수속 신청하기"}
                   </Button>
                 )}
@@ -298,7 +279,7 @@ function EnrollmentApplyPage() {
             </div>
           </div>
 
-          {/* Right: Summary */}
+          {/* 우측: 신청 요약 (스크롤해도 고정) */}
           <div className="lg:col-span-2">
             <div className="lg:sticky lg:top-24">
               <div className="bg-white rounded-[20px] p-6 border border-beige-dark shadow-lg relative overflow-hidden">
