@@ -7,17 +7,21 @@ import { useAuth } from "@/hooks/useAuth";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import { createIsland } from "@/lib/createIsland";
 
+// 로그인 페이지 — 이메일/비밀번호 로그인, 성공 시 ?from 경로 또는 홈으로 이동
 function LoginPage() {
   const { signIn } = useAuth();
 
+  // ?from 파라미터가 있으면 해당 경로로, 없으면 홈("/")으로 이동
   const from = new URLSearchParams(window.location.search).get("from") || "/";
 
+  // 폼 입력 상태
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // 비밀번호 표시/숨김
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  // 로그인 폼 제출 — 빈 입력 검사 → Supabase Auth → 에러 한국어 변환 → 이동
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -32,6 +36,7 @@ function LoginPage() {
     setSubmitting(false);
 
     if (authError) {
+      // Supabase Auth 에러 코드 → 한국어 메시지 변환
       if (authError.includes("Invalid login credentials")) {
         setError("이메일 또는 비밀번호가 올바르지 않습니다.");
       } else if (authError.includes("Email not confirmed")) {
@@ -50,7 +55,7 @@ function LoginPage() {
       <LoadingOverlay visible={submitting} />
       <div className="flex items-center justify-center px-4 py-12 pt-22">
         <div className="flex w-full max-w-[1000px] overflow-hidden rounded-2xl bg-white shadow-lg border border-beige-dark">
-          {/* Left: Form */}
+          {/* 왼쪽: 로그인 폼 */}
           <div className="flex w-full lg:w-1/2 items-center justify-center px-6 sm:px-10 py-12">
             <div className="w-full max-w-sm">
               <div className="mb-8">
@@ -78,7 +83,7 @@ function LoginPage() {
                   />
                 </div>
 
-                {/* 비밀번호 */}
+                {/* 비밀번호 (표시/숨김 토글 포함) */}
                 <div className="space-y-1.5">
                   <Label htmlFor="password" className="text-brown-text font-medium">
                     비밀번호
@@ -111,6 +116,7 @@ function LoginPage() {
                 </Button>
               </form>
 
+              {/* 계정 찾기 / 회원가입 링크 */}
               <div className="mt-6 text-center text-sm text-brown space-y-2">
                 <p>
                   <a href="/find-account" className="text-brown hover:text-terracotta hover:underline">
@@ -131,7 +137,7 @@ function LoginPage() {
             </div>
           </div>
 
-          {/* Right: Mascot illustration */}
+          {/* 오른쪽: 마스코트 일러스트 (데스크탑 전용) */}
           <div className="hidden lg:flex w-1/2 items-center justify-center bg-beige">
             <div className="text-center px-8">
               <div className="mb-6">

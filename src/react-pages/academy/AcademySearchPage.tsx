@@ -7,19 +7,21 @@ import type { Academy } from "@/data/academies";
 import { getAcademySystemChipClass, getTagChipClass } from "@/data/academy/chipColors";
 import LoadingOverlay from "@/components/LoadingOverlay";
 
+// 어학원 검색 및 목록 페이지 — 텍스트 검색 / 지역 / 코스 필터 지원
 function AcademySearchPage() {
   const { data: academies = [], isLoading } = useQuery<Academy[]>({
     queryKey: ["academies"],
     queryFn: fetchAcademies,
   });
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [regionFilter, setRegionFilter] = useState<string | null>(null);
-  const [tagFilters, setTagFilters] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState(""); // 텍스트 검색어
+  const [regionFilter, setRegionFilter] = useState<string | null>(null); // 지역 필터, null = 전체
+  const [tagFilters, setTagFilters] = useState<string[]>([]); // 코스 필터 (복수 선택)
 
+  // 필터 조건에 따라 어학원 목록을 계산 — 텍스트(이름/지역/설명) AND 지역 AND 코스(OR)
   const filteredAcademies = useMemo(() => {
     return academies.filter((academy) => {
-      // Text search: match name, region, or desc
+      // 텍스트 검색: 이름, 지역, 설명 중 하나라도 포함되면 통과
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         const matchesText =
@@ -29,10 +31,10 @@ function AcademySearchPage() {
         if (!matchesText) return false;
       }
 
-      // Region filter
+      // 지역 필터: null이면 전체 통과
       if (regionFilter && academy.region !== regionFilter) return false;
 
-      // Tag filters (match ANY): check academy_system AND tags
+      // 코스 필터: academy_system + tags 중 하나라도 선택값에 포함되면 통과 (OR)
       if (tagFilters.length > 0) {
         const academyAllTags = [academy.academy_system, ...academy.tags];
         const matchesAnyTag = tagFilters.some((filter) =>
@@ -49,7 +51,6 @@ function AcademySearchPage() {
     <>
       <LoadingOverlay visible={isLoading} />
 
-      {/* Page Header */}
       <div className="bg-white border-b border-beige-dark pt-20">
         <div className="max-w-[1200px] mx-auto px-6 py-8">
           <h1 className="text-[1.8rem] md:text-[2.2rem] font-extrabold text-brown-dark tracking-tight mb-2">어학원 비교</h1>
@@ -57,9 +58,10 @@ function AcademySearchPage() {
         </div>
       </div>
 
-      {/* Search & Filters */}
+      {/* 검색 및 필터 영역 (스크롤 시 상단 고정) */}
       <div className="border-b border-beige-dark bg-white sticky top-16 z-40">
         <div className="max-w-[1200px] mx-auto px-6 py-4">
+          {/* 텍스트 검색창 */}
           <div className="flex items-stretch rounded-xl h-12 border border-beige-dark bg-cream overflow-hidden">
             <div className="flex items-center justify-center pl-4 text-brown">
               <Search size={20} strokeWidth={2} className="text-brown" />
@@ -72,12 +74,12 @@ function AcademySearchPage() {
             />
           </div>
 
-          {/* 지역 filter row */}
+          {/* 지역 필터 */}
           <div className="flex items-center gap-2 mt-3">
             <span className="text-xs font-semibold text-brown-light shrink-0 w-8">지역</span>
             <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
               {["전체", "세부", "바기오"].map((region) => {
-                const isActive = region === "전체" ? regionFilter === null : regionFilter === region;
+                const isActive = region === "전체" ? regionFilter === null : regionFilter === region; // 전체는 null일 때 활성
                 return (
                   <button
                     key={region}
@@ -95,7 +97,7 @@ function AcademySearchPage() {
             </div>
           </div>
 
-          {/* 코스 filter row */}
+          {/* 코스 필터 (복수 선택) */}
           <div className="flex items-center gap-2 mt-2">
             <span className="text-xs font-semibold text-brown-light shrink-0 w-8">코스</span>
             <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
@@ -106,6 +108,7 @@ function AcademySearchPage() {
                     key={tag}
                     onClick={() =>
                       setTagFilters((prev) =>
+                        // 이미 선택된 태그면 제거, 새 태그면 추가
                         prev.includes(tag) ? prev.filter((selected) => selected !== tag) : [...prev, tag]
                       )
                     }
@@ -124,8 +127,9 @@ function AcademySearchPage() {
         </div>
       </div>
 
-      {/* Results */}
+      {/* 검색 결과 */}
       <div className="max-w-[1200px] mx-auto px-6 py-8">
+        {/* 로딩 중이면 "..." 표시 */}
         <div className="flex items-center mb-6">
           <h2 className="text-lg font-bold text-brown-dark">{isLoading ? "..." : filteredAcademies.length}개 어학원</h2>
         </div>
@@ -143,6 +147,7 @@ function AcademySearchPage() {
                 key={academy.id}
                 className="bg-white rounded-[20px] overflow-hidden border border-beige-dark hover:-translate-y-1 hover:shadow-lg transition-all no-underline text-brown-text"
               >
+                {/* 대표 이미지 + 지역/수업방식 뱃지 */}
                 <div className="h-[180px] relative overflow-hidden">
                   <img src={academy.images[0]} alt={academy.name} className="w-full h-full object-cover" loading="lazy" />
                   <div className="absolute top-3 left-3 flex gap-1.5">
@@ -154,6 +159,7 @@ function AcademySearchPage() {
                     </span>
                   </div>
                 </div>
+                {/* 이름 + 한 줄 설명 + 태그 */}
                 <div className="p-5">
                   <div className="text-[1.1rem] font-bold text-brown-dark">{academy.name}</div>
                   <p className="mt-1.5 text-[0.82rem] text-brown leading-[1.5] line-clamp-2">{academy.desc}</p>

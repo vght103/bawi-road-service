@@ -1,6 +1,7 @@
 import { supabase, supabaseConfigured } from "@/lib/supabase";
 import type { InquiryInsert } from "@/types/inquiry";
 
+// 상담 문의를 inquiry_list 테이블에 저장 (상담 신청 폼 제출 시 호출)
 export async function createInquiry(
   data: InquiryInsert
 ): Promise<{ error: string | null }> {

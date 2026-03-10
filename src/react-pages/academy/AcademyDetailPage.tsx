@@ -12,8 +12,11 @@ import type { AcademyDetail } from "@/data/academies";
 import { getAcademySystemChipClass, getTagChipClass } from "@/data/academy/chipColors";
 import LoadingOverlay from "@/components/LoadingOverlay";
 
+// 어학원 상세 페이지 — URL 파라미터 id로 어학원 정보를 조회해 표시
 function AcademyDetailPage({ id }: { id: string }) {
-  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
+  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null); // 이미지 슬라이더 제어용
+
+  // id가 없으면 요청하지 않음
   const { data: academy, isLoading } = useQuery<AcademyDetail | null>({
     queryKey: ["academy", id],
     queryFn: () => fetchAcademy(id!),
@@ -37,7 +40,7 @@ function AcademyDetailPage({ id }: { id: string }) {
 
   return (
     <>
-      {/* Breadcrumb */}
+      {/* 브레드크럼: 홈 > 어학원 > 현재 어학원명 */}
       <div className="pt-20 bg-white border-b border-beige-dark">
         <div className="max-w-[1200px] mx-auto px-6 py-3">
           <div className="flex items-center gap-2 text-sm text-brown">
@@ -56,7 +59,7 @@ function AcademyDetailPage({ id }: { id: string }) {
 
       <main className="max-w-[900px] mx-auto px-6 py-8">
         <div className="space-y-6">
-          {/* Image Swiper */}
+          {/* 이미지 슬라이더 — 2장 이상이면 슬라이더, 1장이면 단순 이미지 */}
           <div className="rounded-[20px] overflow-hidden border border-beige-dark relative group">
             {academy.images.length > 1 ? (
               <>
@@ -73,12 +76,14 @@ function AcademyDetailPage({ id }: { id: string }) {
                     </SwiperSlide>
                   ))}
                 </Swiper>
+                {/* 이전 이미지 버튼 (마우스 오버 시 표시) */}
                 <button
                   onClick={() => swiperInstance?.slidePrev()}
                   className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm shadow-md flex items-center justify-center text-brown-dark hover:bg-white transition-all opacity-0 group-hover:opacity-100"
                 >
                   <ChevronLeft size={20} strokeWidth={2.5} />
                 </button>
+                {/* 다음 이미지 버튼 (마우스 오버 시 표시) */}
                 <button
                   onClick={() => swiperInstance?.slideNext()}
                   className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm shadow-md flex items-center justify-center text-brown-dark hover:bg-white transition-all opacity-0 group-hover:opacity-100"
@@ -93,7 +98,7 @@ function AcademyDetailPage({ id }: { id: string }) {
             )}
           </div>
 
-          {/* Academy Header */}
+          {/* 지역 / 수업 방식 / 태그 뱃지 + 이름 + 한 줄 설명 */}
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="px-2.5 py-1 rounded-md text-[0.75rem] font-semibold bg-white text-brown-dark border border-beige-dark">
@@ -116,10 +121,11 @@ function AcademyDetailPage({ id }: { id: string }) {
             <h1 className="text-[1.8rem] md:text-[2.2rem] font-extrabold text-brown-dark tracking-tight">
               {academy.name}
             </h1>
+            {/* shortDesc 우선, 없으면 desc */}
             <p className="mt-2 text-brown text-base leading-relaxed">{academy.shortDesc ?? academy.desc}</p>
           </div>
 
-          {/* 기본 정보 */}
+          {/* 기본 정보 카드 — 값이 있는 항목만 표시 */}
           <div className="bg-white rounded-[16px] p-6 border border-beige-dark">
             <h3 className="font-bold text-brown-dark mb-4">기본 정보</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -156,6 +162,7 @@ function AcademyDetailPage({ id }: { id: string }) {
               {academy.website && (
                 <div>
                   <div className="text-xs text-brown-light mb-1">웹사이트</div>
+                  {/* https:// / http:// 접두사 제거 후 표시 */}
                   <a
                     href={academy.website}
                     target="_blank"
@@ -169,7 +176,7 @@ function AcademyDetailPage({ id }: { id: string }) {
             </div>
           </div>
 
-          {/* Pros & Cons */}
+          {/* 장점(초록) / 참고사항(주황) 카드 */}
           {(academy.pros?.length || academy.cons?.length) && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {academy.pros?.length && (
@@ -205,7 +212,7 @@ function AcademyDetailPage({ id }: { id: string }) {
             </div>
           )}
 
-          {/* Recommended For */}
+          {/* 추천 대상 태그 */}
           {academy.recommendedFor?.length && (
             <div className="bg-white rounded-[16px] p-6 border border-beige-dark">
               <h3 className="font-bold text-brown-dark mb-3">🎯 이런 분에게 추천</h3>
@@ -222,7 +229,7 @@ function AcademyDetailPage({ id }: { id: string }) {
             </div>
           )}
 
-          {/* Description */}
+          {/* 어학원 소개 본문 */}
           {academy.description && (
             <div className="bg-white rounded-[16px] p-6 border border-beige-dark">
               <h3 className="font-bold text-brown-dark mb-3">어학원 소개</h3>
@@ -230,7 +237,7 @@ function AcademyDetailPage({ id }: { id: string }) {
             </div>
           )}
 
-          {/* Facilities */}
+          {/* 시설 태그 목록 */}
           {academy.facilities?.length && (
             <div className="bg-white rounded-[16px] p-6 border border-beige-dark">
               <h3 className="font-bold text-brown-dark mb-4">시설</h3>
@@ -244,7 +251,7 @@ function AcademyDetailPage({ id }: { id: string }) {
             </div>
           )}
 
-          {/* Courses */}
+          {/* 코스 안내 */}
           <div className="bg-white rounded-[16px] p-6 border border-beige-dark">
             <h3 className="font-bold text-brown-dark mb-4">코스 안내</h3>
             <div className="space-y-3">
@@ -259,6 +266,7 @@ function AcademyDetailPage({ id }: { id: string }) {
                     </span>
                   </div>
                   <p className="text-sm text-brown mb-2">{course.desc}</p>
+                  {/* 수업 구성: 1:1 / 그룹 / 선택 */}
                   <div className="flex gap-2 text-[0.75rem]">
                     <span className="px-2 py-0.5 bg-white border border-beige-dark rounded">
                       1:1 {course.manToMan}시간
@@ -266,6 +274,7 @@ function AcademyDetailPage({ id }: { id: string }) {
                     <span className="px-2 py-0.5 bg-white border border-beige-dark rounded">
                       그룹 {course.group}시간
                     </span>
+                    {/* 선택 수업 0시간이면 숨김 */}
                     {course.optional > 0 && (
                       <span className="px-2 py-0.5 bg-white border border-beige-dark rounded">
                         선택 {course.optional}시간
@@ -277,7 +286,7 @@ function AcademyDetailPage({ id }: { id: string }) {
             </div>
           </div>
 
-          {/* Dormitories */}
+          {/* 기숙사 타입별 주당 가격 */}
           <div className="bg-white rounded-[16px] p-6 border border-beige-dark">
             <h3 className="font-bold text-brown-dark mb-4">기숙사</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -287,6 +296,7 @@ function AcademyDetailPage({ id }: { id: string }) {
                   className="p-4 rounded-[12px] border border-beige-dark bg-beige/30 text-center"
                 >
                   <div className="font-bold text-brown-dark mb-1">{dormitory.type}</div>
+                  {/* pricePerWeek(원) → 만원 단위 */}
                   <div className="text-sm font-bold text-terracotta">
                     {(dormitory.pricePerWeek / 10000).toFixed(0)}만원
                     <span className="text-[0.7rem] font-normal text-brown-light">/주</span>
@@ -298,7 +308,7 @@ function AcademyDetailPage({ id }: { id: string }) {
             </div>
           </div>
 
-          {/* CTA */}
+          {/* CTA 버튼: 견적 / 수속 신청 / 카카오톡 */}
           <div className="bg-white rounded-[16px] p-6 border border-beige-dark text-center space-y-3">
             <a
               href="/quote?from=academy-detail"

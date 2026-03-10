@@ -7,16 +7,19 @@ import StatusProgress from "./components/StatusProgress";
 import DocumentUploadCard from "./components/DocumentUploadCard";
 import DocumentViewCard from "./components/DocumentViewCard";
 
+// 특정 수속 신청의 진행 상태, 서류 업로드/열람 기능을 제공하는 페이지
 function EnrollmentDetailPage({ id }: { id: string }) {
   const { user } = useAuth();
+
   const { enrollment, documents, loading, error } = useEnrollment(id);
+
   const uploadMutation = useUploadDocument(id ?? "");
   const deleteMutation = useDeleteDocument(id ?? "");
 
-  const isProcessing = uploadMutation.isPending || deleteMutation.isPending;
+  const isProcessing = uploadMutation.isPending || deleteMutation.isPending; // 업로드/삭제 진행 중
 
-  const admissionDoc = documents.find((document) => document.document_type === "ADMISSION_LETTER");
-  const invoiceDoc = documents.find((document) => document.document_type === "INVOICE");
+  const admissionDoc = documents.find((document) => document.document_type === "ADMISSION_LETTER"); // 입학허가서
+  const invoiceDoc = documents.find((document) => document.document_type === "INVOICE"); // 인보이스
 
   if (!user) {
     return (
@@ -30,6 +33,7 @@ function EnrollmentDetailPage({ id }: { id: string }) {
               <p className="text-brown text-[0.9rem] mb-6">
                 수속 진행현황은 로그인 후 확인하실 수 있습니다.
               </p>
+              {/* 로그인 후 이 페이지로 돌아올 수 있도록 from 파라미터 포함 */}
               <Button asChild>
                 <a href={"/login?from=" + encodeURIComponent(`/enrollment/${id}`)} className="no-underline">
                   로그인
@@ -69,14 +73,14 @@ function EnrollmentDetailPage({ id }: { id: string }) {
   }
 
   const startDate = new Date(enrollment.start_date);
-  const endDate = new Date(startDate);
+  const endDate = new Date(startDate); // 종료 예상일 = 시작일 + (주 수 × 7일)
   endDate.setDate(endDate.getDate() + enrollment.duration_weeks * 7);
 
   return (
     <div className="bg-cream min-h-screen">
       <LoadingOverlay visible={isProcessing} />
 
-      {/* Breadcrumb */}
+      {/* 브레드크럼 (홈 > 마이페이지 > 수속 진행현황) */}
       <div className="pt-20 bg-white border-b border-beige-dark">
         <div className="max-w-[1200px] mx-auto px-6 py-3">
           <div className="flex items-center gap-2 text-sm text-brown">
@@ -90,7 +94,6 @@ function EnrollmentDetailPage({ id }: { id: string }) {
       </div>
 
       <main className="max-w-[900px] mx-auto px-6 py-8 space-y-6">
-        {/* Title */}
         <div>
           <h1 className="text-[1.5rem] md:text-[1.8rem] font-extrabold text-brown-dark tracking-tight mb-1">
             수속 진행현황
@@ -100,13 +103,11 @@ function EnrollmentDetailPage({ id }: { id: string }) {
           </p>
         </div>
 
-        {/* Status Progress */}
         <section className="bg-white rounded-[20px] p-6 md:p-8 border border-beige-dark">
           <h2 className="font-bold text-brown-dark text-lg mb-5">진행 상태</h2>
           <StatusProgress currentStatus={enrollment.status} />
         </section>
 
-        {/* Enrollment Info */}
         <section className="bg-white rounded-[20px] p-6 md:p-8 border border-beige-dark">
           <h2 className="font-bold text-brown-dark text-lg mb-5">수속 정보</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -143,7 +144,7 @@ function EnrollmentDetailPage({ id }: { id: string }) {
           </div>
         </section>
 
-        {/* Student Documents Upload */}
+        {/* 학생이 직접 업로드하는 서류 (항공권, 여행자 보험) */}
         <section className="bg-white rounded-[20px] p-6 md:p-8 border border-beige-dark">
           <h2 className="font-bold text-brown-dark text-lg mb-2">서류 업로드</h2>
           <p className="text-sm text-muted-foreground mb-5">
@@ -173,7 +174,7 @@ function EnrollmentDetailPage({ id }: { id: string }) {
           </div>
         </section>
 
-        {/* Admin Documents View */}
+        {/* 담당자가 업로드한 서류를 학생이 열람 (입학허가서, 인보이스) */}
         <section className="bg-white rounded-[20px] p-6 md:p-8 border border-beige-dark">
           <h2 className="font-bold text-brown-dark text-lg mb-2">수속 서류</h2>
           <p className="text-sm text-muted-foreground mb-5">
@@ -193,7 +194,6 @@ function EnrollmentDetailPage({ id }: { id: string }) {
           </div>
         </section>
 
-        {/* Back Link */}
         <div className="text-center">
           <Button variant="outline" asChild className="rounded-[10px]">
             <a href="/my" className="no-underline">마이페이지로 돌아가기</a>
