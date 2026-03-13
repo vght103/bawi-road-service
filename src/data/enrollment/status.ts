@@ -1,5 +1,6 @@
 import type { EnrollmentStatus } from "@/types/enrollment";
 
+// 수속 상태별 라벨, 색상, 순서, 안내 문구 설정
 export const STATUS_CONFIG: Record<
   EnrollmentStatus,
   { label: string; color: string; bgColor: string; order: number; description: string }
@@ -39,7 +40,7 @@ export const STATUS_CONFIG: Record<
     order: 4,
     description: "모든 수속이 완료되었습니다.",
   },
-  CANCELLED: {
+  CANCELLED: { // order -1 = 정상 진행 단계에서 제외
     label: "취소됨",
     color: "text-red-700",
     bgColor: "bg-red-50 border-red-200",
@@ -48,4 +49,5 @@ export const STATUS_CONFIG: Record<
   },
 };
 
+// 스텝 바에 표시할 진행 단계 순서 (COMPLETED, CANCELLED 제외)
 export const STATUS_STEPS: EnrollmentStatus[] = ["PENDING", "CONFIRMED", "DOCUMENTS_PENDING", "READY_TO_DEPART"];

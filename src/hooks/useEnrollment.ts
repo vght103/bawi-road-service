@@ -8,8 +8,9 @@ import {
 import { getUploadPresignedUrl, deleteDocumentFromR2 } from "@/api/storage/presign";
 import { compressIfImage } from "@/lib/imageCompression";
 
-const R2_PUBLIC_URL = import.meta.env.PUBLIC_R2_PUBLIC_URL as string;
+const R2_PUBLIC_URL = import.meta.env.PUBLIC_R2_PUBLIC_URL as string; // 업로드 파일 공개 URL 기반
 
+// 수강 신청 정보와 첨부 서류 목록을 조회하는 훅
 export function useEnrollment(id: string | undefined) {
   const {
     data,
@@ -36,15 +37,16 @@ interface UploadDocumentParams {
   file: File;
   enrollmentId: string;
   documentType: DocumentType;
-  existingDocumentId?: string;
+  existingDocumentId?: string; // 교체 시 기존 서류 ID
 }
 
+// 서류 파일을 R2에 업로드하고 DB에 기록하는 훅 (이미지 압축 + Presigned URL 병렬 처리)
 export function useUploadDocument(enrollmentId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ file, enrollmentId, documentType, existingDocumentId }: UploadDocumentParams) => {
-      // 1. Compress image + get presigned URL in parallel
+      // 이미지 압축과 Presigned URL 발급을 병렬 처리
       const [compressed, presignResult] = await Promise.all([
         compressIfImage(file),
         getUploadPresignedUrl({
@@ -61,13 +63,11 @@ export function useUploadDocument(enrollmentId: string) {
 
       const { uploadUrl, objectKey } = presignResult.data;
 
-      // 2. Upload to R2
       const uploadResult = await uploadDocumentToR2(compressed, uploadUrl);
       if (uploadResult.error) {
         throw new Error(uploadResult.error);
       }
 
-      // 3. Save record in DB (store public URL)
       const publicFileUrl = `${R2_PUBLIC_URL}/${objectKey}`;
       const saveResult = await saveDocumentRecord({
         enrollment_id: enrollmentId,
@@ -83,7 +83,7 @@ export function useUploadDocument(enrollmentId: string) {
         throw new Error(saveResult.error ?? "문서 정보 저장에 실패했습니다.");
       }
 
-      // 4. Replace: delete old document if replacing
+      // 교체 시 기존 파일 삭제. 실패해도 업로드 흐름 중단하지 않음
       if (existingDocumentId) {
         await deleteDocumentFromR2(existingDocumentId).catch(() => {});
       }
@@ -100,6 +100,7 @@ interface DeleteDocumentParams {
   documentId: string;
 }
 
+// R2 파일과 DB 레코드를 함께 삭제하는 훅
 export function useDeleteDocument(enrollmentId: string) {
   const queryClient = useQueryClient();
 

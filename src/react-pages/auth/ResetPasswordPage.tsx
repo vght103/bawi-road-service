@@ -7,8 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
 import LoadingOverlay from "@/components/LoadingOverlay";
 
-/* ─── 비밀번호 강도 체크 항목 ─── */
-
+// 비밀번호 강도 체크 항목 — 입력 중 실시간으로 각 조건 충족 여부 표시
 const PASSWORD_CHECKS = [
   { label: "8자 이상", test: (pw: string) => pw.length >= 8 },
   { label: "숫자 포함", test: (pw: string) => /\d/.test(pw) },
@@ -18,8 +17,7 @@ const PASSWORD_CHECKS = [
   },
 ] as const;
 
-/* ─── 비밀번호 변경 완료 화면 ─── */
-
+// 비밀번호 변경 완료 화면 — 성공 메시지 + 로그인 페이지 이동 버튼
 function ResetPasswordSuccess() {
   return (
     <div className="min-h-dvh bg-cream">
@@ -39,11 +37,10 @@ function ResetPasswordSuccess() {
   );
 }
 
-/* ─── 비밀번호 입력 + 표시/숨김 토글 ─── */
-
+// 비밀번호 입력 컴포넌트 — 표시/숨김 토글 버튼 포함
 function PasswordInput({
   value,
-  show,
+  show,      // true면 텍스트, false면 점(*)으로 표시
   onToggle,
   ...props
 }: React.ComponentProps<typeof Input> & {
@@ -64,22 +61,23 @@ function PasswordInput({
   );
 }
 
-/* ─── 비밀번호 재설정 페이지 ─── */
-
+// 비밀번호 재설정 페이지 — 이메일 링크 클릭 후 새 비밀번호 입력, 강도/일치 실시간 체크
 function ResetPasswordPage() {
   const { changePassword } = useAuth();
 
+  // 폼 입력 상태
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState(false); // 완료 화면 전환 여부
 
-  const allChecksPass = PASSWORD_CHECKS.every((check) => check.test(newPassword));
-  const passwordMatch = confirmPassword.length > 0 && newPassword === confirmPassword;
+  const allChecksPass = PASSWORD_CHECKS.every((check) => check.test(newPassword)); // 모든 강도 조건 충족 여부
+  const passwordMatch = confirmPassword.length > 0 && newPassword === confirmPassword; // 일치 여부
 
+  // 폼 제출 — 강도 조건 → 일치 확인 → Supabase Auth 비밀번호 변경
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setError("");
@@ -113,10 +111,9 @@ function ResetPasswordPage() {
       <LoadingOverlay visible={submitting} />
       <div className="flex items-center justify-center px-4 py-12 pt-22">
         <div className="flex w-full max-w-[1000px] overflow-hidden rounded-2xl bg-white shadow-lg border border-beige-dark">
-          {/* ─── 왼쪽: 비밀번호 재설정 폼 ─── */}
+          {/* 왼쪽: 비밀번호 재설정 폼 */}
           <div className="flex w-full lg:w-1/2 items-center justify-center px-6 sm:px-10 py-12">
             <div className="w-full max-w-sm">
-              {/* 헤더 */}
               <div className="mb-8">
                 <a href="/login" className="mb-6 inline-block text-sm text-brown hover:text-terracotta">
                   ← 로그인으로
@@ -141,7 +138,7 @@ function ResetPasswordPage() {
                     show={showNewPassword}
                     onToggle={() => setShowNewPassword((prev) => !prev)}
                   />
-                  {/* 비밀번호 강도 체크 표시 */}
+                  {/* 강도 체크: 조건 충족 시 초록색, 미충족 시 회색 */}
                   {newPassword && (
                     <div className="flex gap-3">
                       {PASSWORD_CHECKS.map((check) => (
@@ -169,7 +166,7 @@ function ResetPasswordPage() {
                     show={showConfirmPassword}
                     onToggle={() => setShowConfirmPassword((prev) => !prev)}
                   />
-                  {/* 비밀번호 일치 여부 표시 */}
+                  {/* 일치 여부: 일치하면 초록색, 불일치하면 빨간색 */}
                   {confirmPassword && (
                     <p className={`text-xs ${passwordMatch ? "text-accent-green" : "text-red-500"}`}>
                       {passwordMatch ? "✓ 비밀번호가 일치합니다" : "비밀번호가 일치하지 않습니다"}
@@ -186,7 +183,6 @@ function ResetPasswordPage() {
                 </Button>
               </form>
 
-              {/* 로그인 링크 */}
               <p className="mt-6 text-center text-sm text-brown">
                 <a href="/login" className="font-medium text-terracotta hover:underline">
                   ← 로그인으로 돌아가기
@@ -195,7 +191,7 @@ function ResetPasswordPage() {
             </div>
           </div>
 
-          {/* ─── 오른쪽: 마스코트 일러스트 (데스크탑 전용) ─── */}
+          {/* 오른쪽: 마스코트 일러스트 (데스크탑 전용) */}
           <div className="hidden lg:flex w-1/2 items-center justify-center bg-beige">
             <div className="text-center px-8">
               <div className="mb-6">

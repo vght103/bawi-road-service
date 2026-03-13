@@ -11,5 +11,6 @@
     "verbatimModuleSyntax": false,
     "erasableSyntaxOnly": true
   },
-  "include": ["src", ".astro"]
+  "include": ["src", ".astro"],
+  "exclude": ["supabase/functions"]
 }

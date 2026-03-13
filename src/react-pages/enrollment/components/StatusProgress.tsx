@@ -7,6 +7,8 @@ interface StatusProgressProps {
   currentStatus: EnrollmentStatus;
 }
 
+// 수속 진행 상태를 단계별로 시각화하는 컴포넌트
+// CANCELLED인 경우 단계 대신 취소 안내 메시지만 표시
 export default function StatusProgress({ currentStatus }: StatusProgressProps) {
   if (currentStatus === "CANCELLED") {
     return (
@@ -17,13 +19,15 @@ export default function StatusProgress({ currentStatus }: StatusProgressProps) {
     );
   }
 
-  const currentOrder = STATUS_CONFIG[currentStatus].order;
+  const currentOrder = STATUS_CONFIG[currentStatus].order; // 진행선 너비 계산에 사용
 
   return (
     <div className="space-y-4">
       <div className="relative flex items-start justify-between">
-        {/* 연결선 (원 중앙 높이에 위치) */}
+        {/* 전체 연결선 배경 (회색) */}
         <div className="absolute top-5 left-0 right-0 mx-[calc(100%/8)] h-0.5 bg-secondary" />
+
+        {/* 진행된 부분 연결선 (주색상) */}
         <div
           className="absolute top-5 left-0 mx-[calc(100%/8)] h-0.5 bg-primary transition-all"
           style={{
@@ -35,7 +39,7 @@ export default function StatusProgress({ currentStatus }: StatusProgressProps) {
 
         {STATUS_STEPS.map((step, index) => {
           const config = STATUS_CONFIG[step];
-          const isCompleted = config.order < currentOrder;
+          const isCompleted = config.order < currentOrder; // 현재보다 이전 단계
           const isCurrent = step === currentStatus;
 
           return (
@@ -44,14 +48,16 @@ export default function StatusProgress({ currentStatus }: StatusProgressProps) {
                 className={cn(
                   "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold",
                   isCompleted
-                    ? "bg-primary text-white"
+                    ? "bg-primary text-white"                         // 완료
                     : isCurrent
-                      ? "bg-primary text-white ring-4 ring-primary/20"
-                      : "bg-secondary text-muted-foreground"
+                      ? "bg-primary text-white ring-4 ring-primary/20"  // 현재 (링 강조)
+                      : "bg-secondary text-muted-foreground"             // 미진행
                 )}
               >
                 {isCompleted ? <CheckIcon className="w-5 h-5" /> : index + 1}
               </div>
+
+              {/* 현재/완료 단계는 진한 색, 미진행은 흐린 색 */}
               <p
                 className={cn(
                   "mt-2 text-xs font-medium text-center leading-tight",
@@ -65,7 +71,7 @@ export default function StatusProgress({ currentStatus }: StatusProgressProps) {
         })}
       </div>
 
-      {/* Current status description */}
+      {/* 현재 상태 설명 박스 */}
       <div className={cn("rounded-[10px] border p-4", STATUS_CONFIG[currentStatus].bgColor)}>
         <p className={cn("font-semibold text-sm", STATUS_CONFIG[currentStatus].color)}>
           {STATUS_CONFIG[currentStatus].label}

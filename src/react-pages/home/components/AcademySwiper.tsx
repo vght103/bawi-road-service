@@ -9,11 +9,12 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 interface AcademySwiperProps {
-  academies: Academy[];
+  academies: Academy[]; // 슬라이더에 표시할 어학원 목록
 }
 
+// 홈페이지 인기 어학원 슬라이더 — 모바일 1개, 태블릿 2개, 데스크탑 3개씩 표시
 export default function AcademySwiper({ academies }: AcademySwiperProps) {
-  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
+  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null); // 화살표 버튼 제어용
 
   return (
     <div className="relative">
@@ -25,12 +26,13 @@ export default function AcademySwiper({ academies }: AcademySwiperProps) {
         slidesPerGroup={1}
         loop
         breakpoints={{
-          768: { slidesPerView: 2, slidesPerGroup: 2 },
-          1024: { slidesPerView: 3, slidesPerGroup: 3 },
+          768: { slidesPerView: 2, slidesPerGroup: 2 },  // 태블릿
+          1024: { slidesPerView: 3, slidesPerGroup: 3 }, // 데스크탑
         }}
         onSwiper={setSwiperInstance}
         className="pb-12"
       >
+        {/* 최대 9개만 표시 */}
         {academies.slice(0, 9).map((academy) => (
           <SwiperSlide key={academy.id}>
             <a
@@ -46,6 +48,7 @@ export default function AcademySwiper({ academies }: AcademySwiperProps) {
                   width={400}
                   height={180}
                 />
+                {/* 이미지 위 지역 + 수업 방식 뱃지 */}
                 <div className="absolute top-3 left-3 flex gap-1.5">
                   <span className="px-2.5 py-1 rounded-md text-[0.7rem] font-semibold bg-white/90 text-brown-dark">
                     {academy.region}
@@ -65,6 +68,7 @@ export default function AcademySwiper({ academies }: AcademySwiperProps) {
           </SwiperSlide>
         ))}
       </Swiper>
+      {/* 이전 버튼 (데스크탑 전용) */}
       <button
         onClick={() => swiperInstance?.slidePrev()}
         aria-label="이전 어학원 보기"
@@ -72,6 +76,7 @@ export default function AcademySwiper({ academies }: AcademySwiperProps) {
       >
         <ChevronLeft size={18} strokeWidth={2.5} />
       </button>
+      {/* 다음 버튼 (데스크탑 전용) */}
       <button
         onClick={() => swiperInstance?.slideNext()}
         aria-label="다음 어학원 보기"

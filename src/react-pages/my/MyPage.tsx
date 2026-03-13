@@ -12,6 +12,7 @@ import { STATUS_CONFIG } from "@/data/enrollment/status";
 import { cn } from "@/lib/utils";
 import LoadingOverlay from "@/components/LoadingOverlay";
 
+// 비밀번호 유효성 검사 — 8자 이상, 숫자, 특수기호 조건 미충족 항목 반환
 function validatePassword(pw: string) {
   const errors: string[] = [];
   if (pw.length < 8) errors.push("8자 이상");
@@ -20,9 +21,11 @@ function validatePassword(pw: string) {
   return errors;
 }
 
+// 마이페이지 — 내 정보 / 수속 현황 / 비밀번호 변경 / 회원 탈퇴
 function MyPage() {
   const { user, signOut, changePassword, deleteAccount } = useAuth();
-  const { member } = useMember();
+  const { member } = useMember(); // 이름, 연락처 등 프로필
+
   const { data: enrollments = [] as Enrollment[], isLoading: enrollmentsLoading } = useQuery({
     queryKey: ["enrollments", user?.id],
     queryFn: async () => {
@@ -33,19 +36,20 @@ function MyPage() {
     enabled: !!user,
   });
 
-  // 비밀번호 변경
+  // 비밀번호 변경 상태
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [pwError, setPwError] = useState("");
   const [pwSuccess, setPwSuccess] = useState(false);
   const [pwSubmitting, setPwSubmitting] = useState(false);
 
-  // 회원 탈퇴
-  const [deleteConfirm, setDeleteConfirm] = useState("");
+  // 회원 탈퇴 상태
+  const [deleteConfirm, setDeleteConfirm] = useState(""); // "회원탈퇴" 입력 확인
   const [deleteError, setDeleteError] = useState("");
   const [deleteSubmitting, setDeleteSubmitting] = useState(false);
-  const [showDeleteSection, setShowDeleteSection] = useState(false);
+  const [showDeleteSection, setShowDeleteSection] = useState(false); // 탈퇴 입력 영역 표시 여부
 
+  // 비밀번호 변경 폼 제출 — 유효성 검사 → 일치 확인 → 서버 요청
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault();
     setPwError("");
@@ -75,6 +79,7 @@ function MyPage() {
     setNewPasswordConfirm("");
   }
 
+  // 회원 탈퇴 — "회원탈퇴" 정확히 입력된 경우에만 진행, 완료 후 홈으로 이동
   async function handleDeleteAccount() {
     if (deleteConfirm !== "회원탈퇴") {
       setDeleteError('"회원탈퇴"를 정확히 입력해주세요.');
@@ -113,21 +118,22 @@ function MyPage() {
       <div className="mx-auto w-full max-w-lg px-4 pt-22 pb-12">
         <h1 className="mb-8 text-2xl font-bold text-brown-text">마이페이지</h1>
 
-        {/* 내 정보 */}
+        {/* 내 정보: 이름 / 이메일 / 연락처 + 로그아웃 */}
         <section className="mb-8 rounded-2xl border border-beige-dark bg-white p-6">
           <h2 className="mb-4 text-lg font-semibold text-brown-text">내 정보</h2>
           <div className="space-y-2 text-sm text-brown">
             <p>
-              <span className="font-medium text-brown-text">이름:</span> {member?.name ?? "-"}
+              <span className="font-medium text-brown-text">이름:</span> {member?.name ?? "-"} {/* 프로필 미완성 시 "-" */}
             </p>
             <p>
               <span className="font-medium text-brown-text">이메일:</span> {user.email}
             </p>
             <p>
-              <span className="font-medium text-brown-text">연락처:</span> {member?.phone ?? "-"}
+              <span className="font-medium text-brown-text">연락처:</span> {member?.phone ?? "-"} {/* 프로필 미완성 시 "-" */}
             </p>
           </div>
 
+          {/* 로그아웃 후 홈으로 이동 */}
           <Button
             onClick={async () => {
               await signOut();
@@ -140,11 +146,12 @@ function MyPage() {
           </Button>
         </section>
 
-        {/* 내 수속 */}
+        {/* 내 수속 현황 */}
         <section className="mb-8 rounded-2xl border border-beige-dark bg-white p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-brown-text">내 수속</h2>
 
+            {/* 수속 내역 없을 때만 "새 수속 신청" 버튼 표시 */}
             {enrollments.length === 0 && (
               <Button asChild size="sm" variant="outline" className="text-xs">
                 <a href="/enrollment/apply?from=my-page" className="no-underline">
@@ -166,7 +173,7 @@ function MyPage() {
           ) : (
             <div className="space-y-3">
               {enrollments.map((enrollment) => {
-                const statusConfig = STATUS_CONFIG[enrollment.status];
+                const statusConfig = STATUS_CONFIG[enrollment.status]; // 상태별 색상/레이블
                 return (
                   <a
                     key={enrollment.id}
@@ -185,6 +192,7 @@ function MyPage() {
                         {statusConfig.label}
                       </span>
                     </div>
+                    {/* 코스명 · 기숙사 타입 · 연수 기간 */}
                     <div className="text-xs text-muted-foreground">
                       {enrollment.course_name} · {enrollment.dormitory_type} · {enrollment.duration_weeks}주
                     </div>
@@ -240,7 +248,7 @@ function MyPage() {
           </form>
         </section>
 
-        {/* 회원 탈퇴 */}
+        {/* 회원 탈퇴 — "회원 탈퇴하기" 클릭 시 확인 입력 영역 표시 */}
         <section className="rounded-2xl border border-red-200 bg-white p-6">
           <h2 className="mb-2 text-lg font-semibold text-red-600">회원 탈퇴</h2>
           <p className="mb-4 text-sm text-brown">탈퇴 시 모든 개인정보가 즉시 삭제되며 복구할 수 없습니다.</p>
@@ -272,6 +280,7 @@ function MyPage() {
                 >
                   {deleteSubmitting ? "처리 중..." : "탈퇴 확인"}
                 </Button>
+                {/* 취소: 입력 영역 닫고 초기화 */}
                 <Button
                   onClick={() => {
                     setShowDeleteSection(false);

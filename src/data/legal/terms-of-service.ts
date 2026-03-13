@@ -1,7 +1,7 @@
 import type { ContentBlock, ListItem, TermsDocument } from "./types";
 
-// 이용약관 및 환불규정
-
+// 바위로드 이용약관 전문 (제1조~제14조)
+// 수정 시 effectiveDate도 함께 변경할 것
 export const TERMS_OF_SERVICE: TermsDocument = {
   pageTitle: "이용약관",
   effectiveDate: "2026년 3월 4일",
@@ -354,12 +354,14 @@ export const TERMS_OF_SERVICE: TermsDocument = {
   ],
 };
 
-// ─── Plain-text 변환 유틸리티 ───────────────────────────────────────
+// ─── Plain-text 변환 유틸리티 ────────────────────────────────────────
 
+// ListItem에서 텍스트만 추출
 function listItemText(item: ListItem): string {
   return typeof item === "string" ? item : item.text;
 }
 
+// 콘텐츠 블록 하나를 plain text로 변환
 function blockToPlainText(block: ContentBlock): string {
   switch (block.type) {
     case "paragraph":
@@ -386,7 +388,7 @@ function blockToPlainText(block: ContentBlock): string {
   }
 }
 
-/** 특정 조항들을 plain text로 변환 (수속 신청 약관 동의용) */
+// 특정 조항들을 plain text로 변환 (수속 신청 약관 동의용)
 export function articleToPlainText(articleIds: string[]): string {
   return articleIds
     .map((id) => {
@@ -401,7 +403,7 @@ export function articleToPlainText(articleIds: string[]): string {
     .join("\n\n\n");
 }
 
-/** 수속 신청 화면에서 사용할 환불 규정 텍스트 */
+// 수속 신청 화면에서 사용할 환불 규정 텍스트
 export function getRefundPolicyText(): string {
   return articleToPlainText(["10-3"]);
 }

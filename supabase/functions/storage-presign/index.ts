@@ -6,6 +6,7 @@ const ALLOWED_ORIGINS = [
   "http://localhost:4321",
   "https://bawiroad.com",
   "https://www.bawiroad.com",
+  "https://dev.bawi-road-service.pages.dev",
 ];
 
 const R2_ENDPOINT = Deno.env.get("R2_ENDPOINT")!;

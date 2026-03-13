@@ -1054,7 +1054,7 @@ url.searchParams.set("X-Amz-Expires", "900");
 | `VITE_SUPABASE_ANON_KEY` | Anon Key | 클라이언트 토큰 | O |
 | `VITE_R2_PUBLIC_URL` | `https://pub-[hash].r2.dev` | R2 공개 도메인 | O |
 
-**설정 위치**: `/Users/ochunghyeon/Desktop/project/bawi-road-service/.env`
+**설정 위치**: 프로젝트 루트의 `.env`
 
 ```
 VITE_SUPABASE_URL=https://<project-ref>.supabase.co
@@ -1083,7 +1083,7 @@ verify_jwt = false
 ### 프로젝트 전체 구조
 
 ```
-/Users/ochunghyeon/Desktop/project/bawi-road-service/
+bawi-road-service/
 ├── supabase/
 │   ├── config.toml                              # Supabase Functions 설정
 │   ├── .env.local                               # R2 credentials (gitignore)
