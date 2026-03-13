@@ -10,8 +10,8 @@
 
 | 프로젝트          | 경로                                                   | 설명                 |
 | ----------------- | ------------------------------------------------------ | -------------------- |
-| **서비스 (현재)** | `/Users/ochunghyeon/Desktop/project/bawi-road-service` | 고객용 서비스 페이지 |
-| **어드민**        | `/Users/ochunghyeon/Desktop/project/bawi-abroad-admin` | 관리자 백오피스      |
+| **서비스 (현재)** | `./` (이 프로젝트)                                      | 고객용 서비스 페이지 |
+| **어드민**        | 별도 레포: `bawi-abroad-admin`                          | 관리자 백오피스      |
 
 - "어드민에도 적용해", "admin 프로젝트에도 같이 해" → `bawi-abroad-admin` 프로젝트를 의미
 - "서비스 작업해" → 현재 이 프로젝트(`bawi-road-service`)를 의미
