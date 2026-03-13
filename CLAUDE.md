@@ -71,6 +71,8 @@
 - **Admin = 모든 데이터에 전체 CRUD 권한**
 - **Student = 본인 소유(`user_id = auth.uid()`) 데이터에만 접근 가능**
 - 모든 테이블에 RLS 활성화. Admin은 `FOR ALL`, Student는 작업별 개별 정책
+- **RLS 정책에서 `auth.users` 테이블 직접 조회 금지** — `authenticated` role에 `auth` 스키마 SELECT 권한 없음. 반드시 `members` 테이블 또는 `auth.jwt()` 사용
+- RLS 정책 어드민 검증: `members` 테이블 방식 사용 (`EXISTS (SELECT 1 FROM members WHERE members.id = auth.uid() AND members.role = 'ADMIN')`)
 - Edge Function에서 `serviceClient`(service_role) 사용 시 **코드 레벨 권한 검증 필수** (RLS 우회되므로)
 - 프론트엔드 가드는 UX 목적. 실제 보안은 서버(RLS + Edge Function)에서 담당
 - 파일 업로드: Service는 `upload` 액션 + `uploaded_by: "STUDENT"` 사용. `admin-upload` 사용 금지
