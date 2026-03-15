@@ -2,6 +2,8 @@
 
 > 어학원 검색부터 AI 상담, 견적 요청, 수속 신청까지 한 곳에서.
 
+🔗 **서비스 바로가기**: [bawiroad.com](https://bawiroad.com)
+
 ![Service Hero](docs/screenshots/service-hero.png)
 
 ## 소개
@@ -9,7 +11,7 @@
 **바위로드(BAWI ROAD)** 는 필리핀 어학연수를 준비하는 사용자를 위한 원스톱 서비스 플랫폼입니다.
 수수료 0원, 가격 100% 공개를 원칙으로 어학원 비교부터 출국까지의 전 과정을 지원합니다.
 
-이 레포지토리는 **고객용 서비스 페이지**이며, 관리자 백오피스는 별도 레포([bawi-abroad-admin](https://github.com/vght103/bawi-abroad-admin))에서 관리됩니다.
+이 레포지토리는 **고객용 서비스 페이지**이며, 관리자 백오피스는 별도 레포에서 관리됩니다.
 
 ## 주요 기능
 
@@ -28,16 +30,6 @@
 
 어학원, 기간, 기숙사를 선택하면 예상 비용을 바로 확인할 수 있고,
 수속 신청 시 서류 업로드부터 진행 상태 확인까지 온라인으로 처리됩니다.
-
-### 관리자 대시보드 (별도 레포)
-
-상담 유입부터 수속 완료까지의 전체 파이프라인을 한눈에 관리합니다.
-
-![Admin Dashboard](docs/screenshots/admin-dashboard.png)
-
-AI 챗봇 대화 내역도 관리자 화면에서 조회할 수 있습니다.
-
-![Admin Chat History](docs/screenshots/admin-chatbot_history.png)
 
 ## 기술 스택
 
@@ -136,9 +128,3 @@ pnpm run dev
 | `PUBLIC_SUPABASE_ANON_KEY` | Supabase 공개 키 |
 | `VITE_R2_PUBLIC_URL` | Cloudflare R2 공개 도메인 |
 | `PUBLIC_TURNSTILE_SITE_KEY` | Cloudflare Turnstile 사이트 키 |
-
-## 관련 프로젝트
-
-| 프로젝트 | 설명 |
-|----------|------|
-| [bawi-abroad-admin](https://github.com/vght103/bawi-abroad-admin) | 관리자 백오피스 |
