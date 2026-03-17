@@ -27,12 +27,8 @@ function EnrollmentDetailPage({ id }: { id: string }) {
         <div className="pt-[140px] pb-20 px-6">
           <div className="max-w-[520px] mx-auto text-center">
             <div className="bg-white rounded-[20px] p-10 border border-beige-dark shadow-lg">
-              <h2 className="text-[1.3rem] font-extrabold text-brown-dark mb-3">
-                로그인이 필요합니다
-              </h2>
-              <p className="text-brown text-[0.9rem] mb-6">
-                수속 진행현황은 로그인 후 확인하실 수 있습니다.
-              </p>
+              <h2 className="text-[1.3rem] font-extrabold text-brown-dark mb-3">로그인이 필요합니다</h2>
+              <p className="text-brown text-[0.9rem] mb-6">수속 진행현황은 로그인 후 확인하실 수 있습니다.</p>
               {/* 로그인 후 이 페이지로 돌아올 수 있도록 from 파라미터 포함 */}
               <Button asChild>
                 <a href={"/login?from=" + encodeURIComponent(`/enrollment/${id}`)} className="no-underline">
@@ -56,14 +52,12 @@ function EnrollmentDetailPage({ id }: { id: string }) {
         <div className="pt-[140px] pb-20 px-6">
           <div className="max-w-[520px] mx-auto text-center">
             <div className="bg-white rounded-[20px] p-10 border border-beige-dark shadow-lg">
-              <h2 className="text-[1.3rem] font-extrabold text-brown-dark mb-3">
-                수속 정보를 찾을 수 없습니다
-              </h2>
-              <p className="text-brown text-[0.9rem] mb-6">
-                {error ?? "해당 수속 신청 내역이 존재하지 않습니다."}
-              </p>
+              <h2 className="text-[1.3rem] font-extrabold text-brown-dark mb-3">수속 정보를 찾을 수 없습니다</h2>
+              <p className="text-brown text-[0.9rem] mb-6">{error ?? "해당 수속 신청 내역이 존재하지 않습니다."}</p>
               <Button variant="secondary" asChild>
-                <a href="/my" className="no-underline">마이페이지로</a>
+                <a href="/my" className="no-underline">
+                  마이페이지로
+                </a>
               </Button>
             </div>
           </div>
@@ -84,9 +78,13 @@ function EnrollmentDetailPage({ id }: { id: string }) {
       <div className="pt-20 bg-white border-b border-beige-dark">
         <div className="max-w-[1200px] mx-auto px-6 py-3">
           <div className="flex items-center gap-2 text-sm text-brown">
-            <a href="/" className="hover:text-brown-dark no-underline text-brown">홈</a>
+            <a href="/" className="hover:text-brown-dark no-underline text-brown">
+              홈
+            </a>
             <span>/</span>
-            <a href="/my" className="hover:text-brown-dark no-underline text-brown">마이페이지</a>
+            <a href="/my" className="hover:text-brown-dark no-underline text-brown">
+              마이페이지
+            </a>
             <span>/</span>
             <span className="text-brown-dark font-medium">수속 진행현황</span>
           </div>
@@ -98,9 +96,7 @@ function EnrollmentDetailPage({ id }: { id: string }) {
           <h1 className="text-[1.5rem] md:text-[1.8rem] font-extrabold text-brown-dark tracking-tight mb-1">
             수속 진행현황
           </h1>
-          <p className="text-brown text-[0.9rem]">
-            수속 진행 상태와 필요 서류를 확인하세요.
-          </p>
+          <p className="text-brown text-[0.9rem]">수속 진행 상태와 필요 서류를 확인하세요.</p>
         </div>
 
         <section className="bg-white rounded-[20px] p-6 md:p-8 border border-beige-dark">
@@ -147,9 +143,7 @@ function EnrollmentDetailPage({ id }: { id: string }) {
         {/* 학생이 직접 업로드하는 서류 (항공권, 여행자 보험) */}
         <section className="bg-white rounded-[20px] p-6 md:p-8 border border-beige-dark">
           <h2 className="font-bold text-brown-dark text-lg mb-2">서류 업로드</h2>
-          <p className="text-sm text-muted-foreground mb-5">
-            수속에 필요한 서류를 업로드해주세요.
-          </p>
+          <p className="text-sm text-muted-foreground mb-5">수속에 필요한 서류를 업로드해주세요.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <DocumentUploadCard
               title="항공권"
@@ -177,26 +171,18 @@ function EnrollmentDetailPage({ id }: { id: string }) {
         {/* 담당자가 업로드한 서류를 학생이 열람 (입학허가서, 인보이스) */}
         <section className="bg-white rounded-[20px] p-6 md:p-8 border border-beige-dark">
           <h2 className="font-bold text-brown-dark text-lg mb-2">수속 서류</h2>
-          <p className="text-sm text-muted-foreground mb-5">
-            담당자가 업로드한 서류를 확인하세요.
-          </p>
+          <p className="text-sm text-muted-foreground mb-5">담당자가 업로드한 서류를 확인하세요.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <DocumentViewCard
-              title="입학허가서"
-              description="어학원 발행 입학허가서 (LOA)"
-              document={admissionDoc}
-            />
-            <DocumentViewCard
-              title="인보이스"
-              description="등록비 및 숙소비 인보이스"
-              document={invoiceDoc}
-            />
+            <DocumentViewCard title="입학허가서" description="어학원 발행 입학허가서 (LOA)" document={admissionDoc} />
+            <DocumentViewCard title="인보이스" description="등록비 및 숙소비 인보이스" document={invoiceDoc} />
           </div>
         </section>
 
         <div className="text-center">
           <Button variant="outline" asChild className="rounded-[10px]">
-            <a href="/my" className="no-underline">마이페이지로 돌아가기</a>
+            <a href="/my" className="no-underline">
+              마이페이지로 돌아가기
+            </a>
           </Button>
         </div>
       </main>
