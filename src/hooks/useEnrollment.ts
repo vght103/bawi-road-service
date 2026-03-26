@@ -1,15 +1,20 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Enrollment, EnrollmentDocument, DocumentType } from "@/types/enrollment";
 import { fetchEnrollmentWithDocuments } from "@/api/enrollment/enrollments";
-import {
-  uploadDocumentToR2,
-  saveDocumentRecord,
-} from "@/api/enrollment/documents";
+import { uploadDocumentToR2, saveDocumentRecord } from "@/api/enrollment/documents";
 import { getUploadPresignedUrl, deleteDocumentFromR2 } from "@/api/storage/presign";
 import { compressIfImage } from "@/lib/imageCompression";
 
+interface UploadDocumentParams {
+  file: File;
+  enrollmentId: string;
+  documentType: DocumentType;
+  existingDocumentId?: string; // 교체 시 기존 서류 ID
+}
+
 const R2_PUBLIC_URL = import.meta.env.PUBLIC_R2_PUBLIC_URL as string; // 업로드 파일 공개 URL 기반
 
+//
 // 수강 신청 정보와 첨부 서류 목록을 조회하는 훅
 export function useEnrollment(id: string | undefined) {
   const {
@@ -31,13 +36,6 @@ export function useEnrollment(id: string | undefined) {
   const error = queryError instanceof Error ? queryError.message : null;
 
   return { enrollment, documents, loading, error };
-}
-
-interface UploadDocumentParams {
-  file: File;
-  enrollmentId: string;
-  documentType: DocumentType;
-  existingDocumentId?: string; // 교체 시 기존 서류 ID
 }
 
 // 서류 파일을 R2에 업로드하고 DB에 기록하는 훅 (이미지 압축 + Presigned URL 병렬 처리)

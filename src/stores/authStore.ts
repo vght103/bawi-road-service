@@ -19,16 +19,16 @@ export const $loading = atom(true); // 초기 인증 확인 중 true
 export const $member = atom<Member | null>(null);
 
 // members 테이블에서 회원 프로필 조회 후 $member에 저장
+let fetchingMemberId: string | null = null; // 중복 호출 방지 플래그
 async function fetchMember(userId: string) {
   if (!supabaseConfigured) return;
-  const { data } = await supabase
-    .from("members")
-    .select("id, name, phone, role")
-    .eq("id", userId)
-    .single();
+  if (fetchingMemberId === userId) return; // 동일 유저 중복 요청 차단
+  fetchingMemberId = userId;
+  const { data } = await supabase.from("members").select("id, name, phone, role").eq("id", userId).single();
   if (data) {
     $member.set(data as Member);
   }
+  fetchingMemberId = null;
 }
 
 // 앱 최초 로드 시 인증 상태 초기화
@@ -62,8 +62,7 @@ export async function signUp(
   password: string,
   metadata: { name: string; phone: string },
 ): Promise<{ error: string | null }> {
-  if (!supabaseConfigured)
-    return { error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
+  if (!supabaseConfigured) return { error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
   const { error } = await supabase.auth.signUp({
     email,
     password,
@@ -73,20 +72,12 @@ export async function signUp(
 }
 
 // 로그인. STUDENT 역할만 허용하며 ADMIN 계정은 즉시 로그아웃 처리
-export async function signIn(
-  email: string,
-  password: string,
-): Promise<{ error: string | null }> {
-  if (!supabaseConfigured)
-    return { error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
+export async function signIn(email: string, password: string): Promise<{ error: string | null }> {
+  if (!supabaseConfigured) return { error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return { error: error.message };
 
-  const { data: member } = await supabase
-    .from("members")
-    .select("role")
-    .eq("id", data.user.id)
-    .single();
+  const { data: member } = await supabase.from("members").select("role").eq("id", data.user.id).single();
 
   if (member?.role !== "STUDENT") {
     await supabase.auth.signOut();
@@ -103,19 +94,15 @@ export async function signOut(): Promise<void> {
 }
 
 // 비밀번호 변경
-export async function changePassword(
-  newPassword: string,
-): Promise<{ error: string | null }> {
-  if (!supabaseConfigured)
-    return { error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
+export async function changePassword(newPassword: string): Promise<{ error: string | null }> {
+  if (!supabaseConfigured) return { error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
   const { error } = await supabase.auth.updateUser({ password: newPassword });
   return { error: error?.message ?? null };
 }
 
 // delete_own_account RPC로 회원 데이터 삭제 후 자동 로그아웃
 export async function deleteAccount(): Promise<{ error: string | null }> {
-  if (!supabaseConfigured)
-    return { error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
+  if (!supabaseConfigured) return { error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
   const { error } = await supabase.rpc("delete_own_account");
   if (error) return { error: error.message };
   await supabase.auth.signOut();
@@ -135,25 +122,19 @@ export async function findEmail(
     p_phone: phone,
   });
   if (error) return { maskedEmail: null, error: error.message };
-  if (!data || data.length === 0)
-    return { maskedEmail: null, error: "일치하는 회원 정보를 찾을 수 없습니다." };
+  if (!data || data.length === 0) return { maskedEmail: null, error: "일치하는 회원 정보를 찾을 수 없습니다." };
   return { maskedEmail: data[0].masked_email, error: null };
 }
 
 // 이름+이메일로 회원 검증 후 비밀번호 재설정 이메일 발송
-export async function sendPasswordResetEmail(
-  name: string,
-  email: string,
-): Promise<{ error: string | null }> {
-  if (!supabaseConfigured)
-    return { error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
-  const { data: verified, error: verifyError } = await supabase.rpc(
-    "verify_member_by_name_and_email",
-    { p_name: name, p_email: email },
-  );
+export async function sendPasswordResetEmail(name: string, email: string): Promise<{ error: string | null }> {
+  if (!supabaseConfigured) return { error: "일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
+  const { data: verified, error: verifyError } = await supabase.rpc("verify_member_by_name_and_email", {
+    p_name: name,
+    p_email: email,
+  });
   if (verifyError) return { error: verifyError.message };
-  if (!verified)
-    return { error: "일치하는 회원 정보를 찾을 수 없습니다." };
+  if (!verified) return { error: "일치하는 회원 정보를 찾을 수 없습니다." };
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${window.location.origin}/reset-password`,
   });
