@@ -16,9 +16,9 @@ const { title, description, path = "/", minimal = false } = Astro.props;
 
 const SITE_NAME = "바위로드";
 // Cloudflare Pages 빌드 시 배포 URL을 자동으로 사용하고, 프로덕션은 커스텀 도메인 사용
-const BASE_URL = import.meta.env.CF_PAGES_BRANCH === "main"
+const BASE_URL = process.env.CF_PAGES_BRANCH === "main"
   ? "https://bawiroad.com"
-  : (import.meta.env.CF_PAGES_URL || "https://bawiroad.com");
+  : (process.env.CF_PAGES_URL || "https://bawiroad.com");
 const fullTitle = path === "/" ? title : `${title} | ${SITE_NAME}`;
 const url = `${BASE_URL}${path}`;
 const ogImage = `${BASE_URL}/og-image.png`;
