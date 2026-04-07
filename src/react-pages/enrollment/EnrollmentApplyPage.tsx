@@ -220,7 +220,7 @@ function EnrollmentApplyPage() {
       <LoadingOverlay visible={submitting} />
 
       {/* 브레드크럼 (홈 > 수속 신청) */}
-      <div className="pt-20 bg-white border-b border-beige-dark">
+      <div className="bg-white border-b border-beige-dark">
         <div className="max-w-[1200px] mx-auto px-6 py-3">
           <div className="flex items-center gap-2 text-sm text-brown">
             <a href="/" className="hover:text-brown-dark no-underline text-brown">

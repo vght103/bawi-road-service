@@ -29,7 +29,7 @@ function AcademyDetailPage({ id }: { id: string }) {
 
   if (!academy) {
     return (
-      <div className="pt-20 text-center py-16">
+      <div className="text-center py-16">
         <p className="text-brown text-lg">어학원을 찾을 수 없습니다.</p>
         <a href="/academies" className="text-terracotta font-medium mt-4 inline-block no-underline">
           어학원 목록으로 돌아가기
@@ -41,7 +41,7 @@ function AcademyDetailPage({ id }: { id: string }) {
   return (
     <>
       {/* 브레드크럼: 홈 > 어학원 > 현재 어학원명 */}
-      <div className="pt-20 bg-white border-b border-beige-dark">
+      <div className="bg-white border-b border-beige-dark">
         <div className="max-w-[1200px] mx-auto px-6 py-3">
           <div className="flex items-center gap-2 text-sm text-brown">
             <a href="/" className="hover:text-brown-dark no-underline text-brown">
