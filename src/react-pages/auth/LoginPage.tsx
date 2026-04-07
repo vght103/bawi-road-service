@@ -53,10 +53,10 @@ function LoginPage() {
   return (
     <div className="min-h-dvh bg-cream">
       <LoadingOverlay visible={submitting} />
-      <div className="flex items-center justify-center px-4 py-12 pt-22">
-        <div className="flex w-full max-w-[1000px] overflow-hidden rounded-2xl bg-white shadow-lg border border-beige-dark">
-          {/* 왼쪽: 로그인 폼 */}
-          <div className="flex w-full lg:w-1/2 items-center justify-center px-6 sm:px-10 py-12">
+      <div className="flex justify-center px-4 pt-24 pb-12">
+        <div className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-lg border border-beige-dark">
+          {/* 로그인 폼 */}
+          <div className="flex items-center justify-center px-6 sm:px-10 py-12">
             <div className="w-full max-w-sm">
               <div className="mb-8">
                 <a href="/" className="mb-6 inline-block text-sm text-brown hover:text-terracotta">
@@ -134,21 +134,6 @@ function LoginPage() {
                   </a>
                 </p>
               </div>
-            </div>
-          </div>
-
-          {/* 오른쪽: 마스코트 일러스트 (데스크탑 전용) */}
-          <div className="hidden lg:flex w-1/2 items-center justify-center bg-beige">
-            <div className="text-center px-8">
-              <div className="mb-6">
-                <img src="/bawi.webp" alt="바위로드 캐릭터" className="mx-auto w-52 object-contain" />
-              </div>
-              <h2 className="text-xl font-bold text-brown-text mb-2">다 보여주는 유학원</h2>
-              <p className="text-brown text-sm leading-relaxed">
-                투명한 가격, 솔직한 비교
-                <br />
-                바위로드와 함께 필리핀 어학연수를 준비하세요
-              </p>
             </div>
           </div>
         </div>

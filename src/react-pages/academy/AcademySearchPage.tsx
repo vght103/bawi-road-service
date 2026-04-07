@@ -51,7 +51,7 @@ function AcademySearchPage() {
     <>
       <LoadingOverlay visible={isLoading} />
 
-      <div className="bg-white border-b border-beige-dark pt-20">
+      <div className="bg-white border-b border-beige-dark">
         <div className="max-w-[1200px] mx-auto px-6 py-8">
           <h1 className="text-[1.8rem] md:text-[2.2rem] font-extrabold text-brown-dark tracking-tight mb-2">어학원 비교</h1>
           <p className="text-brown text-base">시설, 수업 스타일까지 한눈에 비교하세요.</p>

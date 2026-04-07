@@ -173,7 +173,7 @@ function QuotePage() {
       <LoadingOverlay visible={submitting} />
 
       {/* 브레드크럼: 홈 > 견적 요청 */}
-      <div className="pt-20 bg-white border-b border-beige-dark">
+      <div className="bg-white border-b border-beige-dark">
         <div className="max-w-[1200px] mx-auto px-6 py-3">
           <div className="flex items-center gap-2 text-sm text-brown">
             <a href="/" className="hover:text-brown-dark no-underline text-brown">
@@ -190,7 +190,7 @@ function QuotePage() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           {/* 견적 요청 폼 */}
           <div className="lg:col-span-3">
-            <div className="bg-white rounded-[20px] p-6 md:p-8 border border-beige-dark">
+            <div className="bg-white rounded-[20px] p-6 md:p-10 border border-beige-dark">
               <h1 className="text-[1.5rem] md:text-[1.8rem] font-extrabold text-brown-dark tracking-tight mb-1">
                 무료 견적 요청
               </h1>
@@ -198,35 +198,42 @@ function QuotePage() {
                 어학원과 코스를 선택하면 맞춤 견적서를 이메일로 보내드립니다.
               </p>
 
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-                {/* 이름 */}
-                <div className="space-y-1.5">
-                  <Label className="text-brown-dark font-semibold required">이름</Label>
-                  <Input
-                    type="text"
-                    {...register("name")}
-                    placeholder="홍길동"
-                    aria-invalid={!!errors.name}
-                    className="h-11 rounded-[10px]"
-                  />
-                  {errors.name && <p className="text-terracotta text-[0.75rem]">{errors.name.message}</p>}
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
+                {/* 개인 정보 섹션 */}
+                <div className="space-y-5">
+                  {/* 이름 */}
+                  <div className="space-y-2">
+                    <Label className="text-brown-dark font-semibold required">이름</Label>
+                    <Input
+                      type="text"
+                      {...register("name")}
+                      placeholder="홍길동"
+                      aria-invalid={!!errors.name}
+                      className="h-12 rounded-[10px]"
+                    />
+                    {errors.name && <p className="text-terracotta text-[0.75rem]">{errors.name.message}</p>}
+                  </div>
+
+                  {/* 이메일 (견적서 수신) */}
+                  <div className="space-y-2">
+                    <Label className="text-brown-dark font-semibold required">이메일</Label>
+                    <Input
+                      type="email"
+                      {...register("email")}
+                      placeholder="example@email.com"
+                      aria-invalid={!!errors.email}
+                      className="h-12 rounded-[10px]"
+                    />
+                    {errors.email && <p className="text-terracotta text-[0.75rem]">{errors.email.message}</p>}
+                  </div>
                 </div>
 
-                {/* 이메일 (견적서 수신) */}
-                <div className="space-y-1.5">
-                  <Label className="text-brown-dark font-semibold required">이메일</Label>
-                  <Input
-                    type="email"
-                    {...register("email")}
-                    placeholder="example@email.com"
-                    aria-invalid={!!errors.email}
-                    className="h-11 rounded-[10px]"
-                  />
-                  {errors.email && <p className="text-terracotta text-[0.75rem]">{errors.email.message}</p>}
-                </div>
+                {/* 섹션 구분선 */}
+                <hr className="border-beige-dark" />
 
+                {/* 연수 정보 섹션 */}
                 {/* 어학원 선택 콤보박스 */}
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   <Label className="text-brown-dark font-semibold required">관심 어학원</Label>
                   <Popover open={academyOpen} onOpenChange={setAcademyOpen}>
                     <PopoverTrigger asChild>
@@ -303,7 +310,7 @@ function QuotePage() {
                 </div>
 
                 {/* 코스 선택 — 어학원 선택 후 해당 코스만 표시 */}
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   <Label className="text-brown-dark font-semibold required">코스</Label>
                   {selectedAcademy ? (
                     <div className="space-y-2">
@@ -353,7 +360,7 @@ function QuotePage() {
                 </div>
 
                 {/* 수업 시작 희망일 — 오늘로부터 7일 이후만 선택 가능 */}
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   <Label className="text-brown-dark font-semibold required">수업 시작 희망일</Label>
                   <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
                     <PopoverTrigger asChild>
@@ -394,7 +401,7 @@ function QuotePage() {
                 </div>
 
                 {/* 연수 기간 (주 단위) */}
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   <Label className="text-brown-dark font-semibold required">연수 기간 (주)</Label>
                   <div className="relative">
                     <Input
@@ -432,7 +439,7 @@ function QuotePage() {
                 </div>
 
                 {/* 기숙사 타입 선택 — 어학원 선택 후 해당 기숙사만 표시 */}
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   <Label className="text-brown-dark font-semibold required">기숙사 타입</Label>
                   {selectedAcademy ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
