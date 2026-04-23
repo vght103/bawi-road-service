@@ -33,6 +33,8 @@ const ogImage = `${BASE_URL}/og-image.png`;
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    <!-- 베타 기간 중 검색엔진 인덱싱 차단 (robots.txt와 함께 이중 방어) -->
+    <meta name="robots" content="noindex, nofollow" />
     <link rel="canonical" href={url} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
