@@ -1,4 +1,3 @@
+# 베타 기간 중 검색엔진 크롤링/인덱싱 차단
 User-agent: *
-Allow: /
-
-Sitemap: https://bawiroad.com/sitemap-index.xml
+Disallow: /
