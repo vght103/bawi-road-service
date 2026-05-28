@@ -30,6 +30,6 @@ dist-ssr
 supabase/.env.local
 supabase/.temp/
 .agents/
-.claude/skills/
+.claude/
 .kiro/
 skills-lock.json
